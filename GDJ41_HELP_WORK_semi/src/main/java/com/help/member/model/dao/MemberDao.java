@@ -54,4 +54,26 @@ public class MemberDao {
 		}
 		return m;
 	}
+	
+	public Member checkIdDuplicate(Connection conn,String userId) {
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		Member m=null;
+		String sql=prop.getProperty("selectId");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				m=Member.builder()
+						.memberId(rs.getString("userId"))
+						.build();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return m;
+	}
 }
