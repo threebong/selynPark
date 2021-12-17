@@ -32,7 +32,7 @@ public class LoginMemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//·Î±×ÀÎ ·ÎÁ÷
+		//ë¡œê·¸ì¸
 		String userId=request.getParameter("userId");
 		String password=request.getParameter("password");
 		
@@ -43,11 +43,11 @@ public class LoginMemberServlet extends HttpServlet {
 			session.setAttribute("loginMember", m);
 			response.sendRedirect(request.getContextPath());
 		}else {
-			request.setAttribute("msg", "·Î±×ÀÎ ½ÇÆĞ, ´Ù½Ã ½ÃµµÇÏ¼¼¿ä");
+			request.setAttribute("msg", "ë¡œê·¸ì¸ì— ì‹¤íŒ¨í•˜ì…¨ìŠµë‹ˆë‹¤.");
 			request.setAttribute("loc","/");
 			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 		}
-		//¾ÆÀÌµğ ÀúÀå·ÎÁ÷
+		//ì•„ì´ë””ê°’ ì €ì¥í•˜ê¸°
 		String saveId=request.getParameter("saveId");
 		if(saveId!=null) {
 			Cookie c=new Cookie("saveId",userId);
