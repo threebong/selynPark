@@ -16,7 +16,7 @@ import com.help.member.model.vo.Member;
 /**
  * Servlet implementation class LoginMemberServlet
  */
-@WebServlet("/memberLogin.do")
+@WebServlet("/member/memberLogin.do")
 public class LoginMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -37,6 +37,19 @@ public class LoginMemberServlet extends HttpServlet {
 		String password=request.getParameter("password");
 		
 		Member m=new MemberService().login(userId,password);
+
+		//아이디값 저장하기
+		String saveId=request.getParameter("saveId");
+		
+		if(saveId!=null) {
+			Cookie c=new Cookie("saveId",userId);
+			c.setMaxAge(24*60*60*7);
+			response.addCookie(c);
+		}else {
+			Cookie c=new Cookie("saveId",userId);
+			c.setMaxAge(0);
+			response.addCookie(c);			
+		}
 		
 		if(m!=null) {
 			HttpSession session=request.getSession();
@@ -48,18 +61,7 @@ public class LoginMemberServlet extends HttpServlet {
 			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 		}
 		
-		//아이디값 저장하기
-		String saveId=request.getParameter("saveId");
-		if(saveId!=null) {
-			Cookie c=new Cookie("saveId",userId);
-			c.setMaxAge(24*60*60*7);
-			response.addCookie(c);
-		}else {
-			Cookie c=new Cookie("saveId",userId);
-			c.setMaxAge(0);
-			response.addCookie(c);			
-		}
-	
+			
 	
 	
 	}
