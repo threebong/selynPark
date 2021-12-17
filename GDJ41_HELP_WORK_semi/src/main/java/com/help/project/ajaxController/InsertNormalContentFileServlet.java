@@ -39,7 +39,7 @@ public class InsertNormalContentFileServlet extends HttpServlet {
 		
 		//다중으로 업로드된 파일명 가져오기
 		Enumeration<String> e = mr.getFileNames(); //업로드된 파일들에 대한 모든 파일명 가져오기
-		List<String> filename = new ArrayList<String>();
+		List<String> filename = new ArrayList();
 		
 		while(e.hasMoreElements()) {
 			filename.add(mr.getFilesystemName(e.nextElement()));

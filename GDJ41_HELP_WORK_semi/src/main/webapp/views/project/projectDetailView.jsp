@@ -21,7 +21,7 @@
         <textarea class="form-control" placeholder="내용을 입력하세요" id="normalContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
 		  <div class="mb-3">
  		<label for="formFile" class="form-label"></label>
-  		<input class="form-control" type="file" id="formFile" name="upfile" multiple>
+  		<input class="form-control" type="file" id="uploadNormal" name="upfile" multiple>
 		</div>
 		<input type="hidden" id="memberId" value="admin">
 		<input type="hidden" id="projectNo" value="1">
@@ -78,10 +78,17 @@
 	}
 	
 	$("#nomarl_submit_Btn").click(e=>{
+	
+		
 		let title = $("input[name=title]").val();
 		let content = $("#normalContent").val();
 		let memberId = $("#memberId").val();
 		let projectNo = $("#projectNo").val();
+		const frm = new FormData();
+		const fileInput = $("input[name=upfile]");
+		for(let i=0; i<fileInput[0].files.length;i++){
+			frm.append("upfile"+i,fileInut[0].files[i]);
+		}
 		
 		
 		$.ajax({
@@ -98,13 +105,6 @@
 			
 		});
 		
-		
-		const frm = new FormData();
-		const fileInput = $("#formFile");
-		for(let i=0; i<fileInput[0].files.length;i++){
-			frm.append("upfile"+i,fileInut[0].files[i]);
-		}
-		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/project/insertNormalContentFile.do",
 			type:"post",
@@ -119,13 +119,8 @@
 			
 		});
 		
-		
 	});
 	
-	
-	
-	
-		
 
 </script>
 
