@@ -16,7 +16,7 @@ import com.help.member.model.vo.Member;
 /**
  * Servlet implementation class LoginMemberServlet
  */
-@WebServlet("/login.do")
+@WebServlet("/memberLogin.do")
 public class LoginMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -32,7 +32,7 @@ public class LoginMemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//로그인
+		//로그인		
 		String userId=request.getParameter("userId");
 		String password=request.getParameter("password");
 		
@@ -41,12 +41,13 @@ public class LoginMemberServlet extends HttpServlet {
 		if(m!=null) {
 			HttpSession session=request.getSession();
 			session.setAttribute("loginMember", m);
-			response.sendRedirect(request.getContextPath());
+			request.getRequestDispatcher("/views/project/myProjectView.jsp").forward(request, response);
 		}else {
 			request.setAttribute("msg", "로그인에 실패하셨습니다.");
 			request.setAttribute("loc","/");
 			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 		}
+		
 		//아이디값 저장하기
 		String saveId=request.getParameter("saveId");
 		if(saveId!=null) {

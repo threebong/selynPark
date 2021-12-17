@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import static com.help.common.JDBCTemplate.close;
 
@@ -52,6 +54,39 @@ public class ProjectDao {
 		
 		return result;
 		
+	}
+	
+	
+	public List<Project> selectJoin(Connection conn,String memId){
+		//로그인한 사원이 참여한 모든 프로젝트
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Project> result=new ArrayList<Project>();
+		//Project p=null;
+		String sql=prop.getProperty("selectJoinProject");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, memId);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				Project p=Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proCommonYn(rs.getString("PRO_COMMON_YN"))
+						.proIsActive(rs.getString("PRO_ISACTIVE"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.build();
+				System.out.print(p);
+				result.add(p);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
 	}
 
 }

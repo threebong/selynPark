@@ -14,7 +14,6 @@ public class JDBCTemplate {
 		Connection conn = null;
 
 		String path = JDBCTemplate.class.getResource("/").getPath() + "driver.properties";
-		System.out.println(path);
 
 		Properties prop = new Properties();
 		try {

@@ -8,6 +8,7 @@ import static com.help.common.JDBCTemplate.commit;
 import static com.help.common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
+import java.util.List;
 
 
 public class ProjectService {
@@ -29,7 +30,12 @@ public class ProjectService {
 		return result;
 	}
 
-	
+	public List<Project> selectJoin(String memId){//로그인한 사원이 참여한 모든 프로젝트
+		Connection conn=getConnection();
+		List<Project> join=dao.selectJoin(conn,memId);
+		close(conn);
+		return join;
+	}
 	
 	
 }

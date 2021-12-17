@@ -3,6 +3,16 @@
 <%@page import="com.help.member.model.vo.*" %>
 <%
 	Member loginMember=(Member)session.getAttribute("loginMember");
+	String saveId=null;
+	Cookie[] cookies=request.getCookies();
+	if(cookies!=null){
+		for(Cookie c : cookies){
+			if(c.getName().equals("saveId")) {
+				saveId=c.getValue();	
+				break;
+			}
+		}
+	}
 %>
 <style>
 	* {
@@ -11,16 +21,13 @@
 	  box-sizing: border-box;
 	  font-family: "Noto Sans KR", sans-serif;
 	}
-	
 	a {
 	  text-decoration: none;
 	  color: black;
 	}
-	
 	li {
 	  list-style: none;
 	}
-	
 	.wrap {
 	  width: 100%;
 	  height: 100vh;
@@ -29,7 +36,6 @@
 	  justify-content: center;
 	  background: rgba(0, 0, 0, 0.1);
 	}
-	
 	.login {
 	  width: 30%;
 	  height: 600px;
@@ -103,16 +109,16 @@
 
 </style>
 <main>
-	<div class="wrap">
+	<form class="wrap" action="<%=request.getContextPath()%>/memberLogin.do" method="post">
         <div class="login">
             <h2>Log-in</h2>
-            <div class="login_id" id="login-div" action="<%=request.getContextPath()%>/login.do" method="post">
+            <div class="login_id" id="login-div">
                 <h4>아이디</h4>
-                <input type="text" name="userId" id="userId" placeholder="id를 email형식으로 입력하세요">
+                <input type="text" name="userId" id="userId" placeholder="id를 email형식으로 입력하세요" value="<%=saveId!=null?saveId:""%>">
             </div>
             <div class="login_etc">
                 <div class="checkbox">
-                	<input type="checkbox" name="saveId" id="saveId"> 아이디 저장
+                	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>> 아이디 저장
                 </div>
             </div>
             <div class="login_pw">
@@ -131,5 +137,6 @@
                 <input type="submit" value="로그인">
             </div>
         </div>
-    </div>
+        <%-- <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/memberEnroll.do')" --%>
+    </form>
 </main>

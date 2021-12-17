@@ -1,7 +1,13 @@
+<%@page import="com.help.project.model.vo.Project"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
+<%
+	//로그인한 사원이 참여중인 모든 프로젝트 리스트
+ List<Project> join=(List<Project>)request.getAttribute("joinPro");
 
+%>
 <style>
 #wrapper-Project {
 	width: 90%;
@@ -44,7 +50,7 @@
 	<div id="wrapper-Project">
 		<!-- 내프로젝트를 눌렀을때 보여지는 첫 화면  -->
 		<div class="search_Project">
-			<h4>내 프로젝트</h4>
+			<h4><%=loginMember.getMemberId()%>님의 프로젝트</h4>
 			<div class="input-group mb-3">
 				<select name="search-project-op">
 					<option value="projectName">프로젝트 이름</option>
@@ -89,18 +95,19 @@
 			<div>
 				<!-- 	출력될공간 -->
 				<%
-				for (int i = 0; i < 22; i++) {
+				if(join!=null){
+				for (Project p:join) {
 				%>
 
 				<div class="project_content_ing">
-					<h4>프로젝트명</h4>
-					<h6>프로젝트 설명</h6>
-					<p>프로젝트 생성자</p>
+					<h4><%=p.getProName() %></h4>
+					<h6><%=p.getProExplain() %></h6>
+					<p><%=p.getMemberId() %></p>
 					<h6>참여인원</h6>
 				</div>
 
 				<%
-				}
+				}}
 				%>
 			</div>
 		</div>
