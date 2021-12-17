@@ -84,6 +84,7 @@
 		let content = $("#normalContent").val();
 		let memberId = $("#memberId").val();
 		let projectNo = $("#projectNo").val();
+		
 		const frm = new FormData();
 		const fileInput = $("input[name=upfile]");
 		for(let i=0; i<fileInput[0].files.length;i++){
