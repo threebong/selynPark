@@ -3,6 +3,7 @@ package com.help.project.ajaxController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -38,13 +39,26 @@ public class InsertNormalContentFileServlet extends HttpServlet {
 		MultipartRequest mr = new MultipartRequest(request,path,1024*1024*10,"UTF-8",new MakeFileName());
 		
 		//다중으로 업로드된 파일명 가져오기
-		Enumeration<String> e = mr.getFileNames(); //업로드된 파일들에 대한 모든 파일명 가져오기
-		List<String> filename = new ArrayList();
+
+		Enumeration<String> e = mr.getFileNames();
+		List<String> newFileName = new ArrayList();
+		List<String> oriFileName = new ArrayList();
+		
 		
 		while(e.hasMoreElements()) {
-			filename.add(mr.getFilesystemName(e.nextElement()));
+			String fileName = e.nextElement();
+			String oriName = mr.getOriginalFileName(fileName);
+			oriFileName.add(oriName);
+			newFileName.add(mr.getFilesystemName(fileName));
 		}
-		System.out.println(filename);
+		
+		
+
+		
+		
+		
+		
+		
 		
 		
 	}

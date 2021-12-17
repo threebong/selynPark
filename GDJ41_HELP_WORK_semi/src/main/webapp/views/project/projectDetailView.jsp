@@ -87,7 +87,7 @@
 		const frm = new FormData();
 		const fileInput = $("input[name=upfile]");
 		for(let i=0; i<fileInput[0].files.length;i++){
-			frm.append("upfile"+i,fileInut[0].files[i]);
+			frm.append("upfile"+i,fileInput[0].files[i]);
 		}
 		
 		
@@ -105,9 +105,12 @@
 			
 		});
 		
+		console.log(frm);
+		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/project/insertNormalContentFile.do",
 			type:"post",
+			data:frm,
 			processData:false,
 			contentType:false,
 			success:data=>{
