@@ -48,7 +48,7 @@
 			<div class="input-group mb-3">
 				<select name="search-project-op">
 					<option value="projectName">프로젝트 이름</option>
-					<option value="">담당자</option>
+					<option value="">프로젝트 생성자</option>
 					<option value="">글쓴이</option>
 					<option value="">업무번호</option>
 					<option value="">날짜</option>
@@ -73,7 +73,7 @@
 				<div class="project_content_favor">
 					<h4>프로젝트명</h4>
 					<h6>프로젝트 설명</h6>
-					<p>담당자</p>
+					<p>프로젝트 생성자</p>
 					<h6>참여인원</h6>
 				</div>
 
@@ -95,7 +95,7 @@
 				<div class="project_content_ing">
 					<h4>프로젝트명</h4>
 					<h6>프로젝트 설명</h6>
-					<p>담당자</p>
+					<p>프로젝트 생성자</p>
 					<h6>참여인원</h6>
 				</div>
 

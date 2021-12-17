@@ -21,6 +21,8 @@
 </head>
 
 <!--프로젝트 생성 Modal -->
+
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <form action="<%=request.getContextPath() %>/project/insertProject.do" method="post" onsubmit="return create_pro(this);" id="create_pro_frm">
   <div class="modal-dialog .modal-dialog-centered">
@@ -57,7 +59,7 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">HELP_WORK</a>
+        <a class="navbar-brand ps-3" href="<%=request.getContextPath()%>/project/select.do">HELP_WORK</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i
                 class="fas fa-bars"></i></button>
@@ -134,10 +136,10 @@
                             
                         </a>
                         <div class="sb-sidenav-menu-heading">MY PROJECT</div>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<%=request.getContextPath()%>/project/select.do">
                             <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
                             </div>
-                            My Project List
+                           My Project List
                         </a>
                         <a class="nav-link" href="#" id="create-project">
                             <div class="sb-nav-link-icon"><i class="far fa-file"></i></div>    
