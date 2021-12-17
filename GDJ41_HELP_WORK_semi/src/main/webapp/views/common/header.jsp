@@ -115,7 +115,7 @@ window.addEventListener('DOMContentLoaded', event => {
                         <hr class="dropdown-divider" />
                     </li>
                     <li><a class="dropdown-item" href="#!"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
-                    <li><a class="dropdown-item" href="#!"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
+                    <li><a class="dropdown-item" href="<%=request.getContextPath()%>/logoutMember.do"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
 
                 </ul>
             </li>

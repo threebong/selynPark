@@ -49,6 +49,7 @@ public class LoginMemberServlet extends HttpServlet {
 			request.setAttribute("loc","/");
 			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 		}
+		
 		//아이디값 저장하기
 		String saveId=request.getParameter("saveId");
 		if(saveId!=null) {

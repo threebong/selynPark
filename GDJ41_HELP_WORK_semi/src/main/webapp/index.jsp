@@ -114,11 +114,11 @@
             <h2>Log-in</h2>
             <div class="login_id" id="login-div">
                 <h4>아이디</h4>
-                <input type="text" name="userId" id="userId" placeholder="id를 email형식으로 입력하세요">
+                <input type="text" name="userId" id="userId" placeholder="id를 email형식으로 입력하세요" value="<%=saveId!=null?saveId:""%>">
             </div>
             <div class="login_etc">
                 <div class="checkbox">
-                	<input type="checkbox" name="saveId" id="saveId"> 아이디 저장
+                	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>> 아이디 저장
                 </div>
             </div>
             <div class="login_pw">
