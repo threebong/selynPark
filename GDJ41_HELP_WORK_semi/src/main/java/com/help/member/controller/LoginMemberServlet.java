@@ -32,9 +32,7 @@ public class LoginMemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//로그인
-		response.setCharacterEncoding("UTF-8");
-		
+		//로그인		
 		String userId=request.getParameter("userId");
 		String password=request.getParameter("password");
 		

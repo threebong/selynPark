@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.help.member.model.vo.Member" %>
+<% 
+	Member loginMember=(Member)session.getAttribute("loginMember");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,8 +113,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li class="dropdown-item">userName</li>
-
+                    <li class="dropdown-item"><%=loginMember.getMemberName() %></li>
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
