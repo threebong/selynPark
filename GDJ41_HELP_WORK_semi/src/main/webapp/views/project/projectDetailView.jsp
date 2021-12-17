@@ -90,6 +90,36 @@
 </style>
 <main>
 
+
+<!-- 일반게시글 작성 모달 -->
+<button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" id="insertNormal_">글작성</button>
+<form action="" method="post" enctype="mutipart/form-data">
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">게시물 작성</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" name="title">
+        <textarea class="form-control" placeholder="내용을 입력하세요" id="floatingTextarea2"  style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"
+		  name ="proExplain"></textarea>
+		  <div class="mb-3">
+ 		<label for="formFile" class="form-label"></label>
+  		<input class="form-control" type="file" id="formFile">
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="submit" class="btn btn-primary">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
+
 <div id="title-container">
 	<div id="pro-bookmark-star"><i class="fas fa-star"></i></div>
 	<div id="project-title"><span>프로젝트명</span></div>
@@ -115,7 +145,10 @@
 </div>	
 </main>
 <script>
-	
+	$("#insertNormal").click(e=>{
+		$("#insertNormal_").click();
+		
+	});
 s
 </script>
 
