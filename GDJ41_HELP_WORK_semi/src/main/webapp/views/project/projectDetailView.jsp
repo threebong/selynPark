@@ -1,100 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
-<style>
-	#project-title,#pro-bookmark-star{
-		display: inline-block;
-		margin-bottom: 20px;
-		font-size: 30px;
-	}
-	#project-title{
-		margin-left: 10px;
-		font-weight: bold;
-	}
-	#pro-bookmark-star{
-		color:yellow;
-	}
-	
-	#pro_container{
-		border: 1px solid black;
-		width: 100%;
-		min-height:1000px;
-		padding: 0px;
-		margin: 0px;
-		position: relative;
-		
-	}
-	#content_section{
-		border: 1px solid black;
-		width: 750px;
-		padding: 0px;
-		margin: 0px;
-		position:absolute;
-		left: 20%;
-		min-height: 300px;
-		top:45%;
-		
-		
-	}
-	#inputContent_container{
-		border: 1px solid black;
-		padding-top: 40px;
-		margin: 0px;
-		width: 750px;
-		height: 200px;		
-		position:absolute;
-		left: 20%;
-		top:15%;
-		justify-content: center;
-	}
-	#input-group{
-		position: flex;
-		justify-content: center;
-	}
-	#input-group div{
-		display: inline-block;
-		width: 180px;
-		font-size: 30px;
-		text-align: center;
-	}
-	
-	#input-group a{
-	text-decoration: none;
-	color:black;
-	}
-	#input-group a:hover{
-	color:grey;
-	}
-	
-	#menu-container a{
-		font-size: 25px;
-		font-weight: bold;
-		color: gray;
-	}
-	.nav-link:active {
-	color:black;
-	}
-	.nav-link:hover{
-	color:black;
-	}
-	.nav-item{
-	margin-right: 15px;
-	}
-	
-	#title-container{
-		margin: 30px;
-	}
-	#menu-container{
-		margin-left: 30px;
-	}
-</style>
+<link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <main>
 
 
 <!-- 일반게시글 작성 모달 -->
 <button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" id="insertNormal_">글작성</button>
-<form action="" method="post" enctype="mutipart/form-data">
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" onsubmit="return checkContent();">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -103,21 +17,24 @@
       </div>
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" name="title">
-        <textarea class="form-control" placeholder="내용을 입력하세요" id="floatingTextarea2"  style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"
-		  name ="proExplain"></textarea>
+      <span id="titleResult"></span>
+        <textarea class="form-control" placeholder="내용을 입력하세요" id="normalContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
 		  <div class="mb-3">
  		<label for="formFile" class="form-label"></label>
-  		<input class="form-control" type="file" id="formFile">
+  		<input class="form-control" type="file" id="formFile" name="upfile" multiple>
 		</div>
+		<input type="hidden" id="memberId" value="admin">
+		<input type="hidden" id="projectNo" value="1">
+		
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        <button type="submit" class="btn btn-primary">등록</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_content">닫기</button>
+        <button type="button" class="btn btn-primary" id="nomarl_submit_Btn">등록</button>
       </div>
     </div>
   </div>
 </div>
-</form>
+
 
 
 <div id="title-container">
@@ -142,14 +59,74 @@
 		</div>
 	</div>
 	<div id="content_section"></div>
-</div>	
+</div>
+
 </main>
 <script>
 	$("#insertNormal").click(e=>{
 		$("#insertNormal_").click();
 		
 	});
-s
+	
+	const checkContent=()=>{
+		let title = $("input[name=title]").val();
+		if(title.trim().length == 0){
+			$("input[name=title]").focus();
+			$("#titleResult").text("제목을 입력하세요").css("color","red");
+			return false;
+		}
+	}
+	
+	$("#nomarl_submit_Btn").click(e=>{
+		let title = $("input[name=title]").val();
+		let content = $("#normalContent").val();
+		let memberId = $("#memberId").val();
+		let projectNo = $("#projectNo").val();
+		
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/project/insertNormalContent.do",
+			method :"post",
+			data: {"title":title,"content":content,"memberId":memberId,"projectNo":projectNo},
+			success : data =>{
+				$("#close_content").click();
+			},
+			error: (a)=>{
+				alert(data);
+				$("#close_content").click();
+			}
+			
+		});
+		
+		
+		const frm = new FormData();
+		const fileInput = $("#formFile");
+		for(let i=0; i<fileInput[0].files.length;i++){
+			frm.append("upfile"+i,fileInut[0].files[i]);
+		}
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/project/insertNormalContentFile.do",
+			type:"post",
+			processData:false,
+			contentType:false,
+			success:data=>{
+				alert(data);
+			},
+			error:(a)=>{
+				alert(data);
+			}
+			
+		});
+		
+		
+	});
+	
+	
+	
+	
+		
+
 </script>
 
 <%@ include file="/views/common/footer.jsp"%>

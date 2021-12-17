@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', event => {
         <div class="form-check form-switch" style="padding: 0px;">
   			<label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
   			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
-  			<input type="hidden" name="memberId" value="admin">
+  			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
 		</div>
       </div>
       <div class="modal-footer">
