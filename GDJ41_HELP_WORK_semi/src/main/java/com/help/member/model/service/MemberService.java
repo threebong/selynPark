@@ -16,5 +16,12 @@ public class MemberService {
 		close(conn);
 		return m;
 	}
+	
+	public Member checkIdDuplicate(String userId) {
+		Connection conn=getConnection();
+		Member m=dao.checkIdDuplicate(conn,userId);
+		close(conn);
+		return m;
+	}
 
 }

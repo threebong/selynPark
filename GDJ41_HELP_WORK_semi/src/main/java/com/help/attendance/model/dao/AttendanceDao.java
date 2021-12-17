@@ -1,26 +1,31 @@
-package com.help.attendance.model.dao;
-
-//import static com.member.common.JDBCTemplate.close;
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.Properties;
-
-public class AttendanceDao {
-	private Properties prop = new Properties();
-	
-	public AttendanceDao() {
-		try {
-			String path = AttendanceDao.class.getResource("/sql/attendance/attendance_sql.properties").getPath();
-			prop.load(new FileReader(path));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	//근태 조회(사원)
+//package com.help.attendance.model.dao;
+//
+////import static com.member.common.JDBCTemplate.close;
+//import java.io.FileReader;
+//import java.io.IOException;
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Properties;
+//
+//import com.help.attendance.model.vo.Attendance;
+//
+//public class AttendanceDao {
+//	private Properties prop = new Properties();
+//	
+//	public AttendanceDao() {
+//		try {
+//			String path = AttendanceDao.class.getResource("/sql/attendance/attendance_sql.properties").getPath();
+//			prop.load(new FileReader(path));
+//		} catch(IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	
+//	//근태 조회(사원)
 //	public List<Attendance> selectAttendanceAll(Connection conn, String userId){
 //		PreparedStatement pstmt = null;
 //		ResultSet rs = null;
@@ -36,7 +41,7 @@ public class AttendanceDao {
 //					.attTime(rs.getDate("att_Time"))
 //					.leaveTime(rs.getDate("leave_Time"))
 //					.attDate(rs.getDate("att_Date"))
-//					.attStatus(rs.getString("att_status))
+//					.attStatus(rs.getString("att_status"))
 //					.build();
 //			list.add(a);
 //		}
@@ -48,5 +53,5 @@ public class AttendanceDao {
 //			close(pstmt);
 //		} return list;
 //	}
-
-}
+//
+//}
