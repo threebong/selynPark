@@ -88,5 +88,13 @@ public class ProjectDao {
 			close(pstmt);
 		}return result;
 	}
+	
+	public int joinProjectNumber(Connection conn,List join,String memId) {
+		//로그인한 사원이 참가한 프로젝트의 총 참여인원
+		PreparedStatement pstmt=null;
+		int joinNum=0;
+		String sql=prop.getProperty("joinProjectNumber");
+		return joinNum;
+	}
 
 }
