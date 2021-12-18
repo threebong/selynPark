@@ -99,7 +99,7 @@
 				for (Project p:join) {
 				%>
 
-				<div class="project_content_ing">
+				<div class="project_content_ing" style="cursor:pointer;"onclick="location.href='<%=request.getContextPath()%>/project/detailView.do'">
 					<h4><%=p.getProName() %></h4>
 					<h6><%=p.getProExplain() %></h6>
 					<p>작성자: <%=p.getMemberId() %></p>
