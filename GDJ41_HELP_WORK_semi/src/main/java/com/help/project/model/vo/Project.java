@@ -2,6 +2,8 @@ package com.help.project.model.vo;
 
 import java.sql.Date;
 
+import com.help.member.model.vo.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class Project {
 
 	private int projectNo;
+	//private Member memberId;
 	private String memberId;
 	private String proName;
 	private String proExplain;

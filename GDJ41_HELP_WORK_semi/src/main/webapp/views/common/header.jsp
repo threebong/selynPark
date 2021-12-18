@@ -46,6 +46,7 @@ window.addEventListener('DOMContentLoaded', event => {
 </head>
 
 <body class="sb-nav-fixed">
+
 <!--프로젝트 생성 Modal -->
  <form action="<%=request.getContextPath() %>/project/insertProject.do" method="post" onsubmit="return create_pro(this);" id="create_pro_frm">
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

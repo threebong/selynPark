@@ -48,6 +48,7 @@ public class ProjectService {
 
 	public int insertNormalContentFile(List<Map<String, Object>> fileList) {
 		Connection conn = getConnection();
+		
 		int result = dao.insertNormalContentFile(conn,fileList);
 		
 		if(result>0) {

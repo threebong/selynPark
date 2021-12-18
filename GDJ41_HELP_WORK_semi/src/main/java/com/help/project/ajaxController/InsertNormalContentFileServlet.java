@@ -79,7 +79,7 @@ public class InsertNormalContentFileServlet extends HttpServlet {
 		System.out.println(fileList);
 		
 		
-		int result = new ProjectService().insertNormalContentFile(fileList);
+		new ProjectService().insertNormalContentFile(fileList);
 		
 		
 		
