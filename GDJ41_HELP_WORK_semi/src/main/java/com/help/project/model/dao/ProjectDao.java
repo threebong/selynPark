@@ -98,13 +98,13 @@ public class ProjectDao {
 		}return result;
 	}
 	
-	public int joinProjectNumber(Connection conn,List join,String memId) {
-		//로그인한 사원이 참가한 프로젝트의 총 참여인원
-		PreparedStatement pstmt=null;
-		int joinNum=0;
-		String sql=prop.getProperty("joinProjectNumber");
-		return joinNum;
-	}
+//	public int joinProjectNumber(Connection conn,List join,String memId) {
+//		//로그인한 사원이 참가한 프로젝트의 총 참여인원
+//		PreparedStatement pstmt=null;
+//		int joinNum=0;
+//		String sql=prop.getProperty("joinProjectNumber");
+//		return joinNum;
+//	}
 	public HashMap<Integer, Integer> selectJoinNumber(Connection conn,HashMap<Integer,Integer> peopleNum){
 		//키:프로젝트번호 밸류:해당프로젝트 참가자수 해서 반환함 
 		PreparedStatement pstmt=null;

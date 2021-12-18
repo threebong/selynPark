@@ -42,13 +42,13 @@ public class ProjectService {
 		close(conn);
 		return join;
 	}
-	public int joinProjectNumber(List join,String memId) {
-		//로그인한 사원이 참가한 프로젝트의 총 참여인원
-		Connection conn=getConnection();
-		int joinNum=dao.joinProjectNumber(conn,join,memId);
-		close(conn);
-		return joinNum;
-	}
+//	public int joinProjectNumber(List join,String memId) {
+//		//로그인한 사원이 참가한 프로젝트의 총 참여인원
+//		Connection conn=getConnection();
+//		int joinNum=dao.joinProjectNumber(conn,join,memId);
+//		close(conn);
+//		return joinNum;
+//	}
 	public HashMap<Integer, Integer> selectJoinNumber(HashMap peopleNum){
 		//프로젝트 번호랑..임의의값 넘겨서 찾아올거임 .. 참가자수를
 		Connection conn=getConnection();
