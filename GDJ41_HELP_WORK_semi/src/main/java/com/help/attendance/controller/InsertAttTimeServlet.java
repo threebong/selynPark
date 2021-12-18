@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.help.attendance.model.service.AttendanceService;
+import com.help.attendance.model.vo.Attendance;
 
 @WebServlet("/attendance/insertAttTime.do")
 public class InsertAttTimeServlet extends HttpServlet {
@@ -23,15 +24,16 @@ public class InsertAttTimeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String memberId = request.getParameter("memberId");
 		//현재날짜
-		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd"));
+		System.out.println(attDate);
 		//출근시간
-		String attTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-		int result = new AttendanceService().insertAttTime(memberId, attTime, attDate);
-//		int result = new AttendanceService().insertAttTime(attTime, attDate);
+//		String attTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		int result = new AttendanceService().insertAttTime(memberId);
 		
 		String msg="";
 		String loc="";
 		if(result>0) {
+			Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
 			msg="출근 성공";
 			loc="/";
 		} else {

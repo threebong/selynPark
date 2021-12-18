@@ -26,9 +26,8 @@ public class AttendanceDao {
 		}
 	}
 	
-	//출근
-	public int insertAttTime(Connection conn, String memberId, String attTime, String attDate) {
-//		public int insertAttTime(Connection conn, String attTime, String attDate) {
+	//출근등록
+	public int insertAttTime(Connection conn, String memberId) {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql = prop.getProperty("insertAttTime");
@@ -36,8 +35,6 @@ public class AttendanceDao {
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, memberId);
-			pstmt.setString(1, attTime);
-			pstmt.setString(2, attDate);
 			
 			result = pstmt.executeUpdate();
 			
@@ -47,6 +44,37 @@ public class AttendanceDao {
 			close(pstmt);
 		}
 		return result;
+	}
+	//출근시간 출력
+	public Attendance outputAttTime(Connection conn, String memberId, String attDate) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Attendance a = null;
+		String sql = prop.getProperty("outputAttTime");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,memberId);
+			pstmt.setString(2, attDate);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				a = Attendance.builder()
+						.memberId(rs.getString("member_id"))
+						.attTime(rs.getDate("att_time"))
+						.leaveTime(rs.getDate("leave_date"))
+						.attDate(rs.getDate("att_date"))
+						.attStatus(rs.getString("att_status"))
+						.build();
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		}
+		return a;
 	}
 	
 	
