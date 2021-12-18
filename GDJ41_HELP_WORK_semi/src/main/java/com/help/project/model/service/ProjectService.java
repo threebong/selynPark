@@ -70,10 +70,10 @@ public class ProjectService {
 		return result;
 	}
 
-	public int insertNormalContentFile(List<Map<String, Object>> fileList) {
+	public int insertNormalContentFile(List<Map<String, Object>> fileList, int normalContNo) {
 		Connection conn = getConnection();
 
-		int result = dao.insertNormalContentFile(conn, fileList);
+		int result = dao.insertNormalContentFile(conn, fileList,normalContNo);
 
 		if (result > 0) {
 			commit(conn);
@@ -119,6 +119,17 @@ public class ProjectService {
 		close(conn);
 
 		return pinfo;
+	}
+	
+
+	public int selectNormalConNo(NormalContent nc) {
+		Connection conn = getConnection();
+
+		int normalNo = dao.selectNormalConNo(conn,nc);
+
+		close(conn);
+
+		return normalNo;
 	}
 
 }

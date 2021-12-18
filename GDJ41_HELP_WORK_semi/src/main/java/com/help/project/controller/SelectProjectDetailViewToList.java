@@ -31,8 +31,7 @@ public class SelectProjectDetailViewToList extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int projectNo = Integer.parseInt(request.getParameter("projectNo"));
-		System.out.println(projectNo);
-		
+
 		Project pinfo = new ProjectService().selectProjectOne(projectNo);
 		request.setAttribute("projectInfo", pinfo);
 				

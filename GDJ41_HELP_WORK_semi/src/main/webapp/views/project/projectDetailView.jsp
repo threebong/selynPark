@@ -3,15 +3,11 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
 <%
-	
 	Project p = (Project)request.getAttribute("projectInfo");
 
-	System.out.println("p정보 : "+p);
 %>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <main>
-
-
 <!-- 프로젝트정보 -->
 
 <input type="hidden" id="memberId" value="<%=loginMember.getMemberId()%>">
@@ -37,7 +33,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_content">닫기</button>
-        <button type="button" class="btn btn-primary" id="nomarl_submit_Btn">등록</button>
+        <button type="button" class="btn btn-primary" id="normal_submit_Btn">등록</button>
       </div>
     </div>
   </div>
@@ -153,47 +149,31 @@
 		}
 	}
 	
-	$("#nomarl_submit_Btn").click(e=>{
+	$("#normal_submit_Btn").click(e=>{
 	
-		
-		let title = $("input[name=title]").val();
-		let content = $("#normalContent").val();
-		let memberId = $("#memberId").val();
-		let projectNo = $("#projectNo").val();
-		
 		const frm = new FormData();
 		const fileInput = $("input[name=upfile]");
 		for(let i=0; i<fileInput[0].files.length;i++){
 			frm.append("upfile"+i,fileInput[0].files[i]);
+			
 		}
-		
+		frm.append("title", $("input[name=title]").val());
+		frm.append("content", $("#normalContent").val());
+		frm.append("memberId",$("#memberId").val());
+		frm.append("projectNo", $("#projectNo").val());
+	
 		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/project/insertNormalContent.do",
-			method :"post",
-			data: {"title":title,"content":content,"memberId":memberId,"projectNo":projectNo},
-			success : data =>{
-				$("#close_content").click();
-			},
-			error: (a)=>{
-				alert(data);
-				$("#close_content").click();
-			}
-			
-		});
-
-		
-		$.ajax({
-			url : "<%=request.getContextPath()%>/project/insertNormalContentFile.do",
 			type:"post",
 			data:frm,
 			processData:false,
 			contentType:false,
 			success:data=>{
-				alert(data);
+				$("#close_content").click();
 			},
 			error:(a)=>{
-				alert(data);
+				alert("실팽");
 			}
 			
 		});
@@ -216,19 +196,17 @@
 		}
 	}
 	
-	$("#work_submit_Btn").click(e=>{
+ 	//$("#work_submit_Btn").click(e=>{
 		
-		let workTitle =
-		let workIng=
-		let workAddMember=
-		let workStart=
-		let workEnd
-		let workRank
-		let workContent
+	//	let workTitle = $("#workTitle").val();
+	//	let workIng= 
+	//	let workAddMember=
+	//	let workStart=
+	//	let workEnd
+	//	let workRank
+	//	let workContent
 		
-		
-		
-	});
+//	});
 	
 
 </script>
