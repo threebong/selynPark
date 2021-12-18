@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.help.member.model.vo.Member" %>
+<% 
+	Member loginMember=(Member)session.getAttribute("loginMember");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,13 +21,35 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+window.addEventListener('DOMContentLoaded', event => {
 
+    // Toggle the side navigation
+    const sidebarToggle = document.body.querySelector('#sidebarToggle');
+    if (sidebarToggle) {
+        // Uncomment Below to persist sidebar toggle between refreshes
+        // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+        //     document.body.classList.toggle('sb-sidenav-toggled');
+        // }
+        sidebarToggle.addEventListener('click', event => {
+            event.preventDefault();
+            document.body.classList.toggle('sb-sidenav-toggled');
+            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+        });
+    }
+
+});
+
+</script>
+   
 </head>
 
+<body class="sb-nav-fixed">
 <!--프로젝트 생성 Modal -->
+ <form action="<%=request.getContextPath() %>/project/insertProject.do" method="post" onsubmit="return create_pro(this);" id="create_pro_frm">
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<form action="<%=request.getContextPath() %>/project/insertProject.do" method="post" onsubmit="return create_pro(this);" id="create_pro_frm">
-  <div class="modal-dialog .modal-dialog-centered">
+ <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">새 프로젝트 생성</h5>
@@ -41,25 +67,22 @@
         <div class="form-check form-switch" style="padding: 0px;">
   			<label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
   			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
-  			<input type="hidden" name="memberId" value="admin">
+  			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
 		</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>
         <button type="submit" class="btn btn-primary">프로젝트 생성</button>
-      </div>
-    </div>
+     	 </div>
+   	 	</div>
   </div>
-  </form>
 </div>
-
-
-<body class="sb-nav-fixed">
+  </form>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">HELP_WORK</a>
+        <a class="navbar-brand ps-3" href="">HELP_WORK</a>
         <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i
+         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
 
@@ -90,13 +113,12 @@
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li class="dropdown-item">userName</li>
-
+                    <li class="dropdown-item"><%=loginMember.getMemberName() %></li>
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
                     <li><a class="dropdown-item" href="#!"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
-                    <li><a class="dropdown-item" href="#!"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
+                    <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/logoutMember.do"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
 
                 </ul>
             </li>
@@ -198,11 +220,11 @@
 
             </nav>
         </div>
+      
         <div id="layoutSidenav_content">
         
-        <button id="create-projectBtn" type="button" class="btn btn-primary"
-         data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">New Project</button>
-        
+         <button id="create-projectBtn" type="button" class="btn btn-primary"
+         data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">New Project</button> 
         <script>
         
         $("#create-project").click(e=>{

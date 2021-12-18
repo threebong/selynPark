@@ -16,7 +16,7 @@ import com.help.member.model.vo.Member;
 /**
  * Servlet implementation class LoginMemberServlet
  */
-@WebServlet("/login.do")
+@WebServlet("/member/memberLogin.do")
 public class LoginMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -32,23 +32,15 @@ public class LoginMemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//로그인
+		//로그인		
 		String userId=request.getParameter("userId");
 		String password=request.getParameter("password");
 		
 		Member m=new MemberService().login(userId,password);
-		
-		if(m!=null) {
-			HttpSession session=request.getSession();
-			session.setAttribute("loginMember", m);
-			response.sendRedirect(request.getContextPath());
-		}else {
-			request.setAttribute("msg", "로그인에 실패하셨습니다.");
-			request.setAttribute("loc","/");
-			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
-		}
+
 		//아이디값 저장하기
 		String saveId=request.getParameter("saveId");
+		
 		if(saveId!=null) {
 			Cookie c=new Cookie("saveId",userId);
 			c.setMaxAge(24*60*60*7);
@@ -58,7 +50,18 @@ public class LoginMemberServlet extends HttpServlet {
 			c.setMaxAge(0);
 			response.addCookie(c);			
 		}
-	
+		
+		if(m!=null) {
+			HttpSession session=request.getSession();
+			session.setAttribute("loginMember", m);
+			request.getRequestDispatcher("/views/project/myProjectView.jsp").forward(request, response);
+		}else {
+			request.setAttribute("msg", "로그인에 실패하셨습니다.");
+			request.setAttribute("loc","/");
+			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
+		}
+		
+			
 	
 	
 	}
