@@ -23,5 +23,6 @@ public class Project {
 	private String proCommonYn;
 	private String proIsActive;
 	private Date proDate;
+
 	
 }

@@ -7,9 +7,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import java.util.Properties;
 import static com.help.common.JDBCTemplate.close;
 
@@ -58,7 +64,71 @@ public class ProjectDao {
 		return result;
 		
 	}
-
+	
+	
+	public List<Project> selectJoin(Connection conn,String memId){
+		//로그인한 사원이 참여한 모든 프로젝트
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Project> result=new ArrayList<Project>();
+		//Project p=null;
+		String sql=prop.getProperty("selectJoinProject");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, memId);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				Project p=Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proCommonYn(rs.getString("PRO_COMMON_YN"))
+						.proIsActive(rs.getString("PRO_ISACTIVE"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.build();
+				System.out.print(p);
+				result.add(p);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	public int joinProjectNumber(Connection conn,List join,String memId) {
+		//로그인한 사원이 참가한 프로젝트의 총 참여인원
+		PreparedStatement pstmt=null;
+		int joinNum=0;
+		String sql=prop.getProperty("joinProjectNumber");
+		return joinNum;
+	}
+	public HashMap<Integer, Integer> selectJoinNumber(Connection conn,HashMap<Integer,Integer> peopleNum){
+		//키:프로젝트번호 밸류:해당프로젝트 참가자수 해서 반환함 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		HashMap<Integer,Integer> result= peopleNum;
+		String sql=prop.getProperty("joinProjectNumber");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			for(Entry<Integer, Integer> entry: peopleNum.entrySet()) {
+				pstmt.setInt(1, entry.getKey());
+				rs=pstmt.executeQuery();
+				if(rs.next()) {
+					result.put(entry.getKey(), rs.getInt("COUNT(*)"));
+				}
+			}
+			
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 
 
 	public int insertNormalContnet(Connection conn, NormalContent nc) {

@@ -54,7 +54,7 @@ public class LoginMemberServlet extends HttpServlet {
 		if(m!=null) {
 			HttpSession session=request.getSession();
 			session.setAttribute("loginMember", m);
-			request.getRequestDispatcher("/views/project/myProjectView.jsp").forward(request, response);
+			request.getRequestDispatcher("/project/select.do").forward(request, response);
 		}else {
 			request.setAttribute("msg", "로그인에 실패하셨습니다.");
 			request.setAttribute("loc","/");

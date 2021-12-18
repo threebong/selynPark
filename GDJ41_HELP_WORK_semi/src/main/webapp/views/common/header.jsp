@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="com.help.member.model.vo.Member" %>
 <% 
-	Member loginMember=(Member)session.getAttribute("loginMember");
+   Member loginMember=(Member)session.getAttribute("loginMember");
 %>
 <!DOCTYPE html>
 <html>
@@ -60,22 +60,24 @@ window.addEventListener('DOMContentLoaded', event => {
         <input class="form-control form-control-m" type="text" placeholder="프로젝트명(100자 이내)" aria-label=".form-control-lg example" name="proName" id="proName_" autocomplete="off">
         <span id="proName-result"></span>
        <div class="form-floating">
-		  <textarea class="form-control" placeholder="프로젝트 설명(600자이내)" id="floatingTextarea2"  style="height: 200px; margin-top: 10px; margin-bottom:10px; resize:none"
-		  name ="proExplain"></textarea>
-		  <label for="floatingTextarea2">프로젝트 설명(600자이내)</label>
-		  <span id="proExplain-result"></span>
-		</div>
+        <textarea class="form-control" placeholder="프로젝트 설명(600자이내)" id="floatingTextarea2"  style="height: 200px; margin-top: 10px; margin-bottom:10px; resize:none"
+        name ="proExplain"></textarea>
+        <label for="floatingTextarea2">프로젝트 설명(600자이내)</label>
+        <span id="proExplain-result"></span>
+      </div>
         <div class="form-check form-switch" style="padding: 0px;">
+
   			<label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
   			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
   			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
 		</div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>
         <button type="submit" class="btn btn-primary">프로젝트 생성</button>
-     	 </div>
-   	 	</div>
+         </div>
+          </div>
   </div>
 </div>
   </form>
@@ -114,7 +116,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li class="dropdown-item"><%=loginMember.getMemberName() %></li>
+                    <li class="dropdown-item"></li>
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
@@ -157,7 +159,7 @@ window.addEventListener('DOMContentLoaded', event => {
                             
                         </a>
                         <div class="sb-sidenav-menu-heading">MY PROJECT</div>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<%=request.getContextPath()%>/project/select.do">
                             <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
                             </div>
                             My Project List
@@ -227,47 +229,47 @@ window.addEventListener('DOMContentLoaded', event => {
         <script>
         
         $("#create-project").click(e=>{
-			$("#create-projectBtn").click();
-		});
+         $("#create-projectBtn").click();
+      });
         
         const create_pro=()=>{
-        	//1.제목 입력 안했을때
-        	if($("#proName_").val().trim().length == 0){
-        		$("#proName_").focus();
-        		return false;
-        	}  	
+           //1.제목 입력 안했을때
+           if($("#proName_").val().trim().length == 0){
+              $("#proName_").focus();
+              return false;
+           }     
         }
         
         //제목 글자수 초과 100자
         $("#proName_").change(e=>{
             if($("#proName_").val().trim().length>100){
-        		$("#proName-result").text("100자 이하로 입력하세요");
-        		$("#proName-result").css("color","red");      		
-        	}else{
-        		$("#proName-result").text("");
-        	}        	
-        	
+              $("#proName-result").text("100자 이하로 입력하세요");
+              $("#proName-result").css("color","red");            
+           }else{
+              $("#proName-result").text("");
+           }           
+           
         });
         
         
         $(()=>{
-        	$("#floatingTextarea2").keyup(e=>{
-            	 const length = $(e.target).val().length;
-            	 if(length>600){
-            		 temp = $(e.target).val().substring(0,598);
-            		 $(e.target).val(temp);
-            	 }
-            	 $("#proExplain-result").text(length+"/600");
+           $("#floatingTextarea2").keyup(e=>{
+                const length = $(e.target).val().length;
+                if(length>600){
+                   temp = $(e.target).val().substring(0,598);
+                   $(e.target).val(temp);
+                }
+                $("#proExplain-result").text(length+"/600");
             });
-        	
-        	
-        	$("#close-project").click(e=>{
-        		$("#proName_").val("");
-        		$("#floatingTextarea2").val("");
-        		$("#proExplain-result").text("");
-        	});
-        	
-        	
+           
+           
+           $("#close-project").click(e=>{
+              $("#proName_").val("");
+              $("#floatingTextarea2").val("");
+              $("#proExplain-result").text("");
+           });
+           
+           
         });
         
         var d = new Date();
@@ -280,5 +282,5 @@ window.addEventListener('DOMContentLoaded', event => {
            leaveTime.innerText = d.getHours()+":"+d.getMinutes();
         } //퇴근시간
         
-		
+      
         </script>
