@@ -9,6 +9,7 @@ import static com.help.common.JDBCTemplate.commit;
 import static com.help.common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.Map;
@@ -47,6 +48,14 @@ public class ProjectService {
 		int joinNum=dao.joinProjectNumber(conn,join,memId);
 		close(conn);
 		return joinNum;
+	}
+	public HashMap<Integer, Integer> selectJoinNumber(HashMap peopleNum){
+		//프로젝트 번호랑..임의의값 넘겨서 찾아올거임 .. 참가자수를
+		Connection conn=getConnection();
+		HashMap<Integer,Integer> result=dao.selectJoinNumber(conn,peopleNum);
+		close(conn);
+		return result;
+		
 	}
 
 	public int insertNormalContnet(NormalContent nc) {

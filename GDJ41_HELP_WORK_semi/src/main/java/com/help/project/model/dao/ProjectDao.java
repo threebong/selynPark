@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.List;
@@ -104,7 +105,29 @@ public class ProjectDao {
 		String sql=prop.getProperty("joinProjectNumber");
 		return joinNum;
 	}
-
+	public HashMap<Integer, Integer> selectJoinNumber(Connection conn,HashMap<Integer,Integer> peopleNum){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		HashMap<Integer,Integer> result= peopleNum;
+		String sql=prop.getProperty("joinProjectNumber");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			for(Entry<Integer, Integer> entry: peopleNum.entrySet()) {
+				pstmt.setInt(1, entry.getKey());
+				rs=pstmt.executeQuery();
+				if(rs.next()) {
+					result.put(entry.getKey(), rs.getInt("COUNT(*)"));
+				}
+			}
+			
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 
 
 	public int insertNormalContnet(Connection conn, NormalContent nc) {

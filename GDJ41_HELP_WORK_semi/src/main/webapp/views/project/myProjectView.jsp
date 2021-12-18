@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="com.help.project.model.vo.Project"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -6,6 +7,9 @@
 <%
 	//로그인한 사원이 참여중인 모든 프로젝트 리스트
  List<Project> join=(List<Project>)request.getAttribute("joinPro");
+
+HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute("joinNum");
+
 
 %>
 <style>
@@ -103,7 +107,10 @@
 					<h4><%=p.getProName() %></h4>
 					<h6><%=p.getProExplain() %></h6>
 					<p>작성자: <%=p.getMemberId() %></p>
-					<h6>참여인원</h6>
+					
+					
+					<h6>참여인원 : <%=joinNum.get(p.getProjectNo()) %></h6>
+					
 				</div>
 
 				<%

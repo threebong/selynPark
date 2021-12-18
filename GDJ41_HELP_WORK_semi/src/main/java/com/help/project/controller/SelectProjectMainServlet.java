@@ -2,6 +2,7 @@ package com.help.project.controller;
 
 import java.io.IOException;
 import java.sql.Array;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -55,6 +56,14 @@ public class SelectProjectMainServlet extends HttpServlet {
 //		}
 		//로그인한 사원이 참가한 프로젝트의..참여자 숫자 구하기
 	//	int joinNum=new ProjectService().joinProjectNumber(people,memId);
+		
+		HashMap<Integer, Integer> peopleNum= new HashMap<>(join.size());//
+		for(int i=0;i<join.size();i++) {
+			peopleNum.put(join.get(i).getProjectNo(),i);//프로젝트번호,임의의값들 추가
+		}
+		HashMap<Integer,Integer> numResult=new ProjectService().selectJoinNumber(peopleNum);
+		request.setAttribute("joinNum",numResult);//키값:플젝번호 밸류:참여자수
+		
 		
 		
 		request.getRequestDispatcher("/views/project/myProjectView.jsp").forward(request, response);
