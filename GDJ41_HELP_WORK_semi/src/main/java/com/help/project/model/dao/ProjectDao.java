@@ -87,7 +87,7 @@ public class ProjectDao {
 						.proIsActive(rs.getString("PRO_ISACTIVE"))
 						.proDate(rs.getDate("PRO_DATE"))
 						.build();
-				System.out.print(p);
+				
 				result.add(p);
 			}
 		}catch(SQLException e) {
@@ -159,7 +159,7 @@ public class ProjectDao {
 
 
 
-	public int insertNormalContentFile(Connection conn, List<Map<String, Object>> fileList) {
+	public int insertNormalContentFile(Connection conn, List<Map<String, Object>> fileList, int normalContNo) {
 
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -171,11 +171,12 @@ public class ProjectDao {
 			for(int i =0; i<fileList.size();i++) {
 				pstmt = conn.prepareStatement(sql);
 								
-					pstmt.setString(1,(String)fileList.get(i).get("oriName"));
-					pstmt.setString(2,(String)fileList.get(i).get("newFileName"));
-					pstmt.setString(3,(String)fileList.get(i).get("exts"));
-					pstmt.setString(4,(String)fileList.get(i).get("filePath"));
-			
+					pstmt.setInt(1, normalContNo);
+					pstmt.setString(2,(String)fileList.get(i).get("oriName"));
+					pstmt.setString(3,(String)fileList.get(i).get("newFileName"));
+					pstmt.setString(4,(String)fileList.get(i).get("exts"));
+					pstmt.setString(5,(String)fileList.get(i).get("filePath"));
+				
 				pstmt.executeUpdate();
 			}
 			
@@ -193,6 +194,133 @@ public class ProjectDao {
 		}else {
 			return 0;	
 		}
+	}
+
+
+
+	public Project selectProjectNewinsert(Connection conn) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectProjectNewinsert");
+		Project p = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				p = Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proCommonYn(rs.getString("PRO_COMMON_YN"))
+						.proIsActive(rs.getString("PRO_ISACTIVE"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.build();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return p;
+	}
+
+
+
+	public int insertProMemberCreator(Connection conn, Project pinfo) {
+		
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertProMemberCreator");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pinfo.getProjectNo());
+			pstmt.setString(2, pinfo.getMemberId());
+			
+			result = pstmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+
+	public Project selectProjectOne(Connection conn, int projectNo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectProjectOne");
+		Project p = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, projectNo);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				p = Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proCommonYn(rs.getString("PRO_COMMON_YN"))
+						.proIsActive(rs.getString("PRO_ISACTIVE"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.build();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return p;
+	}
+
+
+
+	public int selectNormalConNo(Connection conn, NormalContent nc) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectNormalConNo");
+		int normalNo = 0;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, nc.getProjectNo());
+			pstmt.setString(2, nc.getMemberId());
+			pstmt.setString(3,nc.getNormalContentTitle());
+			pstmt.setString(4, nc.getNormalContentContent());
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				normalNo = rs.getInt("NORMAL_CONTENT_NO");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return normalNo;
 	}
 
 }
