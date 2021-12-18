@@ -173,7 +173,7 @@ window.addEventListener('DOMContentLoaded', event => {
                         
                         <div class="sb-sidenav-menu-heading">MenuList</div>
 
-                        <a class="nav-link collapsed" href="<%=request.getContextPath()%>/work/SelectWorkMainView.do" data-bs-toggle="collapse"
+                        <a class="nav-link collapsed" href="<%=request.getContextPath() %>/work/SelectWorkMainView.do" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-align-justify"></i></div>
                             All Work

@@ -30,7 +30,6 @@ public class SelectWorkMainView extends HttpServlet {
 		//All Work버튼 누르면 화면전환 
 		System.out.println("화면전환?");
 		request.getRequestDispatcher("/views/work/workView.jsp").forward(request, response);
-
 	}
 
 	/**
