@@ -173,7 +173,7 @@ window.addEventListener('DOMContentLoaded', event => {
                         
                         <div class="sb-sidenav-menu-heading">MenuList</div>
 
-                        <a class="nav-link collapsed" href="<%=request.getContextPath() %>/work/SelectWorkMainView.do" >
+                        <a class="nav-link collapsed" href="<%=request.getContextPath() %>/work/SelectWorkMainView.do?logId=<%=loginMember.getMemberId()%>" >
                             <div class="sb-nav-link-icon"><i class="fas fa-align-justify"></i></div>
                             All Work
                         </a>

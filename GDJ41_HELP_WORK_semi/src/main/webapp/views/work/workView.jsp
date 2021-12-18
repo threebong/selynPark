@@ -1,6 +1,17 @@
+<%@page import="java.util.Map.Entry"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.help.work.model.vo.Work"%>
+<%@page import="com.help.project.model.vo.Project"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
+<%
+//로그인한 아이디가 속한 프로젝트들 	
+List<Project> project = (List<Project>) request.getAttribute("logProject");
+//최신 게시글 5개만가져옴
+HashMap<Integer,List<Work>> works=(HashMap<Integer,List<Work>>)request.getAttribute("workInPro");
+%>
 <style>
 .opSearch {
 	width: 500px;
@@ -41,8 +52,7 @@
 
 		<div>
 			<div class="input-group mb-3 opSearch">
-				<select class="form-select " id="working"
-					name="search-work-op">
+				<select class="form-select " id="working" name="search-work-op">
 					<option selected>진행 상황</option>
 					<option value="request">요청</option>
 					<option value="ing">진행</option>
@@ -50,47 +60,55 @@
 					<option value="done">완료</option>
 					<option value="hold">보류</option>
 				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건1</label>
-				
-				<select class="form-select " id="priority"
-					name="search-work-op">
+
+				<select class="form-select " id="priority" name="search-work-op">
 					<option selected>우선순위</option>
 					<option value="1">긴급</option>
 					<option value="2">높음</option>
 					<option value="3">보통</option>
 					<option value="4">낮음</option>
 				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건2</label>
-				
+
 			</div>
 		</div>
 
 		<!-- 출력란 -->
 		<div>
-			<table class="table">
-				<h4>프로젝트 이름</h4>
-				<thead>
-					<tr>
-						<th scope="col">No</th>
-						<th scope="col">상태</th>
-						<th scope="col">우선순위</th>
-						<th scope="col">제목</th>
-						<th scope="col">담당자</th>
-						<th scope="col">등록일?수정일?</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th scope="row">1</th>
-						<td>요청</td>
-						<td>긴급</td>
-						<td>이거 출력하세요</td>
-						<td>박세린</td>
-						<td>21-12-19</td>
-					</tr>
-					
-				</tbody>
-			</table>
+		<% for(Project p:project){%>
+			<div>
+				<table class="table">
+					<h4><%=p.getProName() %>
+					</h4>
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">상태</th>
+							<th scope="col">우선순위</th>
+							<th scope="col">제목</th>
+							<th scope="col">담당자</th>
+							<th scope="col">등록일?수정일?</th>
+						</tr>
+					</thead>
+					<tbody>
+					<%for (Entry<Integer, List<Work>> entry: works.entrySet()){
+						if(entry.getKey()==p.getProjectNo()){
+							for(Work w: entry.getValue()){
+						%>
+						<tr>
+							<th scope="row"><%=w.getWorkNo() %></th>
+							<td><%=w.getWorkIng() %></td>
+							<td><%=w.getWorkRank() %></td>
+							<td><%=w.getWorkTitle() %></td>
+							<td><%=w.getMemberId() %></td>
+							<td><%=w.getWorkDate() %></td>
+						</tr>
+					<%} }}%>
+					</tbody>
+				</table>
 
 
+			</div>
+			<%} %>
 		</div>
 
 
