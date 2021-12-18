@@ -1,8 +1,12 @@
 package com.help.project.model.service;
 
+import com.help.member.model.vo.Member;
 import com.help.project.model.dao.ProjectDao;
 import com.help.project.model.vo.NormalContent;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProMember;
+import com.help.project.model.vo.ProMemberJoinMember;
+
 import static com.help.common.JDBCTemplate.getConnection;
 import static com.help.common.JDBCTemplate.close;
 import static com.help.common.JDBCTemplate.commit;
@@ -122,6 +126,14 @@ public class ProjectService {
 		close(conn);
 
 		return normalNo;
+	}
+
+	public List<ProMemberJoinMember> selectProjectJoinMemberList(int projectNo) {
+		
+		Connection conn = getConnection();
+		List<ProMemberJoinMember> mList= dao.selectProjectJoinMemberList(conn,projectNo);
+		close(conn);
+		return mList;
 	}
 
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class proMember {//프로젝트에 참여하 사람들
+public class ProMember {//프로젝트에 참여하 사람들
 	private int proMemberNo;//참여자번호
 	private int projectNo;//프로젝트번호
 	private String memberId;//사원아이디

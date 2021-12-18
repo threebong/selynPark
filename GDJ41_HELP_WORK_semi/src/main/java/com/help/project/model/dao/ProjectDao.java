@@ -19,8 +19,11 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import static com.help.common.JDBCTemplate.close;
 
+import com.help.member.model.vo.Member;
 import com.help.project.model.vo.NormalContent;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProMember;
+import com.help.project.model.vo.ProMemberJoinMember;
 
 
 public class ProjectDao {
@@ -321,6 +324,51 @@ public class ProjectDao {
 		}
 		
 		return normalNo;
+	}
+
+
+
+	//프로젝트에 참여중인 사원 리스트
+	public List<ProMemberJoinMember> selectProjectJoinMemberList(Connection conn, int projectNo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ProMemberJoinMember> mList = new ArrayList();
+		ProMemberJoinMember m = null;
+		String sql = prop.getProperty("selectProjectJoinMemberList");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, projectNo);
+					
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				m = ProMemberJoinMember.builder()
+						.proMemberNo(rs.getInt("PRO_MEMBER_NO"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.isManager(rs.getString("IS_MANAGER"))
+						.deptCode(rs.getString("DEPT_CODE"))
+						.positionCode(rs.getString("POSITION_CODE"))
+						.memberPhone(rs.getString("MEMBER_PHONE"))
+						.memberProfile(rs.getString("MEMBER_PROFILE"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.memberUseYn(rs.getString("MEMBER_USE_YN"))
+						.build();
+				mList.add(m);
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return mList;
 	}
 
 }
