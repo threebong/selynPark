@@ -28,7 +28,6 @@ public class SelectWorkMainView extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//All Work버튼 누르면 화면전환 
-		System.out.println("화면전환?");
 		request.getRequestDispatcher("/views/work/workView.jsp").forward(request, response);
 	}
 
