@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.Project;
-import com.help.project.model.vo.ProMember;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 /**

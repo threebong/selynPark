@@ -22,7 +22,6 @@ import static com.help.common.JDBCTemplate.close;
 import com.help.member.model.vo.Member;
 import com.help.project.model.vo.NormalContent;
 import com.help.project.model.vo.Project;
-import com.help.project.model.vo.ProMember;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 
