@@ -195,4 +195,64 @@ public class ProjectDao {
 		}
 	}
 
+
+
+	public Project selectProjectNewinsert(Connection conn) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectProjectNewinsert");
+		Project p = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				p = Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proCommonYn(rs.getString("PRO_COMMON_YN"))
+						.proIsActive(rs.getString("PRO_ISACTIVE"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.build();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return p;
+	}
+
+
+
+	public int insertProMemberCreator(Connection conn, Project pinfo) {
+		
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertProMemberCreator");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pinfo.getProjectNo());
+			pstmt.setString(2, pinfo.getMemberId());
+			
+			result = pstmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }
