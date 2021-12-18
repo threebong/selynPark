@@ -159,7 +159,7 @@ window.addEventListener('DOMContentLoaded', event => {
                             
                         </a>
                         <div class="sb-sidenav-menu-heading">MY PROJECT</div>
-                        <a class="nav-link" href="<%=request.getContextPath()%>/project/select.do">
+                        <a class="nav-link" href="<%=request.getContextPath()%>/project/selectProjectMain.do">
                             <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
                             </div>
                             My Project List

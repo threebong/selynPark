@@ -104,7 +104,7 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 				for (Project p:join) {
 				%>
 
-				<div class="project_content_ing" style="cursor:pointer;"onclick="location.href='<%=request.getContextPath()%>/project/detailView.do'">
+				<div class="project_content_ing" style="cursor:pointer;"onclick="location.href='<%=request.getContextPath()%>/project/selectProjectDetailView.do'">
 					<h4><%=p.getProjectNo() %></h4>
 					<h4><%=p.getProName() %></h4>
 					<h6><%=p.getProExplain() %></h6>
