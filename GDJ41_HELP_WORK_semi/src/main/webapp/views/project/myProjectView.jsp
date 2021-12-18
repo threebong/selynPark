@@ -7,7 +7,7 @@
 <%
 	//로그인한 사원이 참여중인 모든 프로젝트 리스트
  List<Project> join=(List<Project>)request.getAttribute("joinPro");
-
+//키값:플젝번호 밸류:참여자수
 HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute("joinNum");
 
 
@@ -59,8 +59,7 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 				<select name="search-project-op">
 					<option value="projectName">프로젝트 이름</option>
 					<option value="">프로젝트 생성자</option>
-					<option value="">글쓴이</option>
-					<option value="">업무번호</option>
+					<option value="">프로젝트 번호</option>
 					<option value="">날짜</option>
 				</select> <input type="text" class="form-control"
 					aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -104,6 +103,7 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 				%>
 
 				<div class="project_content_ing" style="cursor:pointer;"onclick="location.href='<%=request.getContextPath()%>/project/detailView.do'">
+					<h4><%=p.getProjectNo() %></h4>
 					<h4><%=p.getProName() %></h4>
 					<h6><%=p.getProExplain() %></h6>
 					<p>작성자: <%=p.getMemberId() %></p>

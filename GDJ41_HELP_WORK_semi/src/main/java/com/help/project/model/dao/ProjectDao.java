@@ -106,6 +106,7 @@ public class ProjectDao {
 		return joinNum;
 	}
 	public HashMap<Integer, Integer> selectJoinNumber(Connection conn,HashMap<Integer,Integer> peopleNum){
+		//키:프로젝트번호 밸류:해당프로젝트 참가자수 해서 반환함 
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		HashMap<Integer,Integer> result= peopleNum;
