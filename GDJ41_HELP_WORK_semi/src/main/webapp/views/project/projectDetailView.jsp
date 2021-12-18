@@ -3,13 +3,17 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
 <%
+	
 	Project p = (Project)request.getAttribute("projectInfo");
+
+	System.out.println("p정보 : "+p);
 %>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <main>
 
 
 <!-- 프로젝트정보 -->
+
 <input type="hidden" id="memberId" value="<%=loginMember.getMemberId()%>">
 <input type="hidden" id="projectNo" value="<%=p.getProjectNo()%>">
 

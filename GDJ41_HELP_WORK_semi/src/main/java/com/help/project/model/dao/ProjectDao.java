@@ -87,7 +87,7 @@ public class ProjectDao {
 						.proIsActive(rs.getString("PRO_ISACTIVE"))
 						.proDate(rs.getDate("PRO_DATE"))
 						.build();
-				System.out.print(p);
+				
 				result.add(p);
 			}
 		}catch(SQLException e) {
@@ -207,7 +207,7 @@ public class ProjectDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs=pstmt.executeQuery();
-			while(rs.next()) {
+			if(rs.next()) {
 				p = Project.builder()
 						.projectNo(rs.getInt("PROJECT_NO"))
 						.memberId(rs.getString("MEMBER_ID"))
@@ -253,6 +253,41 @@ public class ProjectDao {
 		}
 		
 		return result;
+	}
+
+
+
+	public Project selectProjectOne(Connection conn, int projectNo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectProjectOne");
+		Project p = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, projectNo);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				p = Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proCommonYn(rs.getString("PRO_COMMON_YN"))
+						.proIsActive(rs.getString("PRO_ISACTIVE"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.build();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return p;
 	}
 
 }

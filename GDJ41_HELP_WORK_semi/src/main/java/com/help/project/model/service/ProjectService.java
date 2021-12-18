@@ -110,4 +110,15 @@ public class ProjectService {
 
 	}
 
+	public Project selectProjectOne(int projectNo) {
+		
+		Connection conn = getConnection();
+
+		Project pinfo = dao.selectProjectOne(conn,projectNo);
+
+		close(conn);
+
+		return pinfo;
+	}
+
 }
