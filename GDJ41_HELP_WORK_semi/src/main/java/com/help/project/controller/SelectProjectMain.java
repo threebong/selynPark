@@ -45,12 +45,14 @@ public class SelectProjectMain extends HttpServlet {
 		
 		String memId=loginMember.getMemberId();//로그인한 아이디
 		List<Project> join= new ProjectService().selectJoin(memId);
-		int[] people=new int [join.size()];
-		
-		for(int i=0;i<join.size();i++) {
-			people[i]=join.get(i).getProjectNo();//로그인한 사람이 참가한 프로젝트번호들 구하기
-		}
 		request.setAttribute("joinPro", join);
+
+		//-----------------------------------------------참여자수 아직안함
+//		int[] people=new int [join.size()];
+//		
+//		for(int i=0;i<join.size();i++) {
+//			people[i]=join.get(i).getProjectNo();//로그인한 사람이 참가한 프로젝트번호들 구하기
+//		}
 		//로그인한 사원이 참가한 프로젝트의..참여자 숫자 구하기
 	//	int joinNum=new ProjectService().joinProjectNumber(people,memId);
 		

@@ -102,7 +102,7 @@
 				<div class="project_content_ing">
 					<h4><%=p.getProName() %></h4>
 					<h6><%=p.getProExplain() %></h6>
-					<p><%=p.getMemberId() %></p>
+					<p>작성자: <%=p.getMemberId() %></p>
 					<h6>참여인원</h6>
 				</div>
 
