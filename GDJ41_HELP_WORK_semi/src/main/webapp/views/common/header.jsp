@@ -65,17 +65,12 @@ window.addEventListener('DOMContentLoaded', event => {
         <span id="proExplain-result"></span>
       </div>
         <div class="form-check form-switch" style="padding: 0px;">
-<<<<<<< HEAD
-           <label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
-           <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
-           <input type="hidden" name="memberId" value="admin">
-      </div>
-=======
+
   			<label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
   			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
   			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
 		</div>
->>>>>>> branch 'master' of https://github.com/LeeOhyeon/help_work.git
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>

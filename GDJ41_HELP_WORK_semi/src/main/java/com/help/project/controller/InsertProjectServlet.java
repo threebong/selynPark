@@ -44,7 +44,7 @@ public class InsertProjectServlet extends HttpServlet {
 		}else {
 			System.out.println("프로젝트 생성 실패");
 		}
-		
+		request.getRequestDispatcher("/project/select.do").forward(request, response);
 		
 	}
 
