@@ -1,6 +1,8 @@
 package com.help.project.controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProMember;
+import com.help.project.model.vo.ProMemberJoinMember;
 
 /**
  * Servlet implementation class SelectProjectDetailViewToList
@@ -33,6 +37,12 @@ public class SelectProjectDetailViewToList extends HttpServlet {
 		int projectNo = Integer.parseInt(request.getParameter("projectNo"));
 
 		Project pinfo = new ProjectService().selectProjectOne(projectNo);
+		
+		//해당 프로젝트에 참여중인 사원 리스트
+		List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
+	
+		request.setAttribute("ProMemberJoinMember", mList);
+		
 		request.setAttribute("projectInfo", pinfo);
 				
 		request.getRequestDispatcher("/views/project/projectDetailView.jsp").forward(request, response);
