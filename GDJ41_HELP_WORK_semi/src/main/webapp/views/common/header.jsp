@@ -108,26 +108,28 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
-                          <a class="nav-link" href="#" onclick="attTime();">
+                        
+                        <!-- 멤버ID랑 함께 가져가야함 -->
+                          <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertAttTime.do" onclick="attTime();">
                             <div class="sb-nav-link-icon" style="color:green; "><i class="fas fa-battery-full"></i>
                             </div>
-                            attendance&nbsp;<input type="button" value="attTime" style="display:none;"/>
+                            attendance&nbsp;<input type="button" value="attTime"style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
                                     <div id="attTime"></div>
                                 </span>
                             </div>
                         </a>
-                        <a class="nav-link" href="#" onclick="leaveTime();">
+                        <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertLeaveTime.do" onclick="leaveTime();">
                             <div class="sb-nav-link-icon" style="color:rgb(255, 38, 0);"><i class="fas fa-battery-empty"></i>
                             </div>
-                            attendance&nbsp;<input type="button" value="leaveTime" style="display:none;"/>
+                            leave work&nbsp;<input type="button" style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
-                                    <div id="leaveTime"></div>
+                                    <div id="leaveTime" value="leaveTime"></div>
                                 </span>
                             </div>
                         </a>
                         <a class="nav-link" href="<%=request.getContextPath()%>/attendance/attendanceList.do">
-                        <%-- ?userId=<%=loginMember!=null?loginMember.getUserId():""%>  이런식으로 do뒤에 붙어야함--%>
+                        <%-- ?memberId=<%=loginMember!=null?loginMember.getMemberId():""%>  이런식으로 do뒤에 붙어야함--%>
                             <div class="sb-nav-link-icon" ><i class="fas fa-business-time"></i>
                             </div>
                             My A/L Information
