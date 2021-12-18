@@ -47,7 +47,7 @@
       </div>
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="workTitle">
-      <span id="titleResult"></span>
+      <span id="work_titleResult"></span>
       <div id="work_Ing_container">
       	<span><i class="fas fa-history"></i></span>
       	<button type="button" class="btn btn-outline-primary">요청</button>
@@ -94,7 +94,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_content">닫기</button>
-        <button type="button" class="btn btn-primary" id="nomarl_submit_Btn">등록</button>
+        <button type="button" class="btn btn-primary" id="work_submit_Btn">등록</button>
       </div>
     </div>
   </div>
@@ -195,6 +195,30 @@
 	$("#insertWork").click(e=>{
 		$("#insertWork_").click();	
 	});
+	
+	const checkWorkContent=()=>{
+		let worktitle = $("#workTitle").val();
+		if(title.trim().length == 0){
+			$("#workTitle").focus();
+			$("#work_titleResult").text("제목을 입력하세요").css("color","red");
+			return false;
+		}
+	}
+	
+	$("#work_submit_Btn").click(e=>{
+		
+		let workTitle =
+		let workIng=
+		let workAddMember=
+		let workStart=
+		let workEnd
+		let workRank
+		let workContent
+		
+		
+		
+	});
+	
 
 </script>
 

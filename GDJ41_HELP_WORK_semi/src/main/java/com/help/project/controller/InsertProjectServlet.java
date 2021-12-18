@@ -41,10 +41,20 @@ public class InsertProjectServlet extends HttpServlet {
 		
 		if(result>0) {
 			System.out.println("프로젝트 생성 완료");
+			
+			//프로젝트 생성이 완료되면 해당 프로젝트 정보를 받아온당
+			Project pinfo = new ProjectService().selectProjectOne();
+			request.setAttribute("projectInfo", p);
+			
+			
+			
+			request.getRequestDispatcher("/project/selectProjectDetailView.do").forward(request, response);
 		}else {
 			System.out.println("프로젝트 생성 실패");
+			request.getRequestDispatcher("/project/selectProjectMain.do").forward(request, response);
 		}
-		request.getRequestDispatcher("/project/select.do").forward(request, response);
+	
+		
 		
 	}
 

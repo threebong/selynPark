@@ -19,7 +19,7 @@ import com.help.project.model.vo.Project;
 /**
  * Servlet implementation class SelectProjectMain
  */
-@WebServlet("/project/select.do")
+@WebServlet("/project/selectProjectMain.do")
 public class SelectProjectMainServlet extends HttpServlet {
 	//My Project List버튼 누르면 들어오는 첫번째 화면 
 	//로그인 후 들어오는 첫번째 화면 

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class SelectProjectDetailViewServlet
  */
-@WebServlet("/project/detailView.do")
+@WebServlet("/project/selectProjectDetailView.do")
 public class SelectProjectDetailViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

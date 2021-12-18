@@ -87,6 +87,12 @@ public class ProjectService {
 		return result;
 	}
 
+
+	public Project selectProjectOne() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 	
