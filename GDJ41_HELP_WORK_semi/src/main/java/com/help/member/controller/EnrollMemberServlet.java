@@ -1,25 +1,23 @@
 package com.help.member.controller;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LogoutMemberServlet
+ * Servlet implementation class EnrollMemberServlet
  */
-@WebServlet("/member/logoutMember.do")
-public class LogoutMemberServlet extends HttpServlet {
+@WebServlet("/member/enrollMember.do")
+public class EnrollMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LogoutMemberServlet() {
+    public EnrollMemberServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,12 +27,12 @@ public class LogoutMemberServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session=request.getSession(false);
-		if(session!=null) {
-			session.invalidate();
-		}
+		request.setCharacterEncoding("UTF-8");
 		
-		response.sendRedirect(request.getContextPath());
+		request.getRequestDispatcher("/views/member/enrollMember.jsp").forward(request, response);
+		
+		
+		
 		
 	}
 

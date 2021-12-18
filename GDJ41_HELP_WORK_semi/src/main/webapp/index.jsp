@@ -106,10 +106,25 @@
 	  font-size: 1.2em;
 	  letter-spacing: 2px;
 	}
+	.enrollMember {
+	  margin-top: 50px;
+	  width: 80%;
+	}
+	.enrollMember input{
+	  width: 100%;
+	  height: 50px;
+	  border: 0;
+	  outline: none;
+	  border-radius: 40px;
+	  background: linear-gradient(to left, rgb(255, 77, 46), rgb(255, 155, 47));
+	  color: white;
+	  font-size: 1.2em;
+	  letter-spacing: 2px;
+	}
 
 </style>
 <main>
-	<form class="wrap" action="<%=request.getContextPath()%>/memberLogin.do" method="post">
+	<form class="wrap" action="<%=request.getContextPath()%>/member/memberLogin.do" method="post">
         <div class="login">
             <h2>Log-in</h2>
             <div class="login_id" id="login-div">
@@ -118,7 +133,8 @@
             </div>
             <div class="login_etc">
                 <div class="checkbox">
-                	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>> 아이디 저장
+                	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>>
+                	<label for="saveId">아이디저장</label>
                 </div>
             </div>
             <div class="login_pw">
@@ -136,7 +152,12 @@
             <div class="submit">
                 <input type="submit" value="로그인">
             </div>
+	        <div class="enrollMember">
+		        <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/member/enrollMember.do')">
+	        </div>
         </div>
-        <%-- <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/memberEnroll.do')" --%>
     </form>
 </main>
+<script>
+
+</script>
