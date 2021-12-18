@@ -267,6 +267,7 @@ window.addEventListener('DOMContentLoaded', event => {
               $("#proName_").val("");
               $("#floatingTextarea2").val("");
               $("#proExplain-result").text("");
+              
            });
            
            

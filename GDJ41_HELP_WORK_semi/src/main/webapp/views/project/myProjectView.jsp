@@ -5,8 +5,10 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
 <%
-	//로그인한 사원이 참여중인 모든 프로젝트 리스트
- List<Project> join=(List<Project>)request.getAttribute("joinPro");
+
+
+//로그인한 사원이 참여중인 모든 프로젝트 리스트
+List<Project> join=(List<Project>)request.getAttribute("joinPro");
 //키값:플젝번호 밸류:참여자수
 HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute("joinNum");
 
