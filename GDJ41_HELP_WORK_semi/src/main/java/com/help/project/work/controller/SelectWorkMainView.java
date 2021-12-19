@@ -1,4 +1,4 @@
-package com.help.work.controller;
+package com.help.project.work.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.Project;
-import com.help.work.model.service.WorkService;
-import com.help.work.model.vo.Work;
+import com.help.project.work.model.sevice.WorkService;
+import com.help.project.work.model.vo.Work;
 
 /**
  * Servlet implementation class SelectWorkMainView
