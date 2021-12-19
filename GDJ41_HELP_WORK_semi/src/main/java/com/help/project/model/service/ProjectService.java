@@ -1,8 +1,6 @@
 package com.help.project.model.service;
 
-import com.help.member.model.vo.Member;
 import com.help.project.model.dao.ProjectDao;
-import com.help.project.model.vo.NormalContent;
 import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProMemberJoinMember;
 
@@ -51,34 +49,7 @@ public class ProjectService {
 
 	}
 
-	public int insertNormalContnet(NormalContent nc) {
-		Connection conn = getConnection();
-		int result = dao.insertNormalContnet(conn, nc);
-
-		if (result > 0) {
-			commit(conn);
-		} else {
-			rollback(conn);
-		}
-		close(conn);
-
-		return result;
-	}
-
-	public int insertNormalContentFile(List<Map<String, Object>> fileList, int normalContNo) {
-		Connection conn = getConnection();
-
-		int result = dao.insertNormalContentFile(conn, fileList,normalContNo);
-
-		if (result > 0) {
-			commit(conn);
-		} else {
-			rollback(conn);
-		}
-		close(conn);
-
-		return result;
-	}
+	
 
 	public Project selectProjectNewinsert() {
 
@@ -117,15 +88,7 @@ public class ProjectService {
 	}
 	
 
-	public int selectNormalConNo(NormalContent nc) {
-		Connection conn = getConnection();
-
-		int normalNo = dao.selectNormalConNo(conn,nc);
-
-		close(conn);
-
-		return normalNo;
-	}
+	
 
 	public List<ProMemberJoinMember> selectProjectJoinMemberList(int projectNo) {
 		

@@ -20,8 +20,8 @@ import java.util.Properties;
 import static com.help.common.JDBCTemplate.close;
 
 import com.help.member.model.vo.Member;
-import com.help.project.model.vo.NormalContent;
 import com.help.project.model.vo.Project;
+import com.help.project.normal.model.vo.NormalContent;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 
@@ -133,72 +133,7 @@ public class ProjectDao {
 	}
 
 
-	public int insertNormalContnet(Connection conn, NormalContent nc) {
-
-		PreparedStatement pstmt = null;
-		int result = 0;
-		String sql = prop.getProperty("insertNormalContnet");
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setInt(1, nc.getProjectNo());
-			pstmt.setString(2, nc.getMemberId());
-			pstmt.setString(3, nc.getNormalContentTitle());
-			pstmt.setString(4, nc.getNormalContentContent());
-			
-			result =pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			close(pstmt);
-		}
-		
-		return result;
-	}
-
-
-
-	public int insertNormalContentFile(Connection conn, List<Map<String, Object>> fileList, int normalContNo) {
-
-		PreparedStatement pstmt = null;
-		int result = 0;
-		String sql = prop.getProperty("insertNormalContentFile");
-
-		
-		try {
-			
-			for(int i =0; i<fileList.size();i++) {
-				pstmt = conn.prepareStatement(sql);
-								
-					pstmt.setInt(1, normalContNo);
-					pstmt.setString(2,(String)fileList.get(i).get("oriName"));
-					pstmt.setString(3,(String)fileList.get(i).get("newFileName"));
-					pstmt.setString(4,(String)fileList.get(i).get("exts"));
-					pstmt.setString(5,(String)fileList.get(i).get("filePath"));
-				
-				pstmt.executeUpdate();
-			}
-			
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			close(pstmt);
-		}
-		
-		if(result == fileList.size()) {
-			return 1;
-		}else {
-			return 0;	
-		}
-	}
-
-
+	
 
 	public Project selectProjectNewinsert(Connection conn) {
 		
@@ -295,35 +230,6 @@ public class ProjectDao {
 
 
 
-	public int selectNormalConNo(Connection conn, NormalContent nc) {
-		
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = prop.getProperty("selectNormalConNo");
-		int normalNo = 0;
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, nc.getProjectNo());
-			pstmt.setString(2, nc.getMemberId());
-			pstmt.setString(3,nc.getNormalContentTitle());
-			pstmt.setString(4, nc.getNormalContentContent());
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				normalNo = rs.getInt("NORMAL_CONTENT_NO");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			close(rs);
-			close(pstmt);
-		}
-		
-		return normalNo;
-	}
 
 
 

@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="com.help.member.model.vo.Member" %>
+<%@ page import="com.help.member.model.vo.Member, com.help.attendance.model.vo.Attendance
+,java.text.SimpleDateFormat" %>
 <% 
    Member loginMember=(Member)session.getAttribute("loginMember");
+	Attendance a = (Attendance)request.getAttribute("outputAttTime");
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 %>
 <!DOCTYPE html>
 <html>
@@ -42,6 +45,7 @@ window.addEventListener('DOMContentLoaded', event => {
 });
 
 </script>
+
    
 </head>
 
@@ -133,26 +137,27 @@ window.addEventListener('DOMContentLoaded', event => {
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
-                          <a class="nav-link" href="#" onclick="attTime();">
+                        
+                          <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertAttTime.do" onclick="attTime();">
                             <div class="sb-nav-link-icon" style="color:green; "><i class="fas fa-battery-full"></i>
                             </div>
-                            attendance&nbsp;<input type="button" value="attTime" style="display:none;"/>
+                            attendance&nbsp;<input type="button" value="attTime"style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
                                     <div id="attTime"></div>
                                 </span>
                             </div>
                         </a>
-                        <a class="nav-link" href="#" onclick="leaveTime();">
+                        <!-- </form> -->
+                        <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertLeaveTime.do" onclick="leaveTime();">
                             <div class="sb-nav-link-icon" style="color:rgb(255, 38, 0);"><i class="fas fa-battery-empty"></i>
                             </div>
-                            attendance&nbsp;<input type="button" value="leaveTime" style="display:none;"/>
+                            leave work&nbsp;<input type="button" style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
-                                    <div id="leaveTime"></div>
+                                    <div id="leaveTime" value="leaveTime"></div>
                                 </span>
                             </div>
                         </a>
                         <a class="nav-link" href="<%=request.getContextPath()%>/attendance/attendanceList.do">
-                        <%-- ?userId=<%=loginMember!=null?loginMember.getUserId():""%>  이런식으로 do뒤에 붙어야함--%>
                             <div class="sb-nav-link-icon" ><i class="fas fa-business-time"></i>
                             </div>
                             My A/L Information
@@ -273,10 +278,11 @@ window.addEventListener('DOMContentLoaded', event => {
         });
         
         var d = new Date();
-        const attTime=()=>{
+         const attTime=()=>{
              var attTime = document.getElementById('attTime');
              attTime.innerText = d.getHours()+":"+d.getMinutes();
         } //출근시간
+     
         const leaveTime=()=>{
            var leaveTime = document.getElementById('leaveTime');
            leaveTime.innerText = d.getHours()+":"+d.getMinutes();

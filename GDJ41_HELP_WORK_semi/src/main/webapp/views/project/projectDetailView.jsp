@@ -17,6 +17,13 @@
 	}
 %>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
+<style>
+.form-select{
+		width: 150px;
+		
+	}
+	
+</style>
 <main>
 
 <!-- 프로젝트정보 -->
@@ -65,15 +72,16 @@
       <span id="work_titleResult"></span>
       <div id="work_Ing_container">
       	<span><i class="fas fa-history"></i></span>
-      	<button type="button" class="btn btn-outline-primary">요청</button>
-      	<button type="button" class="btn btn-outline-success">진행</button>
-      	<button type="button" class="btn btn-outline-warning">피드백</button>
-      	<button type="button" class="btn btn-outline-secondary">보류</button>
-      	<button type="button" class="btn btn-outline-primary">완료</button>
+      	<input type="radio" value="요청" id="call" name="work_ing"><label for="call">요청</label>
+      	<input type="radio" value="진행" id="ing" name="work_ing"><label for="ing">진행</label>
+        <input type="radio" value="피드백" id="feedback" name="work_ing"><label for="feedback">피드백</label>
+      	<input type="radio" value="보류" id="hold" name="work_ing"><label for="hold">보류</label>
+      	<input type="radio"value="완료" id="complete" name="work_ing"><label for="complete">완료</label>
       </div>
       <div id="work_addMember_container">
       	<span><i class="fas fa-user"></i></span>
-      		<select class="form-select" id="work_addMember"></select>
+      	<div><select class="form-select" id="work_addMember"></select></div>
+      	<div id="work_addMember_area"></div>
       </div>
       <div id="workStart_container">
       	<span><i class="fas fa-calendar-plus"></i></span>
@@ -85,12 +93,10 @@
       </div>
       <div id="workRank_container">
      	 <span><i class="fas fa-flag"></i></span>
-      	 <select class="form-select" id="workRank">
-			  <option value="1" selected="selected">Open this select menu</option>
-			  <option value="1">One</option>
-			  <option value="2">Two</option>
-			  <option value="3">Three</option>
-		</select>
+      	 <input type="radio" value="보통" id="normal" name="work_rank"><label for="normal">보통</label>
+      	 <input type="radio" value="낮음" id="row" name="work_rank"><label for="row">낮음</label>
+      	 <input type="radio" value="긴급" id="emergency" name="work_rank"><label for="emergency">긴급</label>
+      	 <input type="radio" value="높음" id="high" name="work_rank"><label for="high">높음</label>
       </div>
       
         <textarea class="form-control" placeholder="내용을 입력하세요" id="workContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
@@ -103,7 +109,7 @@
 		
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_content">닫기</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_work_content">닫기</button>
         <button type="button" class="btn btn-primary" id="work_submit_Btn">등록</button>
       </div>
     </div>
@@ -201,37 +207,121 @@
 			return false;
 		}
 	}
-	
-	//해당 프로젝트 참여자 리스트 .. 업무 작성시
-	
 		
+		//해당 프로젝트 참여자 리스트 .. 업무 작성시
 		const select = $("#work_addMember");
 		
-			
 		let memberName = new Array();
+		let selectedMember = new Array();
 		memberName = "<%=Arrays.toString(memberName)%>";
 		memberName = memberName.substring(1,memberName.length-1);
 		memberName = memberName.split(",");
 		
 		
-			for(let i=0; i<memberName.length;i++){
-				const option = $("<option>");
-				option.val(memberName[i].trim()).text(memberName[i].trim());
-				select.append(option);
+		for(let i=0; i<memberName.length;i++){
+			const option = $("<option>");
+			option.val(memberName[i].trim()).text(memberName[i].trim());
+			select.append(option);
+		}
+		
+		$(select).change(e=>{
+				
+			let span = $("<span>");
+			let selectMember = select.val();
+			span.text(selectMember);
+
+			for(let i =0; i<memberName.length;i++){
+				if(!selectedMember.includes(selectMember)){
+					selectedMember.push(selectMember);
+					break;
+				}
 			}
+			
+			
+			$("#work_addMember_area").append(span);	
+			
+			span.click(e=>{
+				span.remove();
+				
+				for(let i=0;i<memberName.length;i++){
+					if(selectedMember.includes(span.text())){
+						let spanVal = span.text();
+						selectedMember.splice(selectedMember.indexOf(spanVal),1);
+						break;
+					}
+				}
+			});
+			//최종 값 selectedMember에 있음
+			
+		});
+		
+		//시작 날짜 
+		let workStart;
+		$("#workStart").change(e=>{
+			workStart = $("#workStart").val();
+		});				
+		//마감 날짜
+		let workEnd;
+		$("#workEnd").change(e=>{
+			workEnd = $("#workEnd").val();
+		});
+		
+		//저장 버튼
+		$("#work_submit_Btn").click(e=>{	
+			//업무 제목
+			let workTitle = $("#workTitle").val();
+			
+			//업무 진행상황 값 가져오기
+			let workIngVal  = $("input[name=work_ing]:checked").val();
+			
+			//순위
+			let workRank = $("input[name=work_rank]:checked").val();
+			
+			//내용
+			let workContent = $("#workContent").val();
+			
+			//파일업로드
+			const frm = new FormData();
+			const fileInput = $("input[name=uploadWorkfile]");
+			for(let i=0; i<fileInput[0].files.length;i++){
+				frm.append("upfile"+i,fileInput[0].files[i]);
+				
+			}
+			
+			frm.append("workTitle", workTitle);
+			frm.append("workIng", workIngVal);
+			frm.append("workManagers",selectedMember);
+			frm.append("workStart", workStart);
+			frm.append("workEnd", workEnd);
+			frm.append("workRank", workRank);
+			frm.append("workContent", workContent);
+			
+		
+			
+			$.ajax({
+				url : "<%=request.getContextPath()%>/project/insertWorkContent.do",
+				type:"post",
+				data:frm,
+				processData:false,
+				contentType:false,
+				success:data=>{
+					$("#close_work_content").click();
+				},
+				error:(a)=>{
+					alert("실팽");
+				}
+				
+			});
+			
+			
+		});  
+
+			
 	
 	
- 	/* $("#work_submit_Btn").click(e=>{
-		
-		let workTitle = $("#workTitle").val();
-		let workIng= 
-		let workAddMember=
-		let workStart=
-		let workEnd=
-		let workRank=
-		let workContent=
-		
-	}); */
+	
+	
+	
 	
 
 </script>
