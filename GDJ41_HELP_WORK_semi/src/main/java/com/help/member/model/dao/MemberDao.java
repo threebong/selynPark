@@ -24,6 +24,7 @@ public class MemberDao {
 		}
 	}
 	
+	//로그인
 	public Member login(Connection conn,String userId,String password) {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -55,6 +56,7 @@ public class MemberDao {
 		return m;
 	}
 	
+	//id중복확인
 	public Member checkIdDuplicate(Connection conn,String userId) {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -75,5 +77,25 @@ public class MemberDao {
 			close(rs);
 			close(pstmt);
 		}return m;
+	}
+	
+	//회원가입
+	public int insertMember(Connection conn,Member m) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		String sql=prop.getProperty("insertMember");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, m.getMemberId());
+			pstmt.setString(2, m.getMemberPwd());
+			pstmt.setString(3, m.getMemberPhone());
+			pstmt.setString(4, m.getMemberProfile());
+			pstmt.setString(5, m.getMemberName());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
 	}
 }
