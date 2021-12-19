@@ -1,4 +1,4 @@
-package com.help.work.model.dao;
+package com.help.project.work.model.dao;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,7 +15,7 @@ import java.util.Properties;
 
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
-import com.help.work.model.vo.Work;
+import com.help.project.work.model.vo.Work;
 
 
 public class WorkDao {

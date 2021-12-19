@@ -1,9 +1,10 @@
-package com.help.project.ajaxController;
+package com.help.project.normal.ajaxController;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,20 +16,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.common.MakeFileName;
 import com.help.project.model.service.ProjectService;
-import com.help.project.model.vo.NormalContent;
+import com.help.project.normal.model.vo.NormalContentFile;
 import com.oreilly.servlet.MultipartRequest;
 
 /**
- * Servlet implementation class InsertNormalContentServlet
+ * Servlet implementation class InsertNormalContentFileServlet
  */
-@WebServlet("/project/insertNormalContent.do")
-public class InsertNormalContentServlet extends HttpServlet {
+@WebServlet("/project/insertNormalContentFile.do")
+public class InsertNormalContentFileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public InsertNormalContentServlet() {
+    public InsertNormalContentFileServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -40,23 +41,6 @@ public class InsertNormalContentServlet extends HttpServlet {
 
 		String path = request.getServletContext().getRealPath("/upfile/normal/");
 		MultipartRequest mr = new MultipartRequest(request,path,1024*1024*10,"UTF-8",new MakeFileName());
-		
-		
-		String title = mr.getParameter("title");
-		String content = mr.getParameter("content");
-		String memberId = mr.getParameter("memberId");
-		int projectNo = Integer.parseInt(mr.getParameter("projectNo"));
-		
-		System.out.println(projectNo);
-		
-		NormalContent nc = NormalContent.builder()
-				.normalContentTitle(title)
-				.memberId(memberId)
-				.normalContentContent(content)
-				.projectNo(projectNo).build();
-		
-		int result = new ProjectService().insertNormalContnet(nc);
-		
 		
 		//다중으로 업로드된 파일명 가져오기
 
@@ -92,19 +76,12 @@ public class InsertNormalContentServlet extends HttpServlet {
 				fileMap.put("filePath", path+newFileNames.get(i));
 				fileList.add(fileMap);
 		}
+		System.out.println(fileList);
 		
 		
-		int normalContNo = new ProjectService().selectNormalConNo(nc);
+		//new ProjectService().insertNormalContentFile(fileList);
 		
-		if(result>0) {
-			
-			new ProjectService().insertNormalContentFile(fileList,normalContNo);
-			
-			response.getWriter().write("게시글 작성 성공");
-			
-		}else {
-			response.getWriter().write("게시글 작성 실패");
-		}
+		
 		
 	}
 

@@ -1,4 +1,4 @@
-package com.help.project.model.vo;
+package com.help.project.normal.model.vo;
 
 import java.sql.Date;
 
