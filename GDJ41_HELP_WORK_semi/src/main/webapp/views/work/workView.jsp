@@ -1,6 +1,6 @@
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="com.help.work.model.vo.Work"%>
+<%@page import="com.help.project.work.model.vo.Work"%>
 <%@page import="com.help.project.model.vo.Project"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

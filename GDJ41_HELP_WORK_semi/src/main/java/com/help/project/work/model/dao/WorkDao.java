@@ -1,4 +1,4 @@
-package com.help.work.model.dao;
+package com.help.project.work.model.dao;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,14 +15,14 @@ import java.util.Properties;
 
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
-import com.help.work.model.vo.Work;
+import com.help.project.work.model.vo.Work;
 
 
 public class WorkDao {
 	private Properties prop=new Properties();
 	public WorkDao() {
 		try {
-			prop.load(new FileReader(WorkDao.class.getResource("/").getPath()+"sql/work/work_sql.properties"));
+			prop.load(new FileReader(WorkDao.class.getResource("/").getPath()+"sql/project/work/work_sql.properties"));
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}catch(IOException e) {

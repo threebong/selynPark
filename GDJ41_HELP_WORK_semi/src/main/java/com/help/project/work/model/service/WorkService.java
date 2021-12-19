@@ -1,4 +1,4 @@
-package com.help.work.model.service;
+package com.help.project.work.model.service;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -6,8 +6,8 @@ import java.util.List;
 
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
-import com.help.work.model.dao.WorkDao;
-import com.help.work.model.vo.Work;
+import com.help.project.work.model.dao.WorkDao;
+import com.help.project.work.model.vo.Work;
 
 public class WorkService {
 	private WorkDao dao=new WorkDao();
