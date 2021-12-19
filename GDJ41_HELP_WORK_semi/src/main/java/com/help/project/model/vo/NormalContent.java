@@ -10,18 +10,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Project {
+@NoArgsConstructor
+@Builder
+public class NormalContent {
 
+	private int normalContentNo;
 	private int projectNo;
 	private String memberId;
-	private String proName;
-	private String proExplain;
-	private String proCommonYn;
-	private String proIsActive;
-	private Date proDate;
-
+	private String normalContentTitle;
+	private String normalContentContent;
+	private Date normalContentDate;
+	private int normalContentReadCount;
+	
+	
 	
 }
