@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 public class Project {
 
 	private int projectNo;
-	//private Member memberId;
 	private String memberId;
 	private String proName;
 	private String proExplain;

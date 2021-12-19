@@ -17,7 +17,6 @@ public class NormalContent {
 
 	private int normalContentNo;
 	private int projectNo;
-	//private Member memberId;
 	private String memberId;
 	private String normalContentTitle;
 	private String normalContentContent;

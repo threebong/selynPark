@@ -1,15 +1,26 @@
+<%@page import="java.util.Arrays"%>
+<%@page import="com.help.project.model.vo.ProMemberJoinMember"%>
+<%@page import="java.util.List"%>
 <%@page import="com.help.project.model.vo.Project"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
 <%
 	Project p = (Project)request.getAttribute("projectInfo");
+	List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
+	
+	String[] memberName = new String[pMember.size()];
+	
+	for(int i =0; i<pMember.size();i++){
+		String temp = (String)pMember.get(i).getMemberName();
+		memberName[i] = temp;
+	}
 %>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <main>
 
-
 <!-- 프로젝트정보 -->
+
 <input type="hidden" id="memberId" value="<%=loginMember.getMemberId()%>">
 <input type="hidden" id="projectNo" value="<%=p.getProjectNo()%>">
 
@@ -33,7 +44,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_content">닫기</button>
-        <button type="button" class="btn btn-primary" id="nomarl_submit_Btn">등록</button>
+        <button type="button" class="btn btn-primary" id="normal_submit_Btn">등록</button>
       </div>
     </div>
   </div>
@@ -46,7 +57,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">게시물 작성</h5>
+        <h5 class="modal-title" id="exampleModalLabel">업무 작성</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -62,12 +73,7 @@
       </div>
       <div id="work_addMember_container">
       	<span><i class="fas fa-user"></i></span>
-      		<select class="form-select" id="work_addMember">
-				  <option value="1" selected="selected"></option>
-				  <option value="1"></option>
-				  <option value="2"></option>
-				  <option value="3"></option>
-			</select>
+      		<select class="form-select" id="work_addMember"></select>
       </div>
       <div id="workStart_container">
       	<span><i class="fas fa-calendar-plus"></i></span>
@@ -149,47 +155,31 @@
 		}
 	}
 	
-	$("#nomarl_submit_Btn").click(e=>{
+	$("#normal_submit_Btn").click(e=>{
 	
-		
-		let title = $("input[name=title]").val();
-		let content = $("#normalContent").val();
-		let memberId = $("#memberId").val();
-		let projectNo = $("#projectNo").val();
-		
 		const frm = new FormData();
 		const fileInput = $("input[name=upfile]");
 		for(let i=0; i<fileInput[0].files.length;i++){
 			frm.append("upfile"+i,fileInput[0].files[i]);
+			
 		}
-		
+		frm.append("title", $("input[name=title]").val());
+		frm.append("content", $("#normalContent").val());
+		frm.append("memberId",$("#memberId").val());
+		frm.append("projectNo", $("#projectNo").val());
+	
 		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/project/insertNormalContent.do",
-			method :"post",
-			data: {"title":title,"content":content,"memberId":memberId,"projectNo":projectNo},
-			success : data =>{
-				$("#close_content").click();
-			},
-			error: (a)=>{
-				alert(data);
-				$("#close_content").click();
-			}
-			
-		});
-
-		
-		$.ajax({
-			url : "<%=request.getContextPath()%>/project/insertNormalContentFile.do",
 			type:"post",
 			data:frm,
 			processData:false,
 			contentType:false,
 			success:data=>{
-				alert(data);
+				$("#close_content").click();
 			},
 			error:(a)=>{
-				alert(data);
+				alert("실팽");
 			}
 			
 		});
@@ -212,19 +202,36 @@
 		}
 	}
 	
-	$("#work_submit_Btn").click(e=>{
+	//해당 프로젝트 참여자 리스트 .. 업무 작성시
+	
 		
-		let workTitle =
-		let workIng=
+		const select = $("#work_addMember");
+		
+			
+		let memberName = new Array();
+		memberName = "<%=Arrays.toString(memberName)%>";
+		memberName = memberName.substring(1,memberName.length-1);
+		memberName = memberName.split(",");
+		
+		
+			for(let i=0; i<memberName.length;i++){
+				const option = $("<option>");
+				option.val(memberName[i].trim()).text(memberName[i].trim());
+				select.append(option);
+			}
+	
+	
+ 	/* $("#work_submit_Btn").click(e=>{
+		
+		let workTitle = $("#workTitle").val();
+		let workIng= 
 		let workAddMember=
 		let workStart=
-		let workEnd
-		let workRank
-		let workContent
+		let workEnd=
+		let workRank=
+		let workContent=
 		
-		
-		
-	});
+	}); */
 	
 
 </script>

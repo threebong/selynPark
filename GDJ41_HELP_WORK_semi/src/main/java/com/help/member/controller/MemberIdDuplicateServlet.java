@@ -1,26 +1,27 @@
-package com.help.project.controller;
+package com.help.member.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.help.project.model.service.ProjectService;
-import com.help.project.model.vo.Project;
+import com.help.member.model.service.MemberService;
+import com.help.member.model.vo.Member;
 
 /**
- * Servlet implementation class SelectProjectDetailViewServlet
+ * Servlet implementation class MemberIdDuplicateServlet
  */
-@WebServlet("/project/selectProjectDetailView.do")
-public class SelectProjectDetailViewServlet extends HttpServlet {
+@WebServlet("/member/idDuplicate.do")
+public class MemberIdDuplicateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SelectProjectDetailViewServlet() {
+    public MemberIdDuplicateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,10 +30,16 @@ public class SelectProjectDetailViewServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//프로젝트 상세화면으로 보내 
+
+		String userId=request.getParameter("userId");
 		
-		request.getRequestDispatcher("/views/project/projectDetailView.jsp").forward(request, response);
+		Member m=new MemberService().checkIdDuplicate(userId);
+		
+		request.setAttribute("member", m);
+		
+		request.getRequestDispatcher("/views/member/memberIdDuplicate.jsp").forward(request, response);
+	
+	
 	}
 
 	/**
