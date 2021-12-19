@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -22,7 +23,7 @@ public class WorkDao {
 	private Properties prop=new Properties();
 	public WorkDao() {
 		try {
-			prop.load(new FileReader(WorkDao.class.getResource("/").getPath()+"sql/work/work_sql.properties"));
+			prop.load(new FileReader(WorkDao.class.getResource("/").getPath()+"sql/project/work/work_sql.properties"));
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}catch(IOException e) {
@@ -74,6 +75,132 @@ public class WorkDao {
 			close(rs);
 			close(pstmt);
 		}return worksAll;
+	}
+
+
+	public int insertWorkContent(Connection conn, Work w) {
+		//업무 게시글 작성
+		
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertWorkContent");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, w.getProjectNo());
+			pstmt.setString(2, w.getMemberId());
+			pstmt.setString(3, w.getWorkTitle());
+			pstmt.setString(4, w.getWorkContent());
+			pstmt.setDate(5, w.getWorkStartDate());
+			pstmt.setDate(6, w.getWorkEndDate());
+			pstmt.setString(7, w.getWorkIng());
+			pstmt.setString(8, w.getWorkRank());
+
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		
+		return result;
+	}
+
+
+	public int selectWorkNo(Connection conn, Work w) {
+		//업무 게시글 번호 가져오기
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectWorkNo");
+		int workNo = 0;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, w.getProjectNo());
+			pstmt.setString(2, w.getMemberId());
+			pstmt.setString(3, w.getWorkTitle());
+			pstmt.setString(4, w.getWorkContent());
+
+			rs= pstmt.executeQuery();
+			
+			if(rs.next()) workNo = rs.getInt("WORK_NO");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		
+		
+		return workNo;
+	}
+
+
+	public int insertWorkFile(Connection conn, List<Map<String, Object>> fileList, int workNo) {
+		//업무 파일 등록
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertWorkFile");
+
+		
+		try {
+			
+			for(int i =0; i<fileList.size();i++) {
+				pstmt = conn.prepareStatement(sql);
+								
+					pstmt.setInt(1, workNo);
+					pstmt.setString(2,(String)fileList.get(i).get("oriName"));
+					pstmt.setString(3,(String)fileList.get(i).get("newFileName"));
+					pstmt.setString(4,(String)fileList.get(i).get("exts"));
+					pstmt.setString(5,(String)fileList.get(i).get("filePath"));
+				
+				result = pstmt.executeUpdate();
+				 
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+	public int insertWorkManager(Connection conn, List<Map<String, Object>> wmList) {
+		//업무 담당자 등록
+		PreparedStatement pstmt =null;
+		int result =0;
+		String sql = prop.getProperty("insertWorkManager");
+		
+		try {
+			
+			
+			for(int i=0; i<wmList.size();i++) {
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, (int)wmList.get(i).get("workNo"));	
+				pstmt.setString(2, (String)wmList.get(i).get("managerId"));
+				result =pstmt.executeUpdate();
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 	
 	
