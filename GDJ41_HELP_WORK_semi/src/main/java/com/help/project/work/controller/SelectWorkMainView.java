@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.Project;
 
-import com.help.project.work.model.sevice.WorkService;
+import com.help.project.work.model.service.WorkService;
 import com.help.project.work.model.vo.Work;
 
 /**
