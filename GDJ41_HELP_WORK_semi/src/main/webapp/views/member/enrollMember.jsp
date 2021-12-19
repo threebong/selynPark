@@ -5,29 +5,32 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<section id=enroll-container>
 		<h2>회원 가입 정보 입력</h2>
-    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" onsubmit="return memberEnrollValidate();" >
+    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return memberEnrollValidate();" >
     		<table>
 				<tr>
 					<th>아이디</th>
 					<td>
-						<input type="text" placeholder="이메일형식으로 적어주세요" name="userId" id="userId_" >
-						<input type="button" value="중복검사" id="idDuplicateBtn">
+						<input type="text" placeholder="이메일형식으로 입력해주세요" name="userId" id="userId_" >
+						<input type="button" value="중복검사" id="idDuplicateBtn"><br>
+						<span>이메일 형식으로 입력해주세요 ex)silver@world.com</span>
 					</td>
-					</tr>
-					<tr>
+				</tr>
+				<tr>
 					<th>패스워드</th>
 					<td>
-						<input type="password" name="password" id="password_" ><br>
+						<input type="password" name="password" id="password_" placeholder="비밀번호를 입력해주세요"><br>
+						<span>비밀번호는 영문 대소문자+숫자+특수문자 조합 최소 8자리 이상으로 작성해주세요</span>
 					</td>
 				</tr>
 				<tr>
 					<th>패스워드확인</th>
 					<td>	
-						<input type="password" id="password_2" ><br>
+						<input type="password" id="password_2" placeholder="비밀번호를 다시 한번 입력해주세요"><br>
 						<span id="pwresult"></span>
 					</td>
 				</tr>  
@@ -38,15 +41,16 @@
 					</td>
 				</tr>
 				<tr>
-					<th>나이</th>
+					<th>휴대폰</th>
 					<td>	
-						<input type="number" name="age" id="age"><br>
+						<input type="tel" placeholder="(-없이)01012345678" name="phone" id="phone" maxlength="15" required><br>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<th>프로필사진</th>
 					<td>	
-						<input type="email" placeholder="abc@xyz.com" name="email" id="email"><br>
+						<div id="imageContainer"></div>
+						<input type="file" name="upProfile" id="upProfile"><!-- <button id="upload">프로필사진 업로드</button> -->
 					</td>
 				</tr>
 			</table>
@@ -70,11 +74,9 @@
 	   		});
 	   	});
 	   
-	   
+	   //아이디,비번 확인
 	   	const memberEnrollValidate=()=>{
-	   		//1. userId입력값이 4자리이상인지 확인
-	   		//2. password가 4글자 이상인지 확인
-	   		const userId=$("#userId_").val().trim();//공백을 빼고 처리
+	   		const userId=$("#userId_").val().trim();
 	   		if(!userId.match("@")){
 	   			alert("이메일 형식으로 작성해주세요");
 	   			$("#userId_").focus();
@@ -112,6 +114,44 @@
 	   			}
 	   		});
 	   	});
+	   	
+	   	//이미지미리보기
+	   	
+	   	$("#target").click(e=>{
+	   		$("input[name=upProfile]").click();
+	   	});
+	   	$("input[name=upProfile]").change(e=>{
+	   		if(e.target.files[0].type.includes("image")){
+	   			let reader=new FileReader();
+	   			reader.onload=(e)=>{
+	   				const img=$("<img>").attr({
+	   					src:e.target.result,
+	   					width:"100px",
+	   					height:"100px"
+	   				});
+	   				$("#imageContainer").append(img);
+	   				$("#target").attr("src",e.target.result);
+	   			}
+	   			reader.readAsDataURL(e.target.files[0]);
+	   		}
+	   	})
+	   	//이미지 업로드
+	   	<%-- $("#upload").click(e=>{
+			const frm=new FormData();
+			const fileInput=$("input[name=upProfile]");
+			frm.append("upfile",fileInput[0].files[0]);
+			$.ajax({
+				url:"<%=request.getContextPath()%>/member/profileUpload.do",
+				type:"post",
+				data:frm,
+				processData:false,
+				contentType:false,
+				success:data=>{
+					alert("파일업로드 성공");
+					$("input[name=upProfile]").val("");
+				}
+			});
+		}); --%>
    
    </script>
 </body>
