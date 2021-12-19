@@ -10,10 +10,13 @@
 	List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
 	
 	String[] memberName = new String[pMember.size()];
+	String[] managerId = new String[pMember.size()];
 	
 	for(int i =0; i<pMember.size();i++){
-		String temp = (String)pMember.get(i).getMemberName();
-		memberName[i] = temp;
+		String nameTemp = (String)pMember.get(i).getMemberName();
+		String idTemp = (String)pMember.get(i).getMemberId();
+		memberName[i] = nameTemp;
+		managerId[i] = idTemp;
 	}
 %>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
@@ -176,7 +179,7 @@
 	
 		
 		$.ajax({
-			url : "<%=request.getContextPath()%>/project/insertNormalContent.do",
+			url : "<%=request.getContextPath()%>/project/normal/insertNormalContent.do",
 			type:"post",
 			data:frm,
 			processData:false,
@@ -208,33 +211,50 @@
 		}
 	}
 		
-		//해당 프로젝트 참여자 리스트 .. 업무 작성시
+		//해당 업무 관리자 리스트 .. 업무 작성시
 		const select = $("#work_addMember");
 		
 		let memberName = new Array();
+		let managerId = new Array();
+		
 		let selectedMember = new Array();
+		let selectedManagerId = new Array();
+		
 		memberName = "<%=Arrays.toString(memberName)%>";
 		memberName = memberName.substring(1,memberName.length-1);
 		memberName = memberName.split(",");
 		
+		managerId ="<%=Arrays.toString(managerId)%>";
+		managerId = managerId.substring(1,managerId.length-1);
+		managerId = managerId.split(",");
 		
+		console.log(memberName);//ok
+		console.log(managerId);//ok
+		
+		//업무 관리자 ID값으로 옵션에 value 넣어주기
+						
 		for(let i=0; i<memberName.length;i++){
 			const option = $("<option>");
-			option.val(memberName[i].trim()).text(memberName[i].trim());
+			option.text(memberName[i].trim());
+			option.val(managerId[i].trim());
 			select.append(option);
 		}
 		
 		$(select).change(e=>{
 				
+			//선택된 유저 아이디 span으로 보여줌
 			let span = $("<span>");
-			let selectMember = select.val();
-			span.text(selectMember);
+			let selectMemberName = $("#work_addMember option:selected").text();		
+			let selectManaId = select.val();
+			span.text(selectMemberName);
 
+			//선택된 유저id 배열에 넣어주기
 			for(let i =0; i<memberName.length;i++){
-				if(!selectedMember.includes(selectMember)){
-					selectedMember.push(selectMember);
+				if(!selectedManagerId.includes(selectManaId)){
+					selectedManagerId.push(selectManaId);
 					break;
 				}
+				
 			}
 			
 			
@@ -250,8 +270,9 @@
 						break;
 					}
 				}
+				console.log(selectedMember);
 			});
-			//최종 값 selectedMember에 있음
+			//최종 값 selectedManagerId에 있음
 			
 		});
 		
@@ -259,11 +280,13 @@
 		let workStart;
 		$("#workStart").change(e=>{
 			workStart = $("#workStart").val();
+			
 		});				
 		//마감 날짜
 		let workEnd;
 		$("#workEnd").change(e=>{
 			workEnd = $("#workEnd").val();
+			
 		});
 		
 		//저장 버튼
@@ -290,16 +313,18 @@
 			
 			frm.append("workTitle", workTitle);
 			frm.append("workIng", workIngVal);
-			frm.append("workManagers",selectedMember);
+			frm.append("workManagers",selectedManagerId);
 			frm.append("workStart", workStart);
 			frm.append("workEnd", workEnd);
 			frm.append("workRank", workRank);
 			frm.append("workContent", workContent);
+			frm.append("projectNo", $("#projectNo").val());
+			frm.append("memberId",$("#memberId").val()); //업무작성자
 			
-		
 			
+			//데이터 보내기
 			$.ajax({
-				url : "<%=request.getContextPath()%>/project/insertWorkContent.do",
+				url : "<%=request.getContextPath()%>/project/work/insertWorkContent.do",
 				type:"post",
 				data:frm,
 				processData:false,
@@ -316,11 +341,6 @@
 			
 		});  
 
-			
-	
-	
-	
-	
 	
 	
 

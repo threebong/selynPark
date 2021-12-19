@@ -33,7 +33,7 @@ private Properties prop = new Properties();
 	}
 	
 	public int insertNormalContnet(Connection conn, NormalContent nc) {
-
+		//일반 게시글 작성
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql = prop.getProperty("insertNormalContnet");
@@ -78,7 +78,7 @@ private Properties prop = new Properties();
 					pstmt.setString(4,(String)fileList.get(i).get("exts"));
 					pstmt.setString(5,(String)fileList.get(i).get("filePath"));
 				
-				pstmt.executeUpdate();
+			 result = pstmt.executeUpdate();
 			}
 			
 			
@@ -90,11 +90,7 @@ private Properties prop = new Properties();
 			close(pstmt);
 		}
 		
-		if(result == fileList.size()) {
-			return 1;
-		}else {
-			return 0;	
-		}
+		return result;
 	}
 
 	public int selectNormalConNo(Connection conn, NormalContent nc) {
