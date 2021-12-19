@@ -35,10 +35,10 @@ public class AttendanceService {
 		return a;
 	}
 	
-	//퇴근
-	public int updateLeaveTime(String memberId, String leaveTime, String attDate) {
+	//퇴근등록
+	public int updateLeaveTime(String memberId, String attDate) {
 		Connection conn = getConnection();
-		int result = dao.updateLeaveTime(conn, memberId, leaveTime, attDate);
+		int result = dao.updateLeaveTime(conn, memberId, attDate);
 		if(result>0) commit(conn);
 		else rollback(conn);
 		return result;

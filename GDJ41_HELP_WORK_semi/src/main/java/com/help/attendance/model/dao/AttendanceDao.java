@@ -60,11 +60,11 @@ public class AttendanceDao {
 			
 			if(rs.next()) {
 				a = Attendance.builder()
-						.memberId(rs.getString("member_id"))
-						.attTime(rs.getDate("att_time"))
-						.leaveTime(rs.getDate("leave_date"))
-						.attDate(rs.getDate("att_date"))
-						.attStatus(rs.getString("att_status"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.attTime(rs.getDate("ATT_TIME"))
+						.leaveTime(rs.getDate("LEAVE_TIME"))
+						.attDate(rs.getDate("ATT_DATE"))
+						.attStatus(rs.getString("ATT_STATUS"))
 						.build();
 			}
 			
@@ -78,17 +78,16 @@ public class AttendanceDao {
 	}
 	
 	
-	//퇴근
-	public int updateLeaveTime(Connection conn, String memberId, String leaveTime, String attDate) {
+	//퇴근등록
+	public int updateLeaveTime(Connection conn, String memberId, String attDate) {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql = prop.getProperty("updateLeaveTime");
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, leaveTime);
-			pstmt.setString(2, memberId);
-			pstmt.setString(3, attDate);
+			pstmt.setString(1, memberId);
+			pstmt.setString(2, attDate);
 			result = pstmt.executeUpdate();
 			
 		} catch(SQLException e){

@@ -9,8 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.help.attendance.model.service.AttendanceService;
+import com.help.member.model.vo.Member;
 
 @WebServlet("/attendance/insertLeaveTime.do")
 public class InsertLeaveTimeServlet extends HttpServlet {
@@ -21,14 +23,16 @@ public class InsertLeaveTimeServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String memberId = request.getParameter("memberId");
+		HttpSession session=request.getSession();
+		Member loginMember=(Member)session.getAttribute("loginMember");
+		String memberId=loginMember.getMemberId();		
 		//현재날짜
-		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd"));
 		//퇴근시간
-		String leaveTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")); 
+//		String leaveTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")); 
 		
 		//퇴근 등록인데 아이디,날짜 조회해서 null로 들어간 퇴근시간 수정해야함
-		int result = new AttendanceService().updateLeaveTime(memberId, leaveTime, attDate);
+		int result = new AttendanceService().updateLeaveTime(memberId, attDate);
 	
 		String msg="";
 		String loc="";
@@ -40,7 +44,7 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 			loc="/";
 		}
 		
-		request.getRequestDispatcher("/views/login.jsp").forward(request, response);
+		request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 
 		
 		
