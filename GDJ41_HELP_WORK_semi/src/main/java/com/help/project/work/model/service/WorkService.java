@@ -19,7 +19,14 @@ public class WorkService {
 		close(conn);
 		return works;
 	}
-	
+	public HashMap<Integer,List<Work>> selectWorkMine(List<Project> pro,String logId){
+		//내가 담당자인 업무들 조회
+		Connection conn=getConnection();
+		HashMap<Integer, List<Work>> works=dao.selectWorkMine(conn,pro,logId);
+		close(conn);
+		return works;
+		
+	}
 	
 	
 }

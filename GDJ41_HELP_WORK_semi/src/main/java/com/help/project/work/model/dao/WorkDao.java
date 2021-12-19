@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -76,6 +77,47 @@ public class WorkDao {
 		}return worksAll;
 	}
 	
+	public HashMap<Integer,List<Work>> selectWorkMine(Connection conn,List<Project> pro,String logId){
+		//내가 담당자인 업무들만 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		HashMap<Integer, List<Work>> works=new HashMap<Integer, List<Work>>();
+		String sql=prop.getProperty("selectWorkMine");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, logId);
+			for(Project p:pro) {
+				pstmt.setInt(2, p.getProjectNo());
+				rs=pstmt.executeQuery();
+				
+				List<Work> w=new ArrayList<Work>();
+				while(rs.next()) {
+					ArrayList<String> temp=new ArrayList<String>();
+					temp.add(rs.getString("MANAGER_ID"));
+					Work wo=Work.builder()
+							.workNo(rs.getInt("WORK_NO"))
+							.projectNo(rs.getInt("PROJECT_NO"))
+							.memberId(rs.getString("MEMBER_ID"))
+							.workTitle(rs.getString("WORK_TITLE"))
+							.workIng(rs.getString("WORK_ING"))
+							.workRank(rs.getString("WORK_RANK"))
+							.memberId(rs.getString("MEMBER_ID"))
+							.join(temp)
+							.workDate(rs.getDate("WORK_DATE"))
+							.build();
+					System.out.print(wo);
+					w.add(wo);
+				}
+				works.put(p.getProjectNo(), w);//플젝번호-해당업무들
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return works;
+	}
 	
 	
 	

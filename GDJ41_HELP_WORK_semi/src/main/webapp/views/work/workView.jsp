@@ -10,7 +10,7 @@
 //로그인한 아이디가 속한 프로젝트들 	
 List<Project> project = (List<Project>) request.getAttribute("logProject");
 //최신 게시글 5개만가져옴
-HashMap<Integer,List<Work>> works=(HashMap<Integer,List<Work>>)request.getAttribute("workInPro");
+HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getAttribute("workInPro");
 %>
 <style>
 .opSearch {
@@ -41,7 +41,8 @@ HashMap<Integer,List<Work>> works=(HashMap<Integer,List<Work>>)request.getAttrib
 								<ul class="dropdown-menu dropdown-menu-dark"
 									aria-labelledby="navbarDarkDropdownMenuLink">
 									<li><a class="dropdown-item" href="#">내 업무</a></li>
-									<li><a class="dropdown-item" href="#">전체 업무</a></li>
+									<li><a class="dropdown-item" onclick="allWork();">전체
+											업무</a></li>
 								</ul></li>
 						</ul>
 					</form>
@@ -73,11 +74,13 @@ HashMap<Integer,List<Work>> works=(HashMap<Integer,List<Work>>)request.getAttrib
 		</div>
 
 		<!-- 출력란 -->
-		<div>
-		<% for(Project p:project){%>
+		<div id="deleteTable">
+			<%
+			for (Project p : project) {
+			%>
 			<div>
 				<table class="table">
-					<h4><%=p.getProName() %>
+					<h4><%=p.getProName()%>
 					</h4>
 					<thead>
 						<tr>
@@ -85,30 +88,37 @@ HashMap<Integer,List<Work>> works=(HashMap<Integer,List<Work>>)request.getAttrib
 							<th scope="col">상태</th>
 							<th scope="col">우선순위</th>
 							<th scope="col">제목</th>
-							<th scope="col">담당자</th>
+							<th scope="col">작성자</th>
 							<th scope="col">등록일?수정일?</th>
 						</tr>
 					</thead>
-					<tbody>
-					<%for (Entry<Integer, List<Work>> entry: works.entrySet()){
-						if(entry.getKey()==p.getProjectNo()){
-							for(Work w: entry.getValue()){
+					<tbody >
+						<%
+						for (Entry<Integer, List<Work>> entry : works.entrySet()) {
+							if (entry.getKey() == p.getProjectNo()) {
+								for (Work w : entry.getValue()) {
 						%>
 						<tr>
-							<th scope="row"><%=w.getWorkNo() %></th>
-							<td><%=w.getWorkIng() %></td>
-							<td><%=w.getWorkRank() %></td>
-							<td><%=w.getWorkTitle() %></td>
-							<td><%=w.getMemberId() %></td>
-							<td><%=w.getWorkDate() %></td>
+							<th scope="row"><%=w.getWorkNo()%></th>
+							<td><%=w.getWorkIng()%></td>
+							<td><%=w.getWorkRank()%></td>
+							<td><%=w.getWorkTitle()%></td>
+							<td><%=w.getMemberId()%></td>
+							<td><%=w.getWorkDate()%></td>
 						</tr>
-					<%} }}%>
+						<%
+						}
+						}
+						}
+						%>
 					</tbody>
 				</table>
 
 
 			</div>
-			<%} %>
+			<%
+			}
+			%>
 		</div>
 
 
@@ -118,7 +128,36 @@ HashMap<Integer,List<Work>> works=(HashMap<Integer,List<Work>>)request.getAttrib
 
 
 	<script>
+		const allWork=()=>{//전체업무 조회하기 
+			$("#deleteTable").empty();//비워줘
+			const logId="<%=loginMember.getMemberId()%>";
+			
+			$.ajax({
+				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
+				type : 'post',
+				data: {"logId":logId},
+				dataType : 'text',
+				success : function(data){
+					//console.log(data);
+				},
+				error: function(){
+					alert('실패');
+				}
+			});//id값 보내
+			
+			$.ajax({
+				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
+				dataType : "json",
+				success:data=>{
+					alert("받아옴");
+					console.log(data);
+				}
+			});
+			
+		}
 		
+	
+	
 	</script>
 
 </main>
