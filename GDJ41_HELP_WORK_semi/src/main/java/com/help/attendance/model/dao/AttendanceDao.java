@@ -106,13 +106,14 @@ public class AttendanceDao {
 	
 	
 	//근태 조회(사원)
-	public List<Attendance> selectAttendanceAll(Connection conn, String userId){
+	public List<Attendance> selectAttendanceMonthly(Connection conn, String memberId, String month){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Attendance> list = new ArrayList();
 		try {
-			pstmt = conn.prepareStatement(prop.getProperty("attendanceAll"));
-			pstmt.setString(1,  userId);
+			pstmt = conn.prepareStatement(prop.getProperty("attendanceMonthly"));
+			pstmt.setString(1,  memberId);
+			pstmt.setString(2,  month);
 			rs = pstmt.executeQuery();
 	
 		while(rs.next()) {

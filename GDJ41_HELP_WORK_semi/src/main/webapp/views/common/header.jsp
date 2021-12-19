@@ -147,13 +147,13 @@ window.addEventListener('DOMContentLoaded', event => {
                                 </span>
                             </div>
                         </a>
-                        <!-- </form> -->
+                      
                         <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertLeaveTime.do" onclick="leaveTime();">
                             <div class="sb-nav-link-icon" style="color:rgb(255, 38, 0);"><i class="fas fa-battery-empty"></i>
                             </div>
                             leave work&nbsp;<input type="button" style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
-                                    <div id="leaveTime" value="leaveTime"></div>
+                                    <div id="leaveTime"></div>
                                 </span>
                             </div>
                         </a>

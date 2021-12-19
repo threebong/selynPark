@@ -46,9 +46,9 @@ public class AttendanceService {
 	
 	
 	//근태 조회
-	public List<Attendance> selectAttendanceAll(String userId){
+	public List<Attendance> selectAttendanceMonthly(String memberId, String month){
 		Connection conn = getConnection();
-		List<Attendance> list = dao.selectAttendanceAll(conn, userId);
+		List<Attendance> list = dao.selectAttendanceMonthly(conn, memberId, month);
 		close(conn);
 		return list;
 	}

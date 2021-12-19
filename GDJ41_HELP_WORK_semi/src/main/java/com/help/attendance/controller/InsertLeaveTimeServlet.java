@@ -37,9 +37,9 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 		String workTime = String.valueOf( LocalTime.of(18,  00, 00));
 		String attStatus = null;
 		if(leaveTime.compareTo(workTime)>=0) {
-			attStatus="퇴근";
+			attStatus=" / 퇴근";
 		} else {
-			attStatus = "조퇴";
+			attStatus = " / 조퇴";
 		}
 		int result = new AttendanceService().updateLeaveTime(memberId, leaveTime, attDate, attStatus);
 		
@@ -56,9 +56,6 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 			msg="출근을 먼저 눌러야 합니다.";
 			loc="/project/selectProjectMain.do";
 		}
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		System.out.println(sdf.format(a.getLeaveTime()));
 
 	
 		request.setAttribute("outputleaveTime", a);
