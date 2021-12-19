@@ -3,6 +3,7 @@ package com.help.attendance.controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletException;
@@ -29,37 +30,45 @@ public class InsertAttTimeServlet extends HttpServlet {
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();
 	
+		//출근시간
+		String attTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
 		//현재날짜
-		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd"));
-		
-		Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
+		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		//출근,지각 비교시간
+		String workingTime = String.valueOf(LocalTime.of(9,  00, 00));
+		//출퇴근 상태값
+		String attStatus = null;
 		String msg="";
 		String loc="";
-		if(a==null) {
-			int result = new AttendanceService().insertAttTime(memberId);
-			System.out.println(result);
-			if(result>0) {
-				a = new AttendanceService().outputAttTime(memberId,attDate);
-				msg="출근 성공";
-				loc="/member/memberLogin.do";
-			} else {
-				msg="이미 출근하였습니다.";
-				loc="/member/memberLogin.do";
-			}	
+		//현재날짜 출퇴근 데이터 가져오기
+		//현재날짜에 등록된게 없을때
+//		if(a==null) { sqlexection 뜸
+		if(workingTime.compareTo(attTime)>=0) {
+			attStatus ="출근";
 		} else {
-			request.setAttribute("outputAttTime", a);
-			loc="/member/memberLogin.do";
+			attStatus = "지각";
 		}
-	
-		//등록되고 하루동안 저장 -> 다시 누르면 이미 출근버튼 클릭하였씁니다.
-		//저장된 시간이 09시보다 작으면 '출근' 크면 '지각'
-		System.out.println(a);
-		System.out.println(memberId);
-		System.out.println(attDate);
+		int result = new AttendanceService().insertAttTime(memberId, attTime,attDate,attStatus);
+//		} 
+		//출근 등록하고 다시 데이터 가져오기
+		Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
+		if(result>0) {
+			msg="출근 성공";
+			loc="/project/selectProjectMain.do";
+		} else {
+			//이건.....세션에 하루 저장???
+			msg="이미 출근하였습니다.";
+			loc="/project/selectProjectMain.do";
+		}	
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		System.out.println(sdf.format(a.getAttTime()));
+		
 		request.setAttribute("outputAttTime", a);
+		request.setAttribute("msg", msg);
+		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 
-	
 	
 	}
 
