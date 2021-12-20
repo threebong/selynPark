@@ -118,31 +118,34 @@ public class InsertWorkContentServlet extends HttpServlet {
 						fileList.add(fileMap);
 				}
 				
-				//등록된 업무 게시글 번호 가져오기
-				int workNo = new WorkService().selectWorkNo(w);
 				
-				//업무 담당자 추가하기
-				
-				List<Map<String,Object>> wmList = new ArrayList<Map<String,Object>>();
-				Map<String,Object> wmMap = null;
-				
-				String[] workManager = mr.getParameter("workManagers").split(",");
-				
-				
-				
-				for(int i=0;i<workManager.length;i++) {
-					wmMap =new HashMap<String,Object>();
-					wmMap.put("workNo", workNo);
-					wmMap.put("managerId", workManager[i]);
-					wmList.add(wmMap);
-				}
 			
 				
 				if(result>0) {
 					//게시글 작성 성공시 파일 업로드, 매니저 추가
+					
+					//등록된 업무 게시글 번호 가져오기
+					int workNo = new WorkService().selectWorkNo(w);
+					
+					//업무 담당자 추가하기
+					
+					List<Map<String,Object>> wmList = new ArrayList<Map<String,Object>>();
+					Map<String,Object> wmMap = null;
+					
+					String[] workManager = mr.getParameter("workManagers").split(",");
+					
+					
+					
+					for(int i=0;i<workManager.length;i++) {
+						wmMap =new HashMap<String,Object>();
+						wmMap.put("workNo", workNo);
+						wmMap.put("managerId", workManager[i]);
+						wmList.add(wmMap);
+					}
+					
 					int manaResult = new WorkService().insertWorkManager(wmList);
 					int fileResult = new WorkService().insertWorkFile(fileList,workNo);
-					if(fileResult>0 && fileResult>0) {
+					if(fileResult>0 && manaResult>0) {
 						response.getWriter().write("게시글 작성 성공");	
 					}else {
 						response.getWriter().write("게시글 작성 실패");	

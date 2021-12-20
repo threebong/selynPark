@@ -20,8 +20,6 @@ public class Schedule {
 	private String scheContent;
 	private Date scheStartDate;
 	private Date scheEndDate;
-	private Date scheStartTime;
-	private Date scheEndTime;
 	private String schePlace;
 	private int scheReadCount;
 	private String schePlaceName;

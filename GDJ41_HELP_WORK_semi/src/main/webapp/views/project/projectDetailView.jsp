@@ -143,12 +143,10 @@
       <div id="scheStart_container">
       	<span><i class="fas fa-calendar-plus"></i></span>
       	<input type="date" id="scheStartDate">
-      	<input type="time" id="scheStartTime">
       </div>
       <div id="scheEnd_container">
       	<span><i class="fas fa-calendar-check"></i></span>
       	<input type="date" id="scheEndDate">
-      	<input type="time" id="scheEndTime">
       </div>
 
 		<div>
@@ -674,7 +672,7 @@ $("#sche_place_btn").click(e=>{
 	
 
 	 //일정 참석자 리스트
-	const selectSche = $("#sche_addMember");
+	 const selectSche = $("#sche_addMember");
 	const opheadSche = $("<option>").text("담당자 추가").prop("disabled",true);
 	selectSche.append(ophead);
 	
@@ -723,56 +721,46 @@ $("#sche_place_btn").click(e=>{
 			}
 			span.remove();
 			
-		});
+		}); 
 		//최종 값 selectedManagerId에 있음
 	
 	});
 	
 	//일정 시작 날짜
-	let shceStart;
+	let scheStartDate;
 	$("#scheStartDate").change(e=>{
-		shceStart = $("#scheStartDate").val();
-	});
-	//일정 시작 시간
-	let scheStartTime;
-	$("#scheStartTime").change(e=>{
-		scheStartTime  = $("#scheStartTime").val();
-	});
-	//일정 마감 날짜
-	let sechEnd;
-	$("#scheEndDate").change(e=>{
-		sechEnd = $("#scheEndDate").val();
-	});
-	//일정 마간 시간
-	let scheEndTime;
-	$("#scheEndTime").change(e=>{
-		scheEndTime  = $("#scheEndTime").val();
+		scheStartDate = $("#scheStartDate").val();
 	});
 	
-	let scheTitle;
+	//일정 마감 날짜
+	let scheEndDate;
+	$("#scheEndDate").change(e=>{
+		scheEndDate = $("#scheEndDate").val();
+	});
+	
 	//일정등록
 	$("#sche_submit_Btn").click(e=>{
 		
 		let projectNo = $("#projectNo").val();
 		let memberId = $("#memberId").val();
-		scheTitle= $("#scheTitle").val();
+		let scheTitle= $("#scheTitle").val();
 		let scheContent = $("#scheContent").val();
 		
-		console.log(projectNo,memberId,scheTitle,scheContent,shceStart,scheStartTime,sechEnd,scheEndTime,selectedManagerId,
+		console.log(projectNo,memberId,scheTitle,scheContent,scheStartDate,scheEndDate,selectedManagerId,
 				shce_place_name,shce_place_Loadaddr)
 		
 		//데이터 보내기
 		$.ajax({
 			url : "<%=request.getContextPath()%>/project/sche/insertScheContent.do",
 			type:"POST",
+			 traditional : true,
+			
 			data:{"scheTitle":scheTitle,
 				"scheContent":scheContent,
 				"shce_place_name":shce_place_name,
 				"shce_place_Loadaddr":shce_place_Loadaddr,
-				"shceStart":shceStart,
-				"scheStartTime":scheStartTime,
+				"shceStart":scheStartDate,
 				"scheEndDate":scheEndDate,
-				"scheEndTime":scheEndTime,
 				"projectNo":projectNo,
 				"memberId":memberId,
 				"scheAttendMember":selectedManagerId
