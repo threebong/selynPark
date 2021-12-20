@@ -22,7 +22,7 @@ import com.oreilly.servlet.MultipartRequest;
 /**
  * Servlet implementation class InsertNormalContentServlet
  */
-@WebServlet("/project/insertNormalContent.do")
+@WebServlet("/project/normal/insertNormalContent.do")
 public class InsertNormalContentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -47,8 +47,7 @@ public class InsertNormalContentServlet extends HttpServlet {
 		String content = mr.getParameter("content");
 		String memberId = mr.getParameter("memberId");
 		int projectNo = Integer.parseInt(mr.getParameter("projectNo"));
-		
-		System.out.println(projectNo);
+
 		
 		NormalContent nc = NormalContent.builder()
 				.normalContentTitle(title)

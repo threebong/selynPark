@@ -15,10 +15,10 @@ public class AttendanceService {
 	private AttendanceDao dao = new AttendanceDao();
 	
 	//출근등록
-	public int insertAttTime(String memberId) {
+	public int insertAttTime(String memberId, String attTime, String attDate, String attStatus) {
 //		public int insertAttTime( String attTime, String attDate) {
 		Connection conn = getConnection();
-		int result = dao.insertAttTime(conn, memberId);
+		int result = dao.insertAttTime(conn, memberId,attTime,attDate,attStatus);
 		if(result>0) {
 			commit(conn); 
 			//출근정보 저장되고 다시 가져오려면 여기서 다시 dao로
@@ -36,9 +36,9 @@ public class AttendanceService {
 	}
 	
 	//퇴근등록
-	public int updateLeaveTime(String memberId, String attDate) {
+	public int updateLeaveTime(String memberId, String leaveTime, String attDate, String attStatus) {
 		Connection conn = getConnection();
-		int result = dao.updateLeaveTime(conn, memberId, attDate);
+		int result = dao.updateLeaveTime(conn, memberId, leaveTime, attDate, attStatus);
 		if(result>0) commit(conn);
 		else rollback(conn);
 		return result;
@@ -46,9 +46,9 @@ public class AttendanceService {
 	
 	
 	//근태 조회
-	public List<Attendance> selectAttendanceAll(String userId){
+	public List<Attendance> selectAttendanceMonthly(String memberId, String month){
 		Connection conn = getConnection();
-		List<Attendance> list = dao.selectAttendanceAll(conn, userId);
+		List<Attendance> list = dao.selectAttendanceMonthly(conn, memberId, month);
 		close(conn);
 		return list;
 	}

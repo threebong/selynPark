@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp" %>
-<%-- <%@ page import = "java.util.List, com.member.attendance.vo.Attendance" %> --%>
-<%-- <%
-	List<Attendance> list (List<Attendance>)request.getAttribute("attendanceList");
-%> --%>
-<main>
+<%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance, java.util.List" %>
+<%
+	List<Attendance> list = (List<Attendance>)request.getAttribute("attendanceMonthly");
 
+%>
 <style>
 table.attendanceType {
   border-collapse: collapse;
@@ -45,69 +44,65 @@ font-size:30px;
 }
 
 </style>
-<input type="text" id="selectMonth" readonly/></input><br>
-<!-- 연,월만 들어가게끔 여기랑 일치하는 날짜만 db가져오게-->
-<input id="checkMonth" type="month" onchange="selectDate();"/><!--연,월 선택  -->
+<main>
+
+	<form id="frm" action="" method="post">
+		<span><input type="text" id="selectMonth" name="selectMonth" readonly/></input></span><br>
+		<input id="checkMonth" type="month" onchange="selectDate();"/>
 
 
+		<table class="attendanceType">
+		  <thead>
+		  <tr>
+		    <th>날짜</th>
+		    <th>출근시간</th>
+		    <th>퇴근시간</th>
+		    <th>상태</th>
+		  </tr>
+		  </thead>
+		  <tbody>
+			<% if(list.isEmpty()) { %>
+		  	<tr>
+		  		<td colspan="4">조회된 출퇴근 이력이 없습니다.</td>
+		  	</tr>
+		  	<%} else { 
+		  		for(Attendance aMonth : list) {
+		  	%>
+		  	<tr>
+		  		<td><%=aMonth.getAttDate()%></td>
+		  		<td><%=sdf.format(aMonth.getAttTime()) %></td>
+		  		<td>
+		  	
+		  		 <% try { %> 
+		  		 <%=sdf.format(aMonth.getLeaveTime()) %>
+		  		 <% } catch(Exception e){ %>
+		  		 퇴근정보가 없습니다.
+		  		<%} %> 
+		  		</td>
+		  		<td><%=aMonth.getAttStatus() %></td>
+		  	</tr>
+		  	<%}
+		  	}%>
+		
+		  </tbody>
+		</table>
 
-<table class="attendanceType">
-  <thead>
-  <tr>
-    <th>날짜</th>
-    <th>출근시간</th>
-    <th>퇴근시간</th>
-    <th>상태</th>
-  </tr>
-  </thead>
-  <tbody>
-<%--   	<% if(list.isEmpty()) { %>
-  	<tr>
-  		<td colspan="4">조회된 출퇴근 이력이 없습니다.</td>
-  	</tr>
-  	<%} else { 
-  		for(Attendance a : list) {
-  	%>
-  	<tr>
-  		<td><%=a.getAttDate().getDate() %></td> <!-- '일'만 가져와야함 -->
-  		<td><%=a.getAttTime() %></td>
-  		<td><%=a.getLeaveTime() %></td>
-  		<td><%=a.getAttStatus() %></td>
-  	</tr>
-  	<%}
-  	}%> --%>
-  <tr>
-    <th>1일</th>
-    <td>09:00</td>
-    <td>18:00</td>
-    <td>퇴근</td>
-  </tr>
-  <tr>
-    <th>2일</th>
-    <td>09:00</td>
-    <td>-</td>
-    <td>출근</td>
-  </tr>
-  <tr>
-    <th>3일</th>
-    <td>09:00</td>
-    <td>17:00</td>
-    <td>조퇴</td>
-  </tr>
-  </tbody>
-</table>
-
+	</form>
+</main>
 <script>
-const selectDate =()=> {
-    var checkMonth = document.getElementById("checkMonth");
-    var selectMonth = document.getElementById("selectMonth");
-    selectMonth.value = checkMonth.value;
-  };
+document.getElementById('checkMonth').valueAsDate = new Date(); //기본으로 현재 달 표기
+$("#checkMonth").change(e=>{
+	$("#selectMonth").val($("#checkMonth").val())
+	<%-- $("#frm").attr("action","<%=request.getContextPath() %>/attendance/attendanceList.do")
+	$("#frm").attr("method","post")
+	$("#frm").submit() --%>
+});
+/* $(()=>{
+	$("#checkMonth").change();
+}); */
+
 	
 
 </script>
 
-
-
-</main>
 <%@ include file="/views/common/footer.jsp" %>

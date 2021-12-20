@@ -27,7 +27,7 @@ public class AttendanceDao {
 	}
 	
 	//출근등록
-	public int insertAttTime(Connection conn, String memberId) {
+	public int insertAttTime(Connection conn, String memberId, String attTime, String attDate, String attStatus) {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql = prop.getProperty("insertAttTime");
@@ -35,6 +35,9 @@ public class AttendanceDao {
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, memberId);
+			pstmt.setString(2, attTime);
+			pstmt.setString(3, attDate);
+			pstmt.setString(4, attStatus);
 			
 			result = pstmt.executeUpdate();
 			
@@ -79,15 +82,17 @@ public class AttendanceDao {
 	
 	
 	//퇴근등록
-	public int updateLeaveTime(Connection conn, String memberId, String attDate) {
+	public int updateLeaveTime(Connection conn, String memberId, String leaveTime, String attDate, String attStatus) {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql = prop.getProperty("updateLeaveTime");
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, memberId);
-			pstmt.setString(2, attDate);
+			pstmt.setString(1, leaveTime);
+			pstmt.setString(2, attStatus);
+			pstmt.setString(3, memberId);
+			pstmt.setString(4, attDate);
 			result = pstmt.executeUpdate();
 			
 		} catch(SQLException e){
@@ -101,13 +106,14 @@ public class AttendanceDao {
 	
 	
 	//근태 조회(사원)
-	public List<Attendance> selectAttendanceAll(Connection conn, String userId){
+	public List<Attendance> selectAttendanceMonthly(Connection conn, String memberId, String month){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Attendance> list = new ArrayList();
 		try {
-			pstmt = conn.prepareStatement(prop.getProperty("attendanceAll"));
-			pstmt.setString(1,  userId);
+			pstmt = conn.prepareStatement(prop.getProperty("attendanceMonthly"));
+			pstmt.setString(1,  memberId);
+			pstmt.setString(2,  month);
 			rs = pstmt.executeQuery();
 	
 		while(rs.next()) {

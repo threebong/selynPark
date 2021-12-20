@@ -3,7 +3,6 @@ package com.help.attendance.controller;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,11 +16,11 @@ import com.help.attendance.model.service.AttendanceService;
 import com.help.attendance.model.vo.Attendance;
 import com.help.member.model.vo.Member;
 
-@WebServlet("/attendance/attendanceList.do")
-public class AttendanceListServlet extends HttpServlet {
+@WebServlet("/attendance/attendanceListEnd.do")
+public class AttendanceListEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public AttendanceListServlet() {
+    public AttendanceListEndServlet() {
         super();
     }
 
@@ -30,16 +29,10 @@ public class AttendanceListServlet extends HttpServlet {
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();
 		
-		String month=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM"));
+		String month = request.getParameter("selectMonth");
+
 		
-//		try {
-//			month = request.getParameter("selectMonth"); //파라미터로 받고
-//			System.out.println("파라미터 월:"+month);
-//		} catch(Exception e) {
-//			month=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM")); //없을땐 일단 현재달
-//			System.out.println("현재 월:"+month);
-//
-//		}
+		
 		//아이디 정보 가져와서 아이디와 일치하는 출퇴근이력 전체조회 리스트
 		//월별로 나와야함 yy/MM형태로 지금은 현재달, 선택한 달의 데이터가 이쪽으로 넘어와야함
 
@@ -48,7 +41,7 @@ public class AttendanceListServlet extends HttpServlet {
 		System.out.println(list);
 		request.setAttribute("attendanceMonthly", list);
 		request.getRequestDispatcher("/views/attendance/attendanceList.jsp").forward(request, response);
-	
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
