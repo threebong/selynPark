@@ -209,7 +209,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		});
 	
 		
-		//검색조건 
+		//검색조건 ----해야함
 		$("#filterWork").click(e=>{
 			let ing=$("#working").val();
 			console.log(ing);
