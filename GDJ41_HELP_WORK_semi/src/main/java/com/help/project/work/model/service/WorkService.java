@@ -8,6 +8,7 @@ import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
 import com.help.project.work.model.dao.WorkDao;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 public class WorkService {
 	private WorkDao dao=new WorkDao();
@@ -19,10 +20,10 @@ public class WorkService {
 		close(conn);
 		return works;
 	}
-	public HashMap<Integer,List<Work>> selectWorkMine(List<Project> pro,String logId){
+	public List<WorkSelectManagerJoin> selectWorkMine(List<Project> pro,String logId){
 		//내가 담당자인 업무들 조회
 		Connection conn=getConnection();
-		HashMap<Integer, List<Work>> works=dao.selectWorkMine(conn,pro,logId);
+		List<WorkSelectManagerJoin> works=dao.selectWorkMine(conn,pro,logId);
 		close(conn);
 		return works;
 		

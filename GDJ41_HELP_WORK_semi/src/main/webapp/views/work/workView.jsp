@@ -9,6 +9,9 @@
 <%
 //로그인한 아이디가 속한 프로젝트들 	
 List<Project> project = (List<Project>) request.getAttribute("logProject");
+
+
+
 //최신 게시글 5개만가져옴
 HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getAttribute("workInPro");
 %>
@@ -40,8 +43,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 								data-bs-toggle="dropdown" aria-expanded="false"> 업무 선택 </a>
 								<ul class="dropdown-menu dropdown-menu-dark"
 									aria-labelledby="navbarDarkDropdownMenuLink">
-									<li><a class="dropdown-item" href="#">내 업무</a></li>
-									<li><a class="dropdown-item" onclick="allWork();">전체
+									<li><a class="dropdown-item" id="mywork">내 업무</a></li>
+									<li><a class="dropdown-item" href="#">전체
 											업무</a></li>
 								</ul></li>
 						</ul>
@@ -120,41 +123,136 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			}
 			%>
 		</div>
+		
+		
+		<div id="writeTable">
+		</div>
 
-
+	
 
 
 	</div>
 
 
 	<script>
-		const allWork=()=>{//전체업무 조회하기 
-			$("#deleteTable").empty();//비워줘
+		//const allWork=()=>{//전체업무 조회하기 
+			$(document).on('click','#mywork',function(){
+			//$("#deleteTable").remove();//비워줘
 			const logId="<%=loginMember.getMemberId()%>";
 			
+			alert("누름");
 			$.ajax({
 				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
 				type : 'post',
 				data: {"logId":logId},
-				dataType : 'text',
-				success : function(data){
-					//console.log(data);
-				},
-				error: function(){
-					alert('실패');
+				dataType : 'json',
+				success : data=>{
+					console.log(data);
+					console.log(data.length);
+					console.log(data[0]);
+					console.log(data[0]["projectNo"]);
+					let str="";
+					$("#deleteTable").remove();
+					
+					
+					let table=$("<table>");
+					let h4=$("<h4>").html("조회");
+					let thead=$("<thead>");
+					let tr=$("<tr>");
+					let td=$("<th>").html("No");
+					let td8=$("<th>").html("프로젝트");
+					let td9=$("<th>").html("업무No");
+					let td1=$("<th>").html("상태");
+					let td2=$("<th>").html("우선순위");
+					let td3=$("<th>").html("제목");
+					let td4=$("<th>").html("작성자");
+					let td5=$("<th>").html("담당자");
+					let td6=$("<th>").html("등록일");
+					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
+					
+					let tbody=$("<tbody>");
+					for(let i=0;i<data.length;i++){
+					let tr2=$("<tr>");
+					let proNo=$("<th>").html(data[i]["projectNo"]);
+					let proName=$("<td>").html(data[i]["proName"]);
+					let workNo=$("<td>").html(data[i]["workNo"]);
+					let working=$("<td>").html(data[i]["workIng"]);
+					let rank=$("<td>").html(data[i]["workRank"]);
+					let title=$("<td>").html(data[i]["workTitle"]);
+					let memId=$("<td>").html(data[i]["memberId"]);
+					let manaId=$("<td>").html(data[i]["managerId"]);
+					let date=$("<td>").html(data[i]["workDate"]);
+					let td7=$("<td>");
+				    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
+				    table.append(tbody);
+					}
+					$("#writeTable").html(table);
+					
+					
+					/*속성추가*/
+					$("table").addClass('table');
+					$("table thead th").attr('scope','col');
+					$("table tbody th").attr('scope','col');
+					
+					/* for(let i=0;i<data.length;i++){
+						//if(( i >0 &&(data[i]["projectNo"]!=data[i-1]["projectNo"] ))|| data[0]["projectNo"]!="" ){
+							let table=$("<table>");
+							let h4=$("<h4>").html("프로젝트명");
+							let thead=$("<thead>");
+							let tr=$("<tr>");
+							let td=$("<td>").html("No");
+							let td1=$("<td>").html("상태");
+							let td2=$("<td>").html("우선순위");
+							let td3=$("<td>").html("제목");
+							let td4=$("<td>").html("작성자");
+							let td5=$("<td>").html("담당자");
+							let td6=$("<td>").html("등록일");
+							table.append(h4).append(thead).append(tr).append(td).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
+						//}
+							console.log(table);
+							let html="";
+						//	while((i>0 &&(data[i]["projectNo"]==data[i-1]["projectNo"])) || data[0]!=""){
+								for(let j=0;i<data[i].length;j++){
+								html += '<tr>';
+								html += '<td>'+data[j]["projectNo"]+'</td>';
+								html += '<td>'+data[j]["proName"]+'</td>';
+								html += '<td>'+data[j]["workNo"]+'</td>';
+								html += '<td>'+data[j]["workIng"]+'</td>';
+								html += '<td>'+data[j]["workRank"]+'</td>';
+								html += '<td>'+data[j]["memberId"]+'</td>';
+								html += '<td>'+data[j]["managerId"]+'</td>';
+								html += '<td>'+data[j]["workDate"]+'</td>';
+								html += '</tr>';
+								}
+								$("#deleteTable").remove();
+								$("#deleteTable").append(html);
+								 */
+								/* let tbody=$("<thead>")};
+								let tr2=$("<tr>");
+								let proNo=$("<td>").html(data[i]["projectNo"]);
+								let proName=$("<td>").html(data[i]["proName"]);
+								let workNo=$("<td>").html(data[i]["workNo"]);
+								let working=$("<td>").html(data[i]["workIng"]);
+								let rank=$("<td>").html(data[i]["workRank"]);
+								let title=$("<td>").html(data[i]["workTitle"]);
+								let memId=$("<td>").html(data[i]["memberId"]);
+								let manaId=$("<td>").html(data[i]["managerId"]);
+								let date=$("<td>").html(data[i]["workDate"]);
+								let td7=$("<td>");
+							    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
+							    
+							    table.append(tbody);
+							    str+=table;
+							    console.log(tbody);
+							    console.log(str);  */
+							
+							
+						
+						//$("#writeTable").html(str);
+							
 				}
 			});//id값 보내
-			
-			$.ajax({
-				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
-				dataType : "json",
-				success:data=>{
-					alert("받아옴");
-					console.log(data);
-				}
-			});
-			
-		}
+		})
 		
 	
 	
