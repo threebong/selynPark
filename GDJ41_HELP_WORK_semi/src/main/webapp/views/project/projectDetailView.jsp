@@ -25,11 +25,7 @@
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
-.form-select{
-		width: 150px;
-		
-	}
-	
+
 </style>
 <main>
 
@@ -137,12 +133,12 @@
       </div>
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="scheTitle">
-      <span id="work_titleResult"></span>
-      <div id="work_addMember_container">
+      <span id="sche_titleResult"></span>
+      <div id="sche_addMember_container">
       	<span><i class="fas fa-user"></i></span>
       	<div><select class="form-select" id="sche_addMember">
       	</select></div>
-      	<div id=sche_addMember_area"></div>
+      	<div id="sche_addMember_area"></div>
       </div>
       <div id="scheStart_container">
       	<span><i class="fas fa-calendar-plus"></i></span>
@@ -154,16 +150,25 @@
       	<input type="date" id="scheEndDate">
       	<input type="time" id="scheEndTime">
       </div>
-	 <div>
-	  <button type="button" class="btn" id="sche_place_btn"><i class="fas fa-map-marker-alt"></i>장소검색</button>
-	  <div id="searchPlace_Container" style="display:none"><input type="text" id="searchPlace_keyword" name="searchPlace_keyword_">
-	  <button id="search">검색</button>
-	  </div>
-	 </div>
-	 <div id="test" style="display:none;">
-	 <div id="sche_place_container" style="width:100%;height:400px;"></div>
-    </div>
-    <textarea class="form-control" placeholder="내용을 입력하세요" id="workContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
+
+		<div>
+	  		<button type="button" class="btn" id="sche_place_btn"><i class="fas fa-map-marker-alt"></i>장소검색</button>
+	  			<div id="test" style="display:none;">
+	  				<input type="text" id="searchKeyword">
+	  				<button id="searchBtn">검색</button>
+	  			</div>
+	 	</div>
+	 	<div id="searchContainer" style="display:none; width: 100%; height: 500px;">
+			 <div class="map_wrap">
+				 <div id="map" style="width: 100%;height: 100%;position: relative;overflow: hidden; background: url(https://t1.daumcdn.net/mapjsapi/images/bg_tile.png);"></div>
+				 <div id="menu_wrap" class="bg_white">
+				 <ul id="placeList"></ul>
+				 <div id="pagination"></div>
+	 			</div>
+    		</div>
+		</div>
+
+    <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
 		<input type="hidden" id="memberId" value="<%=loginMember.getMemberId() %>">
 		<input type="hidden" id="projectNo" value="3">
 		
@@ -176,80 +181,241 @@
   </div>
 </div>
 
+	
+	 
 <script>
+	//지도 API 사용
+	
+	//검색한 주소 가져오는 함수
+	
+	let shce_place_name;
+	let shce_place_Loadaddr;
+	
+	function getAddress(){
+	 shce_place_name = $("#shce_place_name").text();
+	 shce_place_Loadaddr = $("#shce_place_Loadaddr").text();
 
-		$("#sche_place_btn").click(e=>{
-			$("#searchPlace_Container").show();
-				});
+	}
+	
+	
+$("#sche_place_btn").click(e=>{
+	$("#test").show();
+});
+
+	$("#searchBtn").click(e=>{
 		
-		$("#search").click(e=>{
-			let searchKeyword = $("#searchPlace_keyword").val();
-			searchMap(searchKeyword);
-		});
-		
-		const searchMap=(searchKeyword)=>{
+		$("#searchContainer").show(e=>{
+			 
+			let keyword = $("#searchKeyword").val();
+			//마커를 담을 배열입니다
+			var markers = [];
+
+			var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+			    mapOption = {
+			        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+			        level: 3 // 지도의 확대 레벨
+			    };  
+
+			// 지도를 생성합니다    
+			var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+			// 장소 검색 객체를 생성합니다
+			var ps = new kakao.maps.services.Places();  
+
+			// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
 			var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-			var container = document.getElementById("sche_place_container"); //지도를 담을 영역의 DOM 레퍼런스
-			var options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-		level: 4 //지도의 레벨(확대, 축소 정도)
-		};
 
-		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴	
-		var ps = new kakao.maps.services.Places(); 
-		ps.keywordSearch(searchKeyword, placesSearchCB); 
-		
-		// 키워드 검색 완료 시 호출되는 콜백함수 입니다
-		function placesSearchCB (data, status, pagination) {
-		    if (status === kakao.maps.services.Status.OK) {
+			 ps.keywordSearch( keyword, placesSearchCB); 
+			
+			// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+			function placesSearchCB(data, status, pagination) {
+			    if (status === kakao.maps.services.Status.OK) {
+			        // 정상적으로 검색이 완료됐으면
+			        // 검색 목록과 마커를 표출합니다
+			        displayPlaces(data);
 
-		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-		        // LatLngBounds 객체에 좌표를 추가합니다
-		        var bounds = new kakao.maps.LatLngBounds();
+			        // 페이지 번호를 표출합니다
+			        displayPagination(pagination);
 
-		        for (var i=0; i<data.length; i++) {
-		            displayMarker(data[i]);    
-		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-		        }       
+			    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 
-		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-		        map.setBounds(bounds);
-		    } 
-		}
+			        alert('검색 결과가 존재하지 않습니다.');
+			        return;
 
-		// 지도에 마커를 표시하는 함수입니다
-		
-		function displayMarker(place) {
-    
-    // 마커를 생성하고 지도에 표시합니다
-    var marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x) 
-    });
+			    } else if (status === kakao.maps.services.Status.ERROR) {
 
-    // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', function() {
-        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-        infowindow.open(map, marker);
-    });
-}
-		
+			        alert('검색 결과 중 오류가 발생했습니다.');
+			        return;
 
-		function relayout() {    
-		    
-		    // 지도를 표시하는 div 크기를 변경한 이후 지도가 정상적으로 표출되지 않을 수도 있습니다
-		    // 크기를 변경한 이후에는 반드시  map.relayout 함수를 호출해야 합니다 
-		    // window의 resize 이벤트에 의한 크기변경은 map.relayout 함수가 자동으로 호출됩니다
-		    map.relayout();
-		}
-			$("#test").show(e=>{
-				relayout();
-			});
-		}
-		
-		
-</script>	
+			    }
+			}
+
+			// 검색 결과 목록과 마커를 표출하는 함수입니다
+			function displayPlaces(places) {
+
+			    var listEl = document.getElementById('placeList'), 
+			    menuEl = document.getElementById('menu_wrap'),
+			    fragment = document.createDocumentFragment(), 
+			    bounds = new kakao.maps.LatLngBounds(), 
+			    listStr = '';
+			    
+			    // 검색 결과 목록에 추가된 항목들을 제거합니다
+			    removeAllChildNods(listEl);
+
+			    // 지도에 표시되고 있는 마커를 제거합니다
+			    removeMarker();
+			    
+			    for ( var i=0; i<places.length; i++ ) {
+
+			        // 마커를 생성하고 지도에 표시합니다
+			        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+			            marker = addMarker(placePosition, i), 
+			            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+			        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+			        // LatLngBounds 객체에 좌표를 추가합니다
+			        bounds.extend(placePosition);
+
+			        // 마커와 검색결과 항목에 mouseover 했을때
+			        // 해당 장소에 인포윈도우에 장소명을 표시합니다
+			        // mouseout 했을 때는 인포윈도우를 닫습니다
+			        (function(marker, title) {
+			            kakao.maps.event.addListener(marker, 'mouseover', function() {
+			                displayInfowindow(marker, title);
+			            });
+
+			            kakao.maps.event.addListener(marker, 'mouseout', function() {
+			                infowindow.close();
+			            });
+
+			            itemEl.onmouseover =  function () {
+			                displayInfowindow(marker, title);
+			            };
+
+			            itemEl.onmouseout =  function () {
+			                infowindow.close();
+			            };
+			        })(marker, places[i].place_name);
+
+			        fragment.appendChild(itemEl);
+			    }
+
+			    // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
+			    listEl.appendChild(fragment);
+			    menuEl.scrollTop = 0;
+
+			    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+			    map.setBounds(bounds);
+			}
+
+			// 검색결과 항목을 Element로 반환하는 함수입니다
+			function getListItem(index, places) {
+
+			    var el = document.createElement('li'),
+			    itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+			                '<div onclick="getAddress();" class="info">' +
+			                '   <h5 id="shce_place_name">' + places.place_name + '</h5>';
+
+			    if (places.road_address_name) {
+			        itemStr += '    <h4 id="shce_place_Loadaddr">' + places.road_address_name + '</h4>' +
+			                    '   <h5 class="jibun gray">' +  places.address_name  + '</h5>';
+			    } else {
+			        itemStr += '    <span>' +  places.address_name  + '</span>'; 
+			    }
+			                 
+			      itemStr += '  <h5 class="tel">' +"tel : "+ places.phone  + '</h5>' +
+			                '</div>';           
+
+			    el.innerHTML = itemStr;
+			    el.className = 'item';
+			    
+			   
+				 
+			    return el;
+			}
+			
+
+			// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+			function addMarker(position, idx, title) {
+			    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+			        imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+			        imgOptions =  {
+			            spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+			            spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+			            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+			        },
+			        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+			            marker = new kakao.maps.Marker({
+			            position: position, // 마커의 위치
+			            image: markerImage 
+			        });
+
+			    marker.setMap(map); // 지도 위에 마커를 표출합니다
+			    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+			    return marker;
+			}
+
+			// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+			function removeMarker() {
+			    for ( var i = 0; i < markers.length; i++ ) {
+			        markers[i].setMap(null);
+			    }   
+			    markers = [];
+			}
+
+			// 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+			function displayPagination(pagination) {
+			    var paginationEl = document.getElementById('pagination'),
+			        fragment = document.createDocumentFragment(),
+			        i; 
+
+			    // 기존에 추가된 페이지번호를 삭제합니다
+			    while (paginationEl.hasChildNodes()) {
+			        paginationEl.removeChild (paginationEl.lastChild);
+			    }
+
+			    for (i=1; i<=pagination.last; i++) {
+			        var el = document.createElement('a');
+			        el.href = "#";
+			        el.innerHTML = i;
+
+			        if (i===pagination.current) {
+			            el.className = 'on';
+			        } else {
+			            el.onclick = (function(i) {
+			                return function() {
+			                    pagination.gotoPage(i);
+			                }
+			            })(i);
+			        }
+
+			        fragment.appendChild(el);
+			    }
+			    paginationEl.appendChild(fragment);
+			}
+
+			// 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+			// 인포윈도우에 장소명을 표시합니다
+			function displayInfowindow(marker, title) {
+			    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+
+			    infowindow.setContent(content);
+			    infowindow.open(map, marker);
+			}
+
+			 // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+			function removeAllChildNods(el) {   
+			    while (el.hasChildNodes()) {
+			        el.removeChild (el.lastChild);
+			    }
+			}
+			 
+			
+			
+		});
+	});
+</script>
 
 
 <div id="title-container">
@@ -280,7 +446,6 @@
 </div>
 
 </main>
-
 
 <script>
 	/* 1.일반 게시글 작성 로직 */
@@ -353,16 +518,16 @@
 		let memberName = new Array();
 		let managerId = new Array();
 		
-		let selectedMember = new Array();
-		let selectedManagerId = new Array();
+		let selectedMember = new Array(); //최종 선택된 멤버 이름
+		let selectedManagerId = new Array(); //최종 선택된 멤버 아이디
 		
 		memberName = "<%=Arrays.toString(memberName)%>";
 		memberName = memberName.substring(1,memberName.length-1);
-		memberName = memberName.split(",");
+		memberName = memberName.split(","); //프로젝트에 참가한 사람 이름 다 가지고있음
 		
 		managerId ="<%=Arrays.toString(managerId)%>";
 		managerId = managerId.substring(1,managerId.length-1);
-		managerId = managerId.split(",");
+		managerId = managerId.split(",");//프로젝트에 참가한 사람 아이디 다 가지고 있음
 		
 		console.log(memberName);//ok
 		console.log(managerId);//ok
@@ -382,9 +547,12 @@
 			let span = $("<span>");
 			let selectMemberName = $("#work_addMember option:selected").text();		
 			let selectManaId = select.val();
+			
 	
 			span.text(selectMemberName);
-
+			span.val(selectManaId);
+			
+			
 			//선택된 유저id 배열에 넣어주기
 			for(let i =0; i<memberName.length;i++){
 				if(!selectedManagerId.includes(selectManaId)){
@@ -395,19 +563,21 @@
 			}
 			
 			
+			//span에서 삭제하면 배열에서도 삭제해주기
 			$("#work_addMember_area").append(span);	
 			
 			span.click(e=>{
-				span.remove();
+				console.log(selectedManagerId);
 				
 				for(let i=0;i<memberName.length;i++){
-					if(selectedMember.includes(span.text())){
-						let spanVal = span.text();
-						selectedMember.splice(selectedMember.indexOf(spanVal),1);
+					if(selectedManagerId.includes(span.val())){
+						selectedManagerId.splice(selectedManagerId.indexOf(span.val()),1);
 						break;
 					}
+					
 				}
-				console.log(selectedMember);
+				span.remove();
+				
 			});
 			//최종 값 selectedManagerId에 있음
 			
@@ -493,9 +663,138 @@
 		$("#insertSche_").click();
 	});
 	
+	const checkScheContent=()=>{
+		let schetitle = $("#scheTitle").val();
+		if(title.trim().length == 0){
+			$("#scheTitle").focus();
+			$("#sche_titleResult").text("제목을 입력하세요").css("color","red");
+			return false;
+		}
+	}
+	
+
+	 //일정 참석자 리스트
+	const selectSche = $("#sche_addMember");
+	const opheadSche = $("<option>").text("담당자 추가").prop("disabled",true);
+	selectSche.append(ophead);
+	
+					
+	for(let i=0; i<memberName.length;i++){
+		const option = $("<option>");
+		option.text(memberName[i].trim());
+		option.val(managerId[i].trim());
+		selectSche.append(option);
+	}
+	
+	$(selectSche).change(e=>{
+		
+		//선택된 유저 아이디 span으로 보여줌
+		let span = $("<span>");
+		let selectMemberName = $("#sche_addMember option:selected").text();		
+		let selectManaId = selectSche.val();
+		
+
+		span.text(selectMemberName);
+		span.val(selectManaId);
+		
+		
+		//선택된 유저id 배열에 넣어주기
+		for(let i =0; i<memberName.length;i++){
+			if(!selectedManagerId.includes(selectManaId)){
+				selectedManagerId.push(selectManaId);
+				break;
+			}
+			
+		}
+		
+		
+		//span에서 삭제하면 배열에서도 삭제해주기
+		$("#sche_addMember_area").append(span);	
+		
+		span.click(e=>{
+			console.log(selectedManagerId);
+			
+			for(let i=0;i<memberName.length;i++){
+				if(selectedManagerId.includes(span.val())){
+					selectedManagerId.splice(selectedManagerId.indexOf(span.val()),1);
+					break;
+				}
+				
+			}
+			span.remove();
+			
+		});
+		//최종 값 selectedManagerId에 있음
+	
+	});
+	
+	//일정 시작 날짜
+	let shceStart;
+	$("#scheStartDate").change(e=>{
+		shceStart = $("#scheStartDate").val();
+	});
+	//일정 시작 시간
+	let scheStartTime;
+	$("#scheStartTime").change(e=>{
+		scheStartTime  = $("#scheStartTime").val();
+	});
+	//일정 마감 날짜
+	let sechEnd;
+	$("#scheEndDate").change(e=>{
+		sechEnd = $("#scheEndDate").val();
+	});
+	//일정 마간 시간
+	let scheEndTime;
+	$("#scheEndTime").change(e=>{
+		scheEndTime  = $("#scheEndTime").val();
+	});
+	
+	let scheTitle;
+	//일정등록
+	$("#sche_submit_Btn").click(e=>{
+		
+		let projectNo = $("#projectNo").val();
+		let memberId = $("#memberId").val();
+		scheTitle= $("#scheTitle").val();
+		let scheContent = $("#scheContent").val();
+		
+		console.log(projectNo,memberId,scheTitle,scheContent,shceStart,scheStartTime,sechEnd,scheEndTime,selectedManagerId,
+				shce_place_name,shce_place_Loadaddr)
+		
+		//데이터 보내기
+		$.ajax({
+			url : "<%=request.getContextPath()%>/project/sche/insertScheContent.do",
+			type:"POST",
+			data:{"scheTitle":scheTitle,
+				"scheContent":scheContent,
+				"shce_place_name":shce_place_name,
+				"shce_place_Loadaddr":shce_place_Loadaddr,
+				"shceStart":shceStart,
+				"scheStartTime":scheStartTime,
+				"scheEndDate":scheEndDate,
+				"scheEndTime":scheEndTime,
+				"projectNo":projectNo,
+				"memberId":memberId,
+				"scheAttendMember":selectedManagerId
+			},
+			success:data=>{
+				alert("성공..");
+				$("#close_sche_content").click();
+				
+			},
+			error:(a)=>{
+				alert("실팽");
+			}
+			
+		});
+		
+	});
+	
 
 </script>
      
+
+
 
 
 <%@ include file="/views/common/footer.jsp"%>
