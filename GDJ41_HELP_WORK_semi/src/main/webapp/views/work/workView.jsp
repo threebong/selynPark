@@ -44,7 +44,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 								<ul class="dropdown-menu dropdown-menu-dark"
 									aria-labelledby="navbarDarkDropdownMenuLink">
 									<li><a class="dropdown-item" id="mywork">내 업무</a></li>
-									<li><a class="dropdown-item" href="#">전체
+									<li><a class="dropdown-item" id="allwork">전체
 											업무</a></li>
 								</ul></li>
 						</ul>
@@ -56,23 +56,23 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 
 		<div>
 			<div class="input-group mb-3 opSearch">
-				<select class="form-select " id="working" name="search-work-op">
+				<select class="form-select " id="working" name="working">
 					<option selected>진행 상황</option>
-					<option value="request">요청</option>
-					<option value="ing">진행</option>
-					<option value="feedback">피드백</option>
-					<option value="done">완료</option>
-					<option value="hold">보류</option>
+					<option value="요청">요청</option>
+					<option value="진행">진행</option>
+					<option value="피드백">피드백</option>
+					<option value="완료">완료</option>
+					<option value="보류">보류</option>
 				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건1</label>
 
-				<select class="form-select " id="priority" name="search-work-op">
+				<select class="form-select " id="priority" name="priority">
 					<option selected>우선순위</option>
-					<option value="1">긴급</option>
-					<option value="2">높음</option>
-					<option value="3">보통</option>
-					<option value="4">낮음</option>
+					<option value="긴급">긴급</option>
+					<option value="높음">높음</option>
+					<option value="보통">보통</option>
+					<option value="낮음">낮음</option>
 				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건2</label>
-
+				<button id="filterWork">검색</button>
 			</div>
 		</div>
 
@@ -139,8 +139,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			$(document).on('click','#mywork',function(){
 			//$("#deleteTable").remove();//비워줘
 			const logId="<%=loginMember.getMemberId()%>";
-			
-			alert("누름");
+					$("#deleteTable").hide();
+					$("#writeTable").show();	
 			$.ajax({
 				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
 				type : 'post',
@@ -152,11 +152,10 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					console.log(data[0]);
 					console.log(data[0]["projectNo"]);
 					let str="";
-					$("#deleteTable").remove();
 					
 					
 					let table=$("<table>");
-					let h4=$("<h4>").html("조회");
+					let h4=$("<h4>").html("나의 업무");
 					let thead=$("<thead>");
 					let tr=$("<tr>");
 					let td=$("<th>").html("No");
@@ -193,68 +192,49 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					$("table").addClass('table');
 					$("table thead th").attr('scope','col');
 					$("table tbody th").attr('scope','col');
-					
-					/* for(let i=0;i<data.length;i++){
-						//if(( i >0 &&(data[i]["projectNo"]!=data[i-1]["projectNo"] ))|| data[0]["projectNo"]!="" ){
-							let table=$("<table>");
-							let h4=$("<h4>").html("프로젝트명");
-							let thead=$("<thead>");
-							let tr=$("<tr>");
-							let td=$("<td>").html("No");
-							let td1=$("<td>").html("상태");
-							let td2=$("<td>").html("우선순위");
-							let td3=$("<td>").html("제목");
-							let td4=$("<td>").html("작성자");
-							let td5=$("<td>").html("담당자");
-							let td6=$("<td>").html("등록일");
-							table.append(h4).append(thead).append(tr).append(td).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
-						//}
-							console.log(table);
-							let html="";
-						//	while((i>0 &&(data[i]["projectNo"]==data[i-1]["projectNo"])) || data[0]!=""){
-								for(let j=0;i<data[i].length;j++){
-								html += '<tr>';
-								html += '<td>'+data[j]["projectNo"]+'</td>';
-								html += '<td>'+data[j]["proName"]+'</td>';
-								html += '<td>'+data[j]["workNo"]+'</td>';
-								html += '<td>'+data[j]["workIng"]+'</td>';
-								html += '<td>'+data[j]["workRank"]+'</td>';
-								html += '<td>'+data[j]["memberId"]+'</td>';
-								html += '<td>'+data[j]["managerId"]+'</td>';
-								html += '<td>'+data[j]["workDate"]+'</td>';
-								html += '</tr>';
-								}
-								$("#deleteTable").remove();
-								$("#deleteTable").append(html);
-								 */
-								/* let tbody=$("<thead>")};
-								let tr2=$("<tr>");
-								let proNo=$("<td>").html(data[i]["projectNo"]);
-								let proName=$("<td>").html(data[i]["proName"]);
-								let workNo=$("<td>").html(data[i]["workNo"]);
-								let working=$("<td>").html(data[i]["workIng"]);
-								let rank=$("<td>").html(data[i]["workRank"]);
-								let title=$("<td>").html(data[i]["workTitle"]);
-								let memId=$("<td>").html(data[i]["memberId"]);
-								let manaId=$("<td>").html(data[i]["managerId"]);
-								let date=$("<td>").html(data[i]["workDate"]);
-								let td7=$("<td>");
-							    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
-							    
-							    table.append(tbody);
-							    str+=table;
-							    console.log(tbody);
-							    console.log(str);  */
-							
-							
-						
-						//$("#writeTable").html(str);
-							
+				
 				}
 			});//id값 보내
-		})
+			
+			
+			
+			
+		});
 		
+		
+		$(document).on('click','#allwork',function(){
+			
+			$("#deleteTable").show();
+			$("#writeTable").hide();	
+		});
 	
+		
+		//검색조건 
+		$("#filterWork").click(e=>{
+			let ing=$("#working").val();
+			console.log(ing);
+			
+			let prior=$("#priority").val();
+			console.log(prior);
+			
+			let h4=$("table h4").text();
+			console.log(h4);
+			
+			$.ajax({
+				url: "<%=request.getContextPath()%>/work/SelectWorkManagerSearchServlet.do",
+				type : 'post',
+				data: {"ing":ing, "prior":prior},
+				dataType : 'json',
+				success : data=>{   
+					alert("성공");
+				
+				}
+			
+			
+			});
+			
+			
+		});
 	
 	</script>
 
