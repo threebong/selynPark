@@ -37,7 +37,6 @@ public class WorkDao {
 	public HashMap<Integer, List<Work>> selectWorkFive(Connection conn,List<Project> pro){
 		//키값: 해당 사원이 참여하고 있는 프로젝트 번호 
 		//밸류: 그 프로젝트번호에 해당하는 업무 게시글 list
-		
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		HashMap<Integer, List<Work>> worksAll=new HashMap<Integer, List<Work>>();
@@ -66,8 +65,6 @@ public class WorkDao {
 					works.add(w);
 				}
 				worksAll.put(p.getProjectNo(), works);
-				
-			
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
