@@ -1,7 +1,7 @@
 package com.help.attendance.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -41,29 +41,30 @@ public class InsertAttTimeServlet extends HttpServlet {
 		String msg="";
 		String loc="";
 		//현재날짜 출퇴근 데이터 가져오기
-		//현재날짜에 등록된게 없을때
-//		if(a==null) { sqlexection 뜸
-		if(workingTime.compareTo(attTime)>=0) {
-			attStatus ="출근";
-		} else {
-			attStatus = "지각";
-		}
-		int result = new AttendanceService().insertAttTime(memberId, attTime,attDate,attStatus);
-//		} 
-		//출근 등록하고 다시 데이터 가져오기
 		Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
-		if(result>0) {
-			msg="출근 성공";
-			loc="/project/selectProjectMain.do";
-		} else {
-			//이건.....세션에 하루 저장???
+		if(a==null) { // a가 null이면 아직 출근 등록 전인 상태니까 출근 등록 로직
+			if(workingTime.compareTo(attTime)>=0) {
+				attStatus ="출근";
+			} else {
+				attStatus = "지각";
+			}
+			int result = new AttendanceService().insertAttTime(memberId, attTime,attDate,attStatus);
+			if(result>0) {
+				msg="출근 성공";
+				loc="member/memberLogin.do";
+			} else {
+				msg="출근 실패";
+				loc="member/memberLogin.do";
+			}	
+			a = new AttendanceService().outputAttTime(memberId,attDate); // 등록하고 다시 조회하기
+		} else { //a가 null이 아니면 이미 해당일자는 출근 등록 되어있는 상태 -> 하루 한번만 등록 가능함 중복등록x
 			msg="이미 출근하였습니다.";
-			loc="/project/selectProjectMain.do";
-		}	
-		
-	
-		
+			loc="member/memberLogin.do";
+			
+		}
 		request.setAttribute("outputAttTime", a);
+		
+		
 		request.setAttribute("msg", msg);
 		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);

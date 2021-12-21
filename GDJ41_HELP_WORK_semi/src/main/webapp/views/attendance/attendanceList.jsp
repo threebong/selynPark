@@ -1,7 +1,7 @@
-<%@ page  contentType="text/html; charset=UTF-8"
+<%@ page  language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp" %>
-<%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance, java.util.List" %>
+<%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance" %>
 <%
 	List<Attendance> list = (List<Attendance>)request.getAttribute("attendanceMonthly");
 
@@ -45,37 +45,13 @@ font-size:30px;
 
 </style>
 
-<script>
-	var request = new XMLHttpRequest();
-	function searchMonth(){
-		request.open("Post","<%=request.getContextPath()%>/JSONServlet",true);
-		request.onreadystatechange = searchProcess;
-		request.send(null);
-		
-	}
-	function searchProcess(){
-		var table = document.getElementById("ajaxTable");
-		table.innerHTML = "";
-		if(request.readyState)==4&&request.status=200){
-			var object = eval('('+request.responseText+')');
-			var result = object.result;
-			for(var i=0; i<result.length; i++){
-				var row = table.insertRow(0);
-				for(var j=0; j<result[i].length; j++){
-					var cell = row.insertCell(j);
-					cell.innerHTML = result[i][j].value;
-				}
-			}
-		}
-	}
-</script>
+
 
 <main>
-
+		<form id="frm" action="">
 		<span><input type="text" id="selectMonth" name="selectMonth" readonly/></input></span><br>
-		<input id="checkMonth" type="month" onchange="searchMonth();">
-		<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
-
+		<input id="checkMonth" type="month" name="checkMonth">
+		</form>
 
 
 		<table class="attendanceType">
@@ -88,7 +64,7 @@ font-size:30px;
 		  </tr>
 		  </thead>
 		  <tbody id="ajaxTable">
-		<%-- 	<% if(list.isEmpty()) { %>
+		 	<% if(list.isEmpty()) { %>
 		  	<tr id="result">
 		  		<td colspan="4">조회된 출퇴근 이력이 없습니다.</td>
 		  	</tr>
@@ -109,22 +85,23 @@ font-size:30px;
 		  		<td><%=aMonth.getAttStatus() %></td>
 		  	</tr>
 		  	<%}
-		  	}%> --%>
+		  	}%>
 		
 		  </tbody>
 		</table>
 
 </main>
 <script>
- /* document.getElementById('checkMonth').valueAsDate = new Date(); */  //기본으로 현재 달 표기
+  //document.getElementById('checkMonth').valueAsDate = new Date();  //기본으로 현재 달 표기
  
 
-<%-- $("#checkMonth").change(e=>{
-	$("#frm").attr("action","<%=request.getContextPath() %>/attendance/attendanceListEnd.do")
+$("#checkMonth").change(e=>{
+	$("#selectMonth").val($("#checkMonth").val());
+	$("#frm").attr("action","<%=request.getContextPath() %>/attendance/attendanceList.do")
 	$("#frm").attr("method","post")
 	$("#frm").submit()
-	$("#selectMonth").val($("#checkMonth").val())
-}); --%>
+});
+  
 
 <%--   $("#checkMonth").change(e=>{
 	$.ajax({
@@ -144,6 +121,30 @@ font-size:30px;
 		}
 	})
 }) --%>
+
+
+<%-- var request = new XMLHttpRequest();
+function searchMonth(){
+	request.open("Post","<%=request.getContextPath()%>/JSONServlet",true);
+	request.onreadystatechange = searchProcess;
+	request.send(null);
+	
+}
+function searchProcess(){
+	var table = document.getElementById("ajaxTable");
+	table.innerHTML = "";
+	if(request.readyState)==4&&request.status=200){
+		var object = eval('('+request.responseText+')');
+		var result = object.result;
+		for(var i=0; i<result.length; i++){
+			var row = table.insertRow(0);
+			for(var j=0; j<result[i].length; j++){
+				var cell = row.insertCell(j);
+				cell.innerHTML = result[i][j].value;
+			}
+		}
+	}
+} --%>
 	
 
 </script>
