@@ -302,8 +302,61 @@ public class WorkDao {
 		
 	}
 	
+	public List<Integer> selectProjectNo(Connection conn,String logId){
+		//내가 참여한 프로젝트 번호들
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("selectProjectNo");
+		List<Integer> result=new ArrayList<Integer>();
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, logId);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				int num;
+				num=rs.getInt("PROJECT_NO");
+				result.add(num);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
-	
-	
+	public List<WorkSelectManagerJoin> selectWorkAll(Connection conn,List<Integer> proNum){
+		//내가 속한 프로젝트의 모든 업무 게시글들
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("selectWorkAll");
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		try {
+			pstmt=conn.prepareStatement(sql);
+			for(Integer i : proNum) {
+				pstmt.setInt(1, i);
+				rs=pstmt.executeQuery();
+				while(rs.next()) {
+					WorkSelectManagerJoin j=WorkSelectManagerJoin.builder()
+							.proName(rs.getString("PRO_NAME"))
+							.projectNo(rs.getInt("PROJECT_NO"))
+							.workNo(rs.getInt("WORK_NO"))
+							.workIng(rs.getString("WORK_ING"))
+							.workRank(rs.getString("WORK_RANK"))
+							.memberId(rs.getString("MEMBER_ID"))
+							.workDate(rs.getDate("WORK_DATE"))
+							.build();
+					result.add(j);
+									
+				}
+				
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
 }

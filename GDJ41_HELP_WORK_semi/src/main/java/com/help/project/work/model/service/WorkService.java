@@ -98,6 +98,19 @@ public class WorkService {
 		return result;
 	}
 	
+	public List<Integer> selectProjectNo(String logId){
+		//내가 참여한 프로젝트 번호들 
+		Connection conn=getConnection();
+		List<Integer> result= dao.selectProjectNo(conn,logId);
+		close(conn);
+		return result;
+	}
 	
-	
+	public List<WorkSelectManagerJoin> selectWorkAll(List<Integer> proNum){
+		//내가 참여한 프로젝트의 모든 업무들 
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,proNum);
+		close(conn);
+		return result;
+	}
 }

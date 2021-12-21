@@ -1,7 +1,6 @@
 package com.help.project.work.ajaxController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,20 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.help.project.model.vo.Project;
 import com.help.project.work.model.service.WorkService;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 /**
- * Servlet implementation class SelectWorkManagerSearchServlet
+ * Servlet implementation class SelectWorkAllViewServlet
  */
-@WebServlet("/work/SelectWorkManagerSearchServlet.do")
-public class SelectWorkManagerSearchServlet extends HttpServlet {
+@WebServlet("/work/SelectWorkAllViewServlet.do")
+public class SelectWorkAllViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SelectWorkManagerSearchServlet() {
+    public SelectWorkAllViewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,24 +33,19 @@ public class SelectWorkManagerSearchServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//본인업무 조건 선택해서 조회하기 
-		String ing=request.getParameter("ing").trim().replace(" ","");//진행상황(요청,진행,피드백,완료,보류)
-		String prior=request.getParameter("prior").trim().replace(" ", "");//우선순위(긴급,높음,보통,낮음)
-		String h4=request.getParameter("h4").trim().replace(" ", "");
-		String logId=request.getParameter("logId");
+//업무-내가 속한 프로젝트의 - 모든 업무 게시글 출력
+		String id=request.getParameter("logId");
+		//내가 참가한 프로젝트 번호 가져오자
+		List<Integer> proNum=new WorkService().selectProjectNo(id);//로그인한 사원이 참여한 프로젝트 번호를 담은 리스트 
+		System.out.println(id+proNum);
 		
+		List<WorkSelectManagerJoin> result=new WorkService().selectWorkAll(proNum);//해당프로젝트의 모든 업무(담당자제외)
+		System.out.println(result);
 		
-		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
-		//if(!ing.equals("진행상황")||!prior.equals("우선순위")) {
-			result=new WorkService().searchMine(ing, prior, h4,logId);
-			System.out.println("받아?"+result);
-		//}
 		
 		
 		response.setContentType("application/json;charset=utf-8");
 		new Gson().toJson(result,response.getWriter());
-		//List<WorkSelectManagerJoin> searchMine=new WorkService().serchMine(ing,prior,h4);
-		
 	}
 
 	/**

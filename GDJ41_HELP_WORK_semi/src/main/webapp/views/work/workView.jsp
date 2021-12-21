@@ -251,22 +251,22 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		});
 		
 		
-		//전체 업무 조회(모든 업무 list) : 내가 참여한 프로젝트의 모든 업무
+		//전체 업무 조회(모든 업무 list) : 내가 참여한 프로젝트의 모든 업무 ---하는중
 		$(document).on('click','#allwork',function(){
 			$("#deleteTable").show();//default테이블 
 			$("#writeTable").hide();//새로 보여줄 테이블	
 			
-			const logId="<%=loginMember.getMemberId()%>";
-			$("#deleteTable").hide();
-			$("#writeTable").show();	
+			const logId="<%=loginMember.getMemberId()%>";//로그인한 아이디
+			$("#deleteTable").toggle();
+			$("#writeTable").toggle();	
 			$.ajax({
-				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
+				url : "<%=request.getContextPath()%>/work/SelectWorkAllViewServlet.do",
 				type : 'post',
 				data: {"logId":logId},
 				dataType : 'json',
 				success : data=>{
 					let table=$("<table>");
-					let h4=$("<h4>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 
+					let h4=$("<h4>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 //이름바꾸면안됨
 					let thead=$("<thead>");
 					let tr=$("<tr>");
 					let td=$("<th>").html("No");
@@ -276,9 +276,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					let td2=$("<th>").html("우선순위");
 					let td3=$("<th>").html("제목");
 					let td4=$("<th>").html("작성자");
-					let td5=$("<th>").html("담당자");
 					let td6=$("<th>").html("등록일");
-					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
+					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
 					
 					let tbody=$("<tbody>");
 					for(let i=0;i<data.length;i++){
@@ -290,10 +289,9 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					let rank=$("<td>").html(data[i]["workRank"]);
 					let title=$("<td>").html(data[i]["workTitle"]);
 					let memId=$("<td>").html(data[i]["memberId"]);
-					let manaId=$("<td>").html(data[i]["managerId"]);
 					let date=$("<td>").html(data[i]["workDate"]);
 					let td7=$("<td>");
-				    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
+				    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
 				    table.append(tbody);
 					}
 					$("#writeTable").html(table);
