@@ -22,7 +22,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 </style>
 <main>
 	<div>
-		<h3>전체 업무</h3>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="#">전체 업무</a>
@@ -73,6 +72,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					<option value="낮음">낮음</option>
 				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건2</label>
 				<button id="filterWork">검색</button>
+				<button id="filterWorkAll">검색all</button>
 			</div>
 		</div>
 
@@ -139,6 +139,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			const logId="<%=loginMember.getMemberId()%>";
 			$("#deleteTable").hide();
 			$("#writeTable").show();	
+			$("#filterWorkAll").hide();
+			$("#filterWork").show();
 			$.ajax({
 				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
 				type : 'post',
@@ -255,6 +257,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		$(document).on('click','#allwork',function(){
 			$("#deleteTable").show();//default테이블 
 			$("#writeTable").hide();//새로 보여줄 테이블	
+			$("#filterWorkAll").show();
+			$("#filterWork").hide();
 			
 			const logId="<%=loginMember.getMemberId()%>";//로그인한 아이디
 			$("#deleteTable").toggle();
@@ -296,6 +300,68 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					}
 					$("#writeTable").html(table);
 					
+					/*속성추가*/
+					$("table").addClass('table');
+					$("table thead th").attr('scope','col');
+					$("table tbody th").attr('scope','col');
+				}
+			});//id값 보내
+		});
+		
+		//전체 업무 ---검색기능 
+		$("#filterWorkAll").click(e=>{
+			let ing=$("#working").val();//진행상황
+			let prior=$("#priority").val();//우선순위
+			let h4=$("table h4").text();//나의 업무
+			const logId="<%=loginMember.getMemberId()%>";
+			$.ajax({
+				url: "<%=request.getContextPath()%>/work/SelectWorkAllSearchServlet.do",
+				type : 'post',
+				data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId},
+				dataType : 'json',
+				success : data=>{   
+					console.log(data);
+					let table=$("<table>");
+					let h4=$("<h4>").html("전체 업무");//문구 변경 금지 (다중조회와 관련)
+					let thead=$("<thead>");
+					let tr=$("<tr>");
+					let td=$("<th>").html("No");
+					let td8=$("<th>").html("프로젝트");
+					let td9=$("<th>").html("업무No");
+					let td1=$("<th>").html("상태");
+					let td2=$("<th>").html("우선순위");
+					let td3=$("<th>").html("제목");
+					let td4=$("<th>").html("작성자");
+					let td6=$("<th>").html("등록일");
+					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
+					
+					let tbody=$("<tbody>");
+					
+					if(data.length==0){//조회결과 X 
+						let nottr=$("<tr>");
+						let notth=$("<td>").html("조회결과가 없습니다.");
+						notth.attr("colspan","9");
+						nottr.css("text-align","center");
+						nottr.append(notth);
+						table.append(nottr);
+					}else{//조회 결과 O 
+						for(let i=0;i<data.length;i++){
+						let tr2=$("<tr>");
+						let proNo=$("<th>").html(data[i]["projectNo"]);
+						let proName=$("<td>").html(data[i]["proName"]);
+						let workNo=$("<td>").html(data[i]["workNo"]);
+						let working=$("<td>").html(data[i]["workIng"]);
+						let rank=$("<td>").html(data[i]["workRank"]);
+						let title=$("<td>").html(data[i]["workTitle"]);
+						let memId=$("<td>").html(data[i]["memberId"]);
+						let date=$("<td>").html(data[i]["workDate"]);
+						let td7=$("<td>");
+					    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
+					    table.append(tbody);
+						}
+					}
+					$("#writeTable").html(table);
+						
 					/*속성추가*/
 					$("table").addClass('table');
 					$("table thead th").attr('scope','col');

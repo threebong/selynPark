@@ -343,6 +343,7 @@ public class WorkDao {
 							.workNo(rs.getInt("WORK_NO"))
 							.workIng(rs.getString("WORK_ING"))
 							.workRank(rs.getString("WORK_RANK"))
+							.workTitle(rs.getString("WORK_TITLE"))
 							.memberId(rs.getString("MEMBER_ID"))
 							.workDate(rs.getDate("WORK_DATE"))
 							.build();
@@ -357,6 +358,64 @@ public class WorkDao {
 			close(rs);
 			close(pstmt);
 		}return result;
+	}
+	
+	public List<WorkSelectManagerJoin> searchAll(Connection conn,String ing,String prior,List<Integer> proNum){
+		//전체업무 --검색기능
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		String sql="";
+		try {
+			for(Integer i : proNum) {
+		
+				if(ing.equals("진행상황")&&!prior.equals("우선순위")) {//우선순위 조건
+					sql = prop.getProperty("searchWorkAllPrior").replace("#COL", "W.WORK_RANK");
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setInt(1, i);
+					pstmt.setString(2, prior);
+					System.out.println("우선순위");
+					
+				}else if(!ing.equals("진행상황")&&prior.equals("우선순위")){//진행상황조건
+					sql = prop.getProperty("searchWorkAllPrior").replace("#COL", "W.WORK_ING");
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setInt(1, i);
+					pstmt.setString(2, ing);
+					System.out.println("진행상황");
+					
+				}else if(!ing.equals("진행상황")&&!prior.equals("우선순위")){//우선순위&&진행상황 조건
+					sql = prop.getProperty("searchWorkAllPriorTwo").replace("#COL", "W.WORK_RANK").replace("#BOL","W.WORK_ING");
+					
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setInt(1, i);
+					pstmt.setString(2, prior);
+					pstmt.setString(3, ing);
+				}
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
+						.proName(rs.getString("PRO_NAME"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workNo(rs.getInt("WORK_NO"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.workTitle(rs.getString("WORK_TITLE"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.workDate(rs.getDate("WORK_DATE"))
+						.build();
+				result.add(wo);
+			}
+			}
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+		
 	}
 	
 }

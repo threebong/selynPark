@@ -41,6 +41,10 @@ public class WorkService {
 			 System.out.println("서비스"+result);
 		}else if(h4.equals("전체업무")) {
 			//해야함
+			List<Integer> proNum=dao.selectProjectNo(conn, logId);
+			 result=dao.searchAll(conn,ing,prior,proNum);
+			 System.out.println("서비스"+result);
+			
 		}
 		return result;
 		
