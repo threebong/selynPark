@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.common.MakeFileName;
 import com.help.project.normal.model.service.NormalService;
-import com.help.project.work.model.sevice.WorkService;
+import com.help.project.work.model.service.WorkService;
 import com.help.project.work.model.vo.Work;
 import com.help.project.work.model.vo.WorkManager;
 import com.oreilly.servlet.MultipartRequest;

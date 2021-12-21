@@ -219,11 +219,11 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			
 			let h4=$("table h4").text();
 			console.log(h4);
-			
+			const logId="<%=loginMember.getMemberId()%>";
 			$.ajax({
 				url: "<%=request.getContextPath()%>/work/SelectWorkManagerSearchServlet.do",
 				type : 'post',
-				data: {"ing":ing, "prior":prior},
+				data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId},
 				dataType : 'json',
 				success : data=>{   
 					alert("성공");

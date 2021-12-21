@@ -245,6 +245,68 @@ public class WorkDao {
 		}return works;
 	}
 	
+	//------------나의 업무 조건 검색
+	public List<WorkSelectManagerJoin> searchMine(Connection conn,String ing,String prior,String logId){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		String sql="";
+		try {
+		
+			if(ing.equals("진행상황")&&!prior.equals("우선순위")) {//우선순위 조건
+				sql = prop.getProperty("searchWorkPrior").replace("#COL", "W.WORK_RANK");
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, logId);
+				pstmt.setString(2, prior);
+				System.out.println("우선순위");
+				
+			}else if(!ing.equals("진행상황")&&prior.equals("우선순위")){//진행상황조건
+				sql = prop.getProperty("searchWorkPrior").replace("#COL", "W.WORK_ING");
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, logId);
+				pstmt.setString(2, ing);
+				System.out.println("진행상황");
+				
+			}else if(!ing.equals("진행상황")&&!prior.equals("우선순위")){//우선순위&&진행상황 조건
+				sql = prop.getProperty("searchWorkPriorTwo").replace("#COL", "W.WORK_RANK").replace("#BOL","W.WORK_ING");
+				
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, logId);
+				pstmt.setString(2, prior);
+				pstmt.setString(3, ing);
+				System.out.println("둘다 "+sql);
+			}
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
+						.proName(rs.getString("PRO_NAME"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workNo(rs.getInt("WORK_NO"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.workTitle(rs.getString("WORK_TITLE"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.managerId(rs.getString("MANAGER_ID"))
+						.workDate(rs.getDate("WORK_DATE"))
+						.build();
+				System.out.println("다오1 조인객체"+wo);
+				result.add(wo);
+				System.out.println("다오 리스트"+result);
+			}
+			
+			
+		}catch(SQLException e) {
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+		
+	}
+	
+	
+	
 	
 	
 }
