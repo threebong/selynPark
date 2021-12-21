@@ -61,7 +61,6 @@ public class WorkService {
 		//업무 담당자 추가
 		Connection conn = getConnection();
 		int result = dao.insertWorkManager(conn,wmList);
-		
 		if (result > 0) {
 			commit(conn);
 		} else {

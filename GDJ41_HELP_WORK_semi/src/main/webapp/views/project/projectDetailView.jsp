@@ -44,12 +44,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" name="title">
+      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="normalTitle" name="title">
       <span id="titleResult"></span>
         <textarea class="form-control" placeholder="내용을 입력하세요" id="normalContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
 		  <div class="mb-3">
  		<label for="formFile" class="form-label"></label>
   		<input class="form-control" type="file" id="uploadNormal" name="upfile" multiple>
+		</div>
+		<div id="fileNameList">
+			
 		</div>
       </div>
       <div class="modal-footer">
@@ -63,7 +66,7 @@
 <!-- 업무게시글 작성 모달 -->
 <button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="insertWork_">글작성</button>
 
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" onsubmit="return checkWorkContent();">
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -83,9 +86,7 @@
       </div>
       <div id="work_addMember_container">
       	<span><i class="fas fa-user"></i></span>
-      	<div><select class="form-select" id="work_addMember">
-      		
-      	</select></div>
+      	<div><select class="form-select" id="work_addMember"></select></div>
       	<div id="work_addMember_area"></div>
       </div>
       <div id="workStart_container">
@@ -109,6 +110,7 @@
  		<label for="formFile" class="form-label"></label>
   		<input class="form-control" type="file" id="uploadWorkfile_" name="uploadWorkfile" multiple>
 		</div>
+		<div id="workFileNameContainer"></div>
 		<input type="hidden" id="memberId" value="admin">
 		<input type="hidden" id="projectNo" value="3">
 		
@@ -124,7 +126,7 @@
 <!-- 일정게시글 작성 모달 -->
 <button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3" id="insertSche_">일정작성</button>
 
-<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" onsubmit="return checkScheContent();">
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -165,6 +167,8 @@
 	 			</div>
     		</div>
 		</div>
+		<div id="searchResultContainer">
+		</div>
 
     <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
 		<input type="hidden" id="memberId" value="<%=loginMember.getMemberId() %>">
@@ -192,7 +196,11 @@
 	function getAddress(){
 	 shce_place_name = $("#shce_place_name").text();
 	 shce_place_Loadaddr = $("#shce_place_Loadaddr").text();
-
+	//화면 출력 꺼지게 하기
+	$("#searchContainer").hide();
+	
+	$("#searchResultContainer").append("<p> 장소명 : "+shce_place_name+"</p>").append("<p> 주소 : "+shce_place_Loadaddr+"</p>");
+	 
 	}
 	
 	
@@ -311,8 +319,8 @@ $("#sche_place_btn").click(e=>{
 
 			    var el = document.createElement('li'),
 			    itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-			                '<div onclick="getAddress();" class="info">' +
-			                '   <h5 id="shce_place_name">' + places.place_name + '</h5>';
+			                '<div onclick="getAddress();" style="cursor:pointer;" class="info">' +
+			                '   <h5 id="shce_place_name" style="font-weight:bold; font-size:15px;">' + places.place_name + '</h5>';
 
 			    if (places.road_address_name) {
 			        itemStr += '    <h4 id="shce_place_Loadaddr">' + places.road_address_name + '</h4>' +
@@ -321,7 +329,7 @@ $("#sche_place_btn").click(e=>{
 			        itemStr += '    <span>' +  places.address_name  + '</span>'; 
 			    }
 			                 
-			      itemStr += '  <h5 class="tel">' +"tel : "+ places.phone  + '</h5>' +
+			      itemStr += '  <h5 class="tel">' +"tel : "+ places.phone  + '</h5><hr>' +
 			                '</div>';           
 
 			    el.innerHTML = itemStr;
@@ -450,19 +458,35 @@ $("#sche_place_btn").click(e=>{
 	$("#insertNormal").click(e=>{
 		$("#insertNormal_").click();
 		
+	});		
+	
+	
+	$("#uploadNormal").change(e=>{
+		if($("#fileNameList").find("p").length>0){
+			$("#fileNameList").find("p").remove();
+		}
+		
+		let fileName = $("input[name=upfile]");
+			for(let i=0;i<fileName.length;i++){
+				if(fileName[i].files.length>0){
+					for(let j =0;j<fileName[i].files.length;j++){
+						let p = $("<p>");
+					p.text(fileName[i].files[j].name);
+					$("#fileNameList").append(p);
+					}
+				}
+			}
 	});
 	
-	const checkContent=()=>{
+	
+	$("#normal_submit_Btn").click(e=>{
+		//제목 반드시 입력
 		let title = $("input[name=title]").val();
 		if(title.trim().length == 0){
 			$("input[name=title]").focus();
 			$("#titleResult").text("제목을 입력하세요").css("color","red");
-			return false;
-		}
-	}
-	
-	$("#normal_submit_Btn").click(e=>{
-	
+		}else{
+			
 		const frm = new FormData();
 		const fileInput = $("input[name=upfile]");
 		for(let i=0; i<fileInput[0].files.length;i++){
@@ -482,6 +506,10 @@ $("#sche_place_btn").click(e=>{
 			processData:false,
 			contentType:false,
 			success:data=>{
+				$("#normalTitle").val("");
+				$("#normalContent").val("");
+				$("#uploadNormal").val("");
+				$("#fileNameList").find("p").remove();			
 				$("#close_content").click();
 			},
 			error:(a)=>{
@@ -489,6 +517,8 @@ $("#sche_place_btn").click(e=>{
 			}
 			
 		});
+
+	}
 		
 	});
 	
@@ -499,15 +529,23 @@ $("#sche_place_btn").click(e=>{
 		$("#insertWork_").click();	
 	});
 	
-	const checkWorkContent=()=>{
-		let worktitle = $("#workTitle").val();
-		if(title.trim().length == 0){
-			$("#workTitle").focus();
-			$("#work_titleResult").text("제목을 입력하세요").css("color","red");
-			return false;
+	$("#uploadWorkfile_").change(e=>{
+		if($("#workFileNameContainer").find("p").length>0){
+			$("#workFileNameContainer").find("p").remove();
 		}
-	}
 		
+		let fileName = $("input[name=uploadWorkfile]");
+			for(let i=0;i<fileName.length;i++){
+				if(fileName[i].files.length>0){
+					for(let j =0;j<fileName[i].files.length;j++){
+						let p = $("<p>");
+					p.text(fileName[i].files[j].name);
+					$("#workFileNameContainer").append(p);
+					}
+				}
+			}
+	});
+
 		//해당 업무 관리자 리스트 .. 업무 작성시
 		const select = $("#work_addMember");
 		const ophead = $("<option>").text("담당자 추가").prop("disabled",true);
@@ -561,9 +599,13 @@ $("#sche_place_btn").click(e=>{
 			}
 			
 			
-			//span에서 삭제하면 배열에서도 삭제해주기
-			$("#work_addMember_area").append(span);	
 			
+			$("#work_addMember_area").append(span);	
+			if($("#work_addMember_area").find("span").length > memberName.length){
+				span.remove();
+			}
+			
+			//span에서 삭제하면 배열에서도 삭제해주기
 			span.click(e=>{
 				console.log(selectedManagerId);
 				
@@ -581,14 +623,17 @@ $("#sche_place_btn").click(e=>{
 			
 		});
 		
+		//기본 날짜 설정
+		
+	let workStart = document.getElementById('workStart').value= new Date().toISOString().substring(0, 10);
+	let workEnd = document.getElementById('workEnd').value= new Date().toISOString().substring(0, 10);	
 		//시작 날짜 
-		let workStart;
 		$("#workStart").change(e=>{
 			workStart = $("#workStart").val();
-			
-		});				
+		});		
+		
 		//마감 날짜
-		let workEnd;
+		
 		$("#workEnd").change(e=>{
 			workEnd = $("#workEnd").val();
 			
@@ -596,24 +641,32 @@ $("#sche_place_btn").click(e=>{
 		
 		//저장 버튼
 		$("#work_submit_Btn").click(e=>{	
-			//업무 제목
+			//제목 가져오기
 			let workTitle = $("#workTitle").val();
 			
-			//업무 진행상황 값 가져오기
-			let workIngVal  = $("input[name=work_ing]:checked").val();
-			
-			//순위
-			let workRank = $("input[name=work_rank]:checked").val();
-			
-			//내용
-			let workContent = $("#workContent").val();
-			
+			if(workTitle.trim().length == 0){
+				$("#workTitle").focus();
+				$("#work_titleResult").text("제목을 입력하세요").css("color","red");
+			}else if(!$("input[name=work_ing]").is(":checked")){
+				$("#call").prop("checked",true);
+			}else if(!$("input[name=work_rank]").is(":checked")){
+				$("#normal").prop("checked",true);
+			}else if(selectedManagerId.length == 0){
+				alert("담당자를 추가하세용");
+				return false;
+			}else {
+				//업무 진행상황 값 가져오기
+				let workIngVal  = $("input[name=work_ing]:checked").val();
+				//순위
+				let workRank = $("input[name=work_rank]:checked").val();
+				//내용
+				let workContent = $("#workContent").val();
 			//파일업로드
 			const frm = new FormData();
 			const fileInput = $("input[name=uploadWorkfile]");
+			
 			for(let i=0; i<fileInput[0].files.length;i++){
 				frm.append("upfile"+i,fileInput[0].files[i]);
-				
 			}
 			
 			frm.append("workTitle", workTitle);
@@ -642,8 +695,9 @@ $("#sche_place_btn").click(e=>{
 					$("input[name=work_ing]").prop('checked',false);
 					$("input[name=work_rank]").prop('checked',false);
 					$("#workContent").val("");
-					$("input[name=uploadWorkfile]").val("");
-					
+					$("input[name=uploadWorkfile]").val("");	
+					$("#workFileNameContainer").find("p").remove();
+					$("#work_addMember_area").find("span").remove();
 					$("#close_work_content").click();
 					
 				},
@@ -653,7 +707,7 @@ $("#sche_place_btn").click(e=>{
 				
 			});
 			
-			
+			}
 		});  
 
 	//일정 작성
@@ -661,16 +715,6 @@ $("#sche_place_btn").click(e=>{
 		$("#insertSche_").click();
 	});
 	
-	const checkScheContent=()=>{
-		let schetitle = $("#scheTitle").val();
-		if(title.trim().length == 0){
-			$("#scheTitle").focus();
-			$("#sche_titleResult").text("제목을 입력하세요").css("color","red");
-			return false;
-		}
-	}
-	
-
 	 //일정 참석자 리스트
 	 const selectSche = $("#sche_addMember");
 	const opheadSche = $("<option>").text("담당자 추가").prop("disabled",true);
@@ -686,15 +730,12 @@ $("#sche_place_btn").click(e=>{
 	
 	$(selectSche).change(e=>{
 		
-		//선택된 유저 아이디 span으로 보여줌
+		
 		let span = $("<span>");
 		let selectMemberName = $("#sche_addMember option:selected").text();		
 		let selectManaId = selectSche.val();
-		
-
 		span.text(selectMemberName);
-		span.val(selectManaId);
-		
+		span.val(selectManaId);	
 		
 		//선택된 유저id 배열에 넣어주기
 		for(let i =0; i<memberName.length;i++){
@@ -705,13 +746,16 @@ $("#sche_place_btn").click(e=>{
 			
 		}
 		
+		$("#sche_addMember_area").append(span);	
+	
+		if($("#sche_addMember_area").find("span").length > memberName.length){
+			span.remove();
+		}
+		
 		
 		//span에서 삭제하면 배열에서도 삭제해주기
-		$("#sche_addMember_area").append(span);	
-		
 		span.click(e=>{
 			console.log(selectedManagerId);
-			
 			for(let i=0;i<memberName.length;i++){
 				if(selectedManagerId.includes(span.val())){
 					selectedManagerId.splice(selectedManagerId.indexOf(span.val()),1);
@@ -726,56 +770,68 @@ $("#sche_place_btn").click(e=>{
 	
 	});
 	
-	//일정 시작 날짜
-	let scheStartDate;
-	$("#scheStartDate").change(e=>{
-		scheStartDate = $("#scheStartDate").val();
-	});
-	
-	//일정 마감 날짜
-	let scheEndDate;
-	$("#scheEndDate").change(e=>{
-		scheEndDate = $("#scheEndDate").val();
-	});
+	//일정 기본 날짜
+	let = scheStartDate = document.getElementById('scheStartDate').value= new Date().toISOString().substring(0, 10);
+	let = scheEndDate = document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
 	
 	//일정등록
 	$("#sche_submit_Btn").click(e=>{
 		
-		let projectNo = $("#projectNo").val();
-		let memberId = $("#memberId").val();
-		let scheTitle= $("#scheTitle").val();
-		let scheContent = $("#scheContent").val();
+		let scheTitle = $("#scheTitle").val();
 		
-		console.log(projectNo,memberId,scheTitle,scheContent,scheStartDate,scheEndDate,selectedManagerId,
-				shce_place_name,shce_place_Loadaddr)
-		
-		//데이터 보내기
-		$.ajax({
-			url : "<%=request.getContextPath()%>/project/sche/insertScheContent.do",
-			type:"POST",
-			 traditional : true,
+		if(scheTitle.trim().length == 0){
+			$("#scheTitle").focus();
+			$("#sche_titleResult").text("제목을 입력하세요").css("color","red");
+		}else{
 			
-			data:{"scheTitle":scheTitle,
-				"scheContent":scheContent,
-				"shce_place_name":shce_place_name,
-				"shce_place_Loadaddr":shce_place_Loadaddr,
-				"shceStart":scheStartDate,
-				"scheEndDate":scheEndDate,
-				"projectNo":projectNo,
-				"memberId":memberId,
-				"scheAttendMember":selectedManagerId
-			},
-			success:data=>{
-				alert("성공..");
-				$("#close_sche_content").click();
+			//일정 시작 날짜
+			
+			$("#scheStartDate").change(e=>{
+				scheStartDate = $("#scheStartDate").val();
+			});
+			
+			//일정 마감 날짜
+			
+			$("#scheEndDate").change(e=>{
+				scheEndDate = $("#scheEndDate").val();
+			});
+			
+			let projectNo = $("#projectNo").val();
+			let memberId = $("#memberId").val();
+			let scheContent = $("#scheContent").val();
+
+			
+			//데이터 보내기
+			$.ajax({
+				url : "<%=request.getContextPath()%>/project/sche/insertScheContent.do",
+				type:"POST",
+				traditional : true,		
+				data:{"scheTitle":scheTitle,
+					"scheContent":scheContent,
+					"shce_place_name":shce_place_name,
+					"shce_place_Loadaddr":shce_place_Loadaddr,
+					"shceStart":scheStartDate,
+					"scheEndDate":scheEndDate,
+					"projectNo":projectNo,
+					"memberId":memberId,
+					"scheAttendMember":selectedManagerId
+				},
+				success:data=>{
+					$("#scheTitle").val("");
+					$("#sche_addMember").val("");
+					$("#searchKeyword").val("");
+					$("#scheContent").val("");
+					$("sche_addMember_area").find("span").remove();
+					$("#searchResultContainer").find("p").remove();
+					$("#close_sche_content").click();
+				},
+				error:(a)=>{
+					alert("실팽");
+					$("#close_sche_content").click();
+				}
 				
-			},
-			error:(a)=>{
-				alert("실팽");
-			}
-			
-		});
-		
+			});
+		}
 	});
 	
 
