@@ -61,7 +61,7 @@ public class InsertAttTimeServlet extends HttpServlet {
 			loc="/project/selectProjectMain.do";
 		}	
 		
-	
+		
 		
 		request.setAttribute("outputAttTime", a);
 		request.setAttribute("msg", msg);

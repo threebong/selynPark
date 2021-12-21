@@ -182,10 +182,9 @@ public class WorkDao {
 		
 		try {
 			
-			
 			for(int i=0; i<wmList.size();i++) {
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, (int)wmList.get(i).get("workNo"));	
+				pstmt.setInt(1, (int)wmList.get(i).get("workNo"));
 				pstmt.setString(2, (String)wmList.get(i).get("managerId"));
 				result =pstmt.executeUpdate();
 			}

@@ -23,6 +23,57 @@ public class WorkService {
 		return works;
 	}
 
+
+	public int insertWorkContent(Work w) {
+		//업무 게시글 작성
+		Connection conn = getConnection();
+		int result = dao.insertWorkContent(conn,w);
+		close(conn);
+
+		return result;
+	}
+
+	public int selectWorkNo(Work w) {
+		//등록된 업무 게시글 번호 가져오기
+		Connection conn = getConnection();
+		int workNo = dao.selectWorkNo(conn,w);
+		close(conn);
+
+		return workNo;
+		
+	}
+
+	public int insertWorkFile(List<Map<String, Object>> fileList, int workNo) {
+		//업무 파일 추가
+		Connection conn = getConnection();
+
+		int result = dao.insertWorkFile(conn, fileList,workNo);
+
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+
+		return result;
+		
+	}
+
+	public int insertWorkManager(List<Map<String, Object>> wmList) {
+		//업무 담당자 추가
+		Connection conn = getConnection();
+		int result = dao.insertWorkManager(conn,wmList);
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+
+		return result;
+	}
+
 	/*
 	 * public int insertWorkContent(Work w) { //업무 게시글 작성 Connection conn =
 	 * getConnection(); int result = dao.insertWorkContent(conn,w); close(conn);
@@ -55,6 +106,7 @@ public class WorkService {
 	 * 
 	 * return result; }
 	 */
+
 	
 	
 	
