@@ -29,11 +29,11 @@ public class AttendanceListServlet extends HttpServlet {
 		HttpSession session=request.getSession();
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();
-		String month = request.getParameter("checkMonth");
+//		String month = request.getParameter("checkMonth");
 		
-		if(month==null || month.isEmpty()) {
-			 month=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-		}
+//		if(month==null || month.isEmpty()) {
+			String month=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+//		}
 		
 
 		//아이디 정보 가져와서 아이디와 일치하는 출퇴근이력 전체조회 리스트
