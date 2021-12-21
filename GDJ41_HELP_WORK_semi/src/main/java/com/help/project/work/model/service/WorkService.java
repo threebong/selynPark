@@ -1,4 +1,4 @@
-package com.help.project.work.model.sevice;
+package com.help.project.work.model.service;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import com.help.project.model.vo.Project;
 import com.help.project.work.model.dao.WorkDao;
 import com.help.project.work.model.vo.Work;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
-////이새기 범인
+
 public class WorkService {
 	private WorkDao dao=new WorkDao();
 	
@@ -22,8 +22,31 @@ public class WorkService {
 		close(conn);
 		return works;
 	}
-
-
+	public List<WorkSelectManagerJoin> selectWorkMine(List<Project> pro,String logId){
+		//내가 담당자인 업무들 조회
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> works=dao.selectWorkMine(conn,pro,logId);
+		close(conn);
+		return works;
+		
+	}
+	
+	public List<WorkSelectManagerJoin> searchMine(String ing,String prior,String h4,String logId){
+		//다중 검색--내가 담당자인 업무들
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		
+		if(h4.equals("나의업무")) {
+			 result=dao.searchMine(conn,ing,prior,logId);
+			 System.out.println("서비스"+result);
+		}else if(h4.equals("전체업무")) {
+			//해야함
+		}
+		return result;
+		
+	}
+	
+	
 	public int insertWorkContent(Work w) {
 		//업무 게시글 작성
 		Connection conn = getConnection();
@@ -64,6 +87,7 @@ public class WorkService {
 		//업무 담당자 추가
 		Connection conn = getConnection();
 		int result = dao.insertWorkManager(conn,wmList);
+		
 		if (result > 0) {
 			commit(conn);
 		} else {
@@ -73,40 +97,6 @@ public class WorkService {
 
 		return result;
 	}
-
-	/*
-	 * public int insertWorkContent(Work w) { //업무 게시글 작성 Connection conn =
-	 * getConnection(); int result = dao.insertWorkContent(conn,w); close(conn);
-	 * 
-	 * return result; }
-	 * 
-	 * public int selectWorkNo(Work w) { //등록된 업무 게시글 번호 가져오기 Connection conn =
-	 * getConnection(); int workNo = dao.selectWorkNo(conn,w); close(conn);
-	 * 
-	 * return workNo;
-	 * 
-	 * }
-	 * 
-	 * public int insertWorkFile(List<Map<String, Object>> fileList, int workNo) {
-	 * //업무 파일 추가 Connection conn = getConnection();
-	 * 
-	 * int result = dao.insertWorkFile(conn, fileList,workNo);
-	 * 
-	 * if (result > 0) { commit(conn); } else { rollback(conn); } close(conn);
-	 * 
-	 * return result;
-	 * 
-	 * }
-	 * 
-	 * public int insertWorkManager(List<Map<String, Object>> wmList) { //업무 담당자 추가
-	 * Connection conn = getConnection(); int result =
-	 * dao.insertWorkManager(conn,wmList);
-	 * 
-	 * if (result > 0) { commit(conn); } else { rollback(conn); } close(conn);
-	 * 
-	 * return result; }
-	 */
-
 	
 	
 	

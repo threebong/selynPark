@@ -17,6 +17,7 @@ import java.util.Properties;
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 
 public class WorkDao {
@@ -36,7 +37,6 @@ public class WorkDao {
 	public HashMap<Integer, List<Work>> selectWorkFive(Connection conn,List<Project> pro){
 		//키값: 해당 사원이 참여하고 있는 프로젝트 번호 
 		//밸류: 그 프로젝트번호에 해당하는 업무 게시글 list
-		
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		HashMap<Integer, List<Work>> worksAll=new HashMap<Integer, List<Work>>();
@@ -65,8 +65,6 @@ public class WorkDao {
 					works.add(w);
 				}
 				worksAll.put(p.getProjectNo(), works);
-				
-			
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -201,6 +199,108 @@ public class WorkDao {
 		
 		return result;
 	}
+	
+	public List<WorkSelectManagerJoin> selectWorkMine(Connection conn,List<Project> pro,String logId){
+		//내가 담당자인 업무들만 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		//HashMap<Integer, List<Work>> works=new HashMap<Integer, List<Work>>();
+		List<WorkSelectManagerJoin> works=new ArrayList<WorkSelectManagerJoin>();
+		String sql=prop.getProperty("selectWorkMine");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, logId);
+			for(Project p:pro) {
+				pstmt.setInt(2, p.getProjectNo());
+				rs=pstmt.executeQuery();
+				while(rs.next()) {
+					
+					WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
+							.proName(rs.getString("PRO_NAME"))
+							.projectNo(rs.getInt("PROJECT_NO"))
+							.workNo(rs.getInt("WORK_NO"))
+							.projectNo(rs.getInt("PROJECT_NO"))
+							.workIng(rs.getString("WORK_ING"))
+							.workRank(rs.getString("WORK_RANK"))
+							.workTitle(rs.getString("WORK_TITLE"))
+							.memberId(rs.getString("MEMBER_ID"))
+							.managerId(rs.getString("MANAGER_ID"))
+							.workDate(rs.getDate("WORK_DATE"))
+							.build();
+					System.out.print(wo);
+					works.add(wo);
+				}
+				//works.put(p.getProjectNo(), w);//플젝번호-해당업무들
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return works;
+	}
+	
+	//------------나의 업무 조건 검색
+	public List<WorkSelectManagerJoin> searchMine(Connection conn,String ing,String prior,String logId){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		String sql="";
+		try {
+		
+			if(ing.equals("진행상황")&&!prior.equals("우선순위")) {//우선순위 조건
+				sql = prop.getProperty("searchWorkPrior").replace("#COL", "W.WORK_RANK");
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, logId);
+				pstmt.setString(2, prior);
+				System.out.println("우선순위");
+				
+			}else if(!ing.equals("진행상황")&&prior.equals("우선순위")){//진행상황조건
+				sql = prop.getProperty("searchWorkPrior").replace("#COL", "W.WORK_ING");
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, logId);
+				pstmt.setString(2, ing);
+				System.out.println("진행상황");
+				
+			}else if(!ing.equals("진행상황")&&!prior.equals("우선순위")){//우선순위&&진행상황 조건
+				sql = prop.getProperty("searchWorkPriorTwo").replace("#COL", "W.WORK_RANK").replace("#BOL","W.WORK_ING");
+				
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, logId);
+				pstmt.setString(2, prior);
+				pstmt.setString(3, ing);
+				System.out.println("둘다 "+sql);
+			}
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
+						.proName(rs.getString("PRO_NAME"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workNo(rs.getInt("WORK_NO"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.workTitle(rs.getString("WORK_TITLE"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.managerId(rs.getString("MANAGER_ID"))
+						.workDate(rs.getDate("WORK_DATE"))
+						.build();
+				System.out.println("다오1 조인객체"+wo);
+				result.add(wo);
+				System.out.println("다오 리스트"+result);
+			}
+			
+			
+		}catch(SQLException e) {
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+		
+	}
+	
 	
 	
 	
