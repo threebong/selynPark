@@ -548,7 +548,8 @@ $("#sche_place_btn").click(e=>{
 
 		//해당 업무 관리자 리스트 .. 업무 작성시
 		const select = $("#work_addMember");
-		const ophead = $("<option>").text("담당자 추가").prop("disabled",true);
+		const ophead = $("<option>").text("담당자 추가");
+		
 		select.append(ophead);
 		
 		let memberName = new Array();
@@ -593,6 +594,7 @@ $("#sche_place_btn").click(e=>{
 			for(let i =0; i<memberName.length;i++){
 				if(!selectedManagerId.includes(selectManaId)){
 					selectedManagerId.push(selectManaId);
+					$("#work_addMember_area").append(span);	
 					break;
 				}
 				
@@ -600,7 +602,6 @@ $("#sche_place_btn").click(e=>{
 			
 			
 			
-			$("#work_addMember_area").append(span);	
 			if($("#work_addMember_area").find("span").length > memberName.length){
 				span.remove();
 			}
@@ -717,8 +718,8 @@ $("#sche_place_btn").click(e=>{
 	
 	 //일정 참석자 리스트
 	 const selectSche = $("#sche_addMember");
-	const opheadSche = $("<option>").text("담당자 추가").prop("disabled",true);
-	selectSche.append(ophead);
+	 const opheadSche = $("<option>").text("참석자 추가");
+	 selectSche.append(opheadSche);
 	
 					
 	for(let i=0; i<memberName.length;i++){
@@ -741,12 +742,11 @@ $("#sche_place_btn").click(e=>{
 		for(let i =0; i<memberName.length;i++){
 			if(!selectedManagerId.includes(selectManaId)){
 				selectedManagerId.push(selectManaId);
+				$("#sche_addMember_area").append(span);
 				break;
 			}
-			
 		}
 		
-		$("#sche_addMember_area").append(span);	
 	
 		if($("#sche_addMember_area").find("span").length > memberName.length){
 			span.remove();
@@ -755,7 +755,6 @@ $("#sche_place_btn").click(e=>{
 		
 		//span에서 삭제하면 배열에서도 삭제해주기
 		span.click(e=>{
-			console.log(selectedManagerId);
 			for(let i=0;i<memberName.length;i++){
 				if(selectedManagerId.includes(span.val())){
 					selectedManagerId.splice(selectedManagerId.indexOf(span.val()),1);
