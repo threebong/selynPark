@@ -62,7 +62,7 @@ public class ProjectService {
 		return pinfo;
 	}
 
-	public void insertProMemberCreator(Project pinfo) {
+	public int insertProMemberCreator(Project pinfo) {
 		Connection conn = getConnection();
 
 		int result = dao.insertProMemberCreator(conn, pinfo);
@@ -73,7 +73,7 @@ public class ProjectService {
 			rollback(conn);
 		}
 		close(conn);
-
+		return result;
 	}
 
 	public Project selectProjectOne(int projectNo) {
@@ -96,6 +96,14 @@ public class ProjectService {
 		List<ProMemberJoinMember> mList= dao.selectProjectJoinMemberList(conn,projectNo);
 		close(conn);
 		return mList;
+	}
+
+	public int selectProjectNo(Project pinfo) {
+		
+		Connection conn = getConnection();
+		int projectNo = dao.selectProjectNo(conn,pinfo);
+		close(conn);
+		return projectNo;
 	}
 
 }

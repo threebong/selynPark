@@ -276,4 +276,32 @@ public class ProjectDao {
 		return mList;
 	}
 
+
+
+	public int selectProjectNo(Connection conn, Project pinfo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int projectNo =0;
+		String sql = prop.getProperty("selectProjectNo");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pinfo.getMemberId());
+			pstmt.setString(2, pinfo.getProName());
+			pstmt.setString(3, pinfo.getProExplain());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next())projectNo = rs.getInt(1);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return projectNo;
+	}
+
 }
