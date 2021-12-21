@@ -1,6 +1,7 @@
 package com.help.attendance.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,13 +31,15 @@ public class AttendanceListEndServlet extends HttpServlet {
 		String memberId=loginMember.getMemberId();
 		
 		String month = request.getParameter("selectMonth");
+		System.out.println(month.getClass().getName());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
 
 		
 		
 		//아이디 정보 가져와서 아이디와 일치하는 출퇴근이력 전체조회 리스트
 		//월별로 나와야함 yy/MM형태로 지금은 현재달, 선택한 달의 데이터가 이쪽으로 넘어와야함
 
-		List<Attendance> list = new AttendanceService().selectAttendanceMonthly(memberId,month);
+		List<Attendance> list = new AttendanceService().selectAttendanceMonthly(memberId, month);
 
 		System.out.println(list);
 		request.setAttribute("attendanceMonthly", list);
