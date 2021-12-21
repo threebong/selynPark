@@ -1,3 +1,4 @@
+<%@page import="com.help.project.model.vo.ProjectAddMember"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="com.help.project.model.vo.ProMemberJoinMember"%>
 <%@page import="java.util.List"%>
@@ -9,6 +10,8 @@
 <%
 	Project p = (Project)request.getAttribute("projectInfo");
 	List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
+	//List<ProjectAddMember> memberList = (List)request.getAttribute("memberList");
+	
 	
 	String[] memberName = new String[pMember.size()];
 	String[] managerId = new String[pMember.size()];
@@ -19,15 +22,62 @@
 		memberName[i] = nameTemp;
 		managerId[i] = idTemp;
 	}
+	int count =0;
 %>
 <script>
 
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
-
 </style>
 <main>
+
+<!-- 프로젝트 초대 모달 -->
+<div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">사원 목록</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div>
+		<div >
+			<div class="input-group mb-3">
+				<div style="width: 100px;">
+				<select class="form-select" aria-label=".form-select-sm example">
+					  <option selected>검색</option>
+					  <option value="1">사원명</option>
+					  <option value="2">부서명</option>
+					  <option value="3">직급명</option>
+				</select>
+				</div>
+				<div>
+					<input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+					<button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
+				</div>
+				
+			</div>
+		</div>
+		
+      </div>
+      <div class="modal-body">
+       	<div id="addProjectMemberListContainer">
+       		<table class="table table-hover" style="text-align: center;">
+       			
+       		</table>
+       	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="proAddMember_close">Close</button>
+        <button type="button" class="btn btn-primary" id="proAddMember_submit">추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+		
+</script>
 
 <!-- 프로젝트정보 -->
 
@@ -183,7 +233,8 @@
   </div>
 </div>
 
-	
+
+
 	 
 <script>
 	//지도 API 사용
@@ -427,15 +478,17 @@ $("#sche_place_btn").click(e=>{
 <div id="title-container">
 	<div id="pro-bookmark-star"><i class="fas fa-star"></i></div>
 	<div id="project-title"><span><%=p.getProName() %></span></div>
+	<div style="float:right;">
+	<%if(loginMember.getMemberId().equals(p.getMemberId())){ %> <!-- 현재 로그인된 멤버와, 프로젝트 생성자 아이디가 같으면 초대 버튼 활성화 -->
+	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProjectMemberModal" id="add_btn">사원 추가</button>
+	<%} %>
+	</div>
 </div>
 <div id="menu-container">
 	<ul class="nav">
 		<li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
 		<li class="nav-item"><a class="nav-link" href="#">업무</a></li>
 		<li class="nav-item"><a class="nav-link" href="#">파일</a></li>
-		<%if(loginMember.getMemberId().equals(p.getMemberId())){ %> <!-- 현재 로그인된 멤버와, 프로젝트 생성자 아이디가 같으면 초대 버튼 활성화 -->
-		<li class="nav-item"><a class="nav-link" href="#">초대</a></li>
-		<%} %>
 	</ul>
 </div>
 	<hr style="margin-top: 5px;">
@@ -454,12 +507,64 @@ $("#sche_place_btn").click(e=>{
 </main>
 
 <script>
+//사원 프로젝트 초대
+$("#add_btn").click(e=>{
+	$.ajax({
+		url: "<%=request.getContextPath()%>/project/selectAllMember.do",
+		dataType:"json",
+		success : data=>{
+			console.log(data);
+			$("#addProjectMemberListContainer").find("table").remove();
+			const table = $("<table class='table' style='text-align:center;'>");
+			table.html("<thead><tr><th scope='col'>이름</th><th scope='col'>부서명</th><th scope='col'>직급</th><th scope='col'>선택</th></tr></thead>");
+			for(let i=0;i<data.length;i++){
+			const tr = $("<tr scope='row'>");
+			const memberName = $("<td>").html(data[i]["memberName"]);
+			const deptName = $("<td>").html(data[i]["deptName"]);
+			const positionName = $("<td>").html(data[i]["positionName"]);
+			const check = $("<td>");
+			check.html("<input type='checkbox' name='proAddMember_Ck' value='"+data[i]["memberId"]+"'>");
+			tr.append(memberName).append(deptName).append(positionName).append(check);
+			table.append(tr);
+			}
+			$("#addProjectMemberListContainer").append(table);
+		}
+		
+	});
+});
+
+
+$("#proAddMember_submit").click(e=>{
+	let addMemberArr = new Array();
+	let projectNo = $("#projectNo").val();
+	//체크박스로 선택된 사원 아이디 가져와서 배열에 저장함
+	$("input[name=proAddMember_Ck]:checked").each(function(){
+		let temp = $(this).val();
+		addMemberArr.push(temp);
+	});
+	//tb_pro_member 테이블에 보내줘야함.
+	
+	console.log(addMemberArr);
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/addProjectMember.do",
+		type:"post",
+		data : {"addMemberArr":addMemberArr,
+				"projectNo":projectNo},
+		success: data=>{
+			$("#proAddMember_close").click();
+		},
+		error: a=>{
+			alert("시일패에..");
+		}
+	});
+});
+
+
 	/* 1.일반 게시글 작성 로직 */
 	$("#insertNormal").click(e=>{
 		$("#insertNormal_").click();
-		
 	});		
-	
 	
 	$("#uploadNormal").change(e=>{
 		if($("#fileNameList").find("p").length>0){
@@ -832,8 +937,6 @@ $("#sche_place_btn").click(e=>{
 			});
 		}
 	});
-	
-
 </script>
      
 

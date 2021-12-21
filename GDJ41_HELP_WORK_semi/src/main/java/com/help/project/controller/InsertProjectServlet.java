@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.help.member.model.vo.Member;
 import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.ProMemberJoinMember;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProjectAddMember;
 
 /**
  * Servlet implementation class InsertProjectServlet
@@ -54,6 +56,9 @@ public class InsertProjectServlet extends HttpServlet {
 			int projectNo = new ProjectService().selectProjectNo(pinfo);
 			List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
 			
+			
+			
+				
 				request.setAttribute("ProMemberJoinMember", mList);
 				request.setAttribute("projectInfo", pinfo);
 				request.getRequestDispatcher("/views/project/projectDetailView.jsp?").forward(request, response);
