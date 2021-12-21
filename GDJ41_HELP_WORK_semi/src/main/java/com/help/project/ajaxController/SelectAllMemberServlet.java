@@ -1,4 +1,4 @@
-package com.help.project.controller;
+package com.help.project.ajaxController;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,23 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.help.member.model.vo.Member;
+import com.google.gson.Gson;
 import com.help.project.model.service.ProjectService;
-import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
-import com.help.project.model.vo.ProMemberJoinMember;
 
 /**
- * Servlet implementation class SelectProjectDetailViewToList
+ * Servlet implementation class SelectAllMemberServlet
  */
-@WebServlet("/project/selectProjectDetailViewToList.do")
-public class SelectProjectDetailViewToList extends HttpServlet {
+@WebServlet("/project/selectAllMember.do")
+public class SelectAllMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SelectProjectDetailViewToList() {
+    public SelectAllMemberServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,23 +32,11 @@ public class SelectProjectDetailViewToList extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//생성후 초대를 위한 전체 회원 정보 가져오기
+		List<ProjectAddMember> mAllList = new ProjectService().selectAllMember();
 		
-		int projectNo = Integer.parseInt(request.getParameter("projectNo"));
-
-		Project pinfo = new ProjectService().selectProjectOne(projectNo);
-		
-		//해당 프로젝트에 참여중인 사원 리스트
-		List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
-	
-		//List<ProjectAddMember> mAllList = new ProjectService().selectAllMember();
-		
-		//request.setAttribute("memberList", mAllList);
-		
-		request.setAttribute("ProMemberJoinMember", mList);
-		
-		request.setAttribute("projectInfo", pinfo);
-				
-		request.getRequestDispatcher("/views/project/projectDetailView.jsp").forward(request, response);
+		response.setContentType("application/json; charset=utf-8");
+		new Gson().toJson(mAllList,response.getWriter());
 	}
 
 	/**

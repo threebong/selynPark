@@ -55,18 +55,16 @@ public class InsertAttTimeServlet extends HttpServlet {
 			int result = new AttendanceService().insertAttTime(memberId, attTime,attDate,attStatus);
 			if(result>0) {
 				msg="출근 성공";
-//				loc="member/memberLogin.do";
 			} else {
 				msg="출근 실패";
-//				loc="member/memberLogin.do";
 			}	
 			a = new AttendanceService().outputAttTime(memberId,attDate); // 등록하고 다시 조회하기
 		} else { //a가 null이 아니면 이미 해당일자는 출근 등록 되어있는 상태 -> 하루 한번만 등록 가능함 중복등록x
 			msg="이미 출근하였습니다.";
+
 //			loc="member/memberLogin.do";
-			
 		}
-	
+
 		
 //		response.setContentType("application/json;charset=utf-8");
 //		new Gson().toJson(a,response.getWriter());

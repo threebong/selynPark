@@ -45,7 +45,6 @@ public class SelectWorkManagerViewServlet extends HttpServlet {
 	//	HashMap<Integer, List<Work>> myworks=new WorkService().selectWorkMine(pro,logId);//플젝번호-해당업무글들
 		List<WorkSelectManagerJoin> myworks=new WorkService().selectWorkMine(pro,logId);//플젝번호-해당업무글들
 		
-		System.out.println(myworks+"잘 가져오니`~~~~~");
 		
 		
 		response.setContentType("application/json;charset=utf-8");

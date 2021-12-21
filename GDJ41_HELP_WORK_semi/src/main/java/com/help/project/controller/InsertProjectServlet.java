@@ -1,14 +1,19 @@
 package com.help.project.controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.help.member.model.vo.Member;
 import com.help.project.model.service.ProjectService;
+import com.help.project.model.vo.ProMemberJoinMember;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProjectAddMember;
 
 /**
  * Servlet implementation class InsertProjectServlet
@@ -40,15 +45,25 @@ public class InsertProjectServlet extends HttpServlet {
 		int result = new ProjectService().insertProject(p);
 		
 		if(result>0) {
-			System.out.println("프로젝트 생성 완료");
 			
 			//프로젝트 생성이 완료되면 해당 프로젝트 정보를 받아온당
 			Project pinfo = new ProjectService().selectProjectNewinsert();
 			
 			//생성 완료시 프로젝트 생성자는 프로젝트 참여자 테이블로 들어가야함
 			new ProjectService().insertProMemberCreator(pinfo);
-			request.setAttribute("projectInfo", pinfo);
-			request.getRequestDispatcher("/project/selectProjectDetailView.do").forward(request, response);
+			
+			//생성 완료시 프로젝트 번호 가져옴
+			int projectNo = new ProjectService().selectProjectNo(pinfo);
+			List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
+			
+			
+			
+				
+				request.setAttribute("ProMemberJoinMember", mList);
+				request.setAttribute("projectInfo", pinfo);
+				request.getRequestDispatcher("/views/project/projectDetailView.jsp?").forward(request, response);
+			
+			
 		}else {
 			System.out.println("프로젝트 생성 실패");
 			request.getRequestDispatcher("/project/selectProjectMain.do").forward(request, response);

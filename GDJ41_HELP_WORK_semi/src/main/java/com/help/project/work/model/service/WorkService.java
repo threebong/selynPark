@@ -41,6 +41,10 @@ public class WorkService {
 			 System.out.println("서비스"+result);
 		}else if(h4.equals("전체업무")) {
 			//해야함
+			List<Integer> proNum=dao.selectProjectNo(conn, logId);
+			 result=dao.searchAll(conn,ing,prior,proNum);
+			 System.out.println("서비스"+result);
+			
 		}
 		return result;
 		
@@ -98,6 +102,19 @@ public class WorkService {
 		return result;
 	}
 	
+	public List<Integer> selectProjectNo(String logId){
+		//내가 참여한 프로젝트 번호들 
+		Connection conn=getConnection();
+		List<Integer> result= dao.selectProjectNo(conn,logId);
+		close(conn);
+		return result;
+	}
 	
-	
+	public List<WorkSelectManagerJoin> selectWorkAll(List<Integer> proNum){
+		//내가 참여한 프로젝트의 모든 업무들 
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,proNum);
+		close(conn);
+		return result;
+	}
 }

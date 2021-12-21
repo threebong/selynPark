@@ -1,7 +1,9 @@
 package com.help.project.model.service;
 
+import com.help.member.model.vo.Member;
 import com.help.project.model.dao.ProjectDao;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProjectAddMember;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 import static com.help.common.JDBCTemplate.getConnection;
@@ -62,7 +64,7 @@ public class ProjectService {
 		return pinfo;
 	}
 
-	public void insertProMemberCreator(Project pinfo) {
+	public int insertProMemberCreator(Project pinfo) {
 		Connection conn = getConnection();
 
 		int result = dao.insertProMemberCreator(conn, pinfo);
@@ -73,7 +75,7 @@ public class ProjectService {
 			rollback(conn);
 		}
 		close(conn);
-
+		return result;
 	}
 
 	public Project selectProjectOne(int projectNo) {
@@ -96,6 +98,38 @@ public class ProjectService {
 		List<ProMemberJoinMember> mList= dao.selectProjectJoinMemberList(conn,projectNo);
 		close(conn);
 		return mList;
+	}
+
+	public int selectProjectNo(Project pinfo) {
+		
+		Connection conn = getConnection();
+		int projectNo = dao.selectProjectNo(conn,pinfo);
+		close(conn);
+		return projectNo;
+	}
+
+	public List<ProjectAddMember> selectAllMember() {
+		Connection conn = getConnection();
+		List <ProjectAddMember> mAllList = dao.selectAllMember(conn);
+		close(conn);
+		
+		return mAllList;
+	}
+
+	public int insertProMember(List<Map<String, Object>> mList) {
+		//프로젝트 사원 초대
+		Connection conn = getConnection();
+
+		int result = dao.insertProMember(conn, mList);
+
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
+		return result;
 	}
 
 }
