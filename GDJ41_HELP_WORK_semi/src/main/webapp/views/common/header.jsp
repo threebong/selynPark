@@ -138,15 +138,17 @@ window.addEventListener('DOMContentLoaded', event => {
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
                         
-                          <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertAttTime.do" onclick="attTime();">
+                          <a id="insertAttTime" class="nav-link" href="">
                             <div class="sb-nav-link-icon" style="color:green; "><i class="fas fa-battery-full"></i>
                             </div>
-                            attendance&nbsp;<input type="button" value="attTime"style="display:none;"/>
+                            attendance&nbsp;<input type="button" style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
                                     <div id="attTime"></div>
                                 </span>
                             </div>
                         </a>
+                        
+                        
                       
                         <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertLeaveTime.do" onclick="leaveTime();">
                             <div class="sb-nav-link-icon" style="color:rgb(255, 38, 0);"><i class="fas fa-battery-empty"></i>
@@ -157,7 +159,7 @@ window.addEventListener('DOMContentLoaded', event => {
                                 </span>
                             </div>
                         </a>
-                        <a class="nav-link" href="<%=request.getContextPath()%>/attendance/attendanceList.do">
+                        <a id="attendanceList" class="nav-link" href="<%=request.getContextPath()%>/attendance/attendanceList.do">
                             <div class="sb-nav-link-icon" ><i class="fas fa-business-time"></i>
                             </div>
                             My A/L Information
@@ -277,12 +279,30 @@ window.addEventListener('DOMContentLoaded', event => {
            
         });
         
-        var d = new Date();
+         var d = new Date();
          const attTime=()=>{
              var attTime = document.getElementById('attTime');
              attTime.innerText = d.getHours()+":"+d.getMinutes();
-        } //출근시간
-     
+        }  //출근시간
+
+<%--     	$("#insertAttTime").click(e=>{
+    	 var d = new Date();
+    	 const memberId="<%=loginMember.getMemberId()%>";
+    	 var attTime = d.getHours()+":"+d.getMinutes();
+    	 var attDate = d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+    	 console.log(memberId);
+    	 console.log(attTime);
+    	 console.log(attDate);
+    	 $.ajax({
+    		url : "<%=request.getContextPath()%>/attendance/insertAttTime.do",
+    		type:'get'
+            success:data=>{
+    		data : {"memberId":memberId,"attTime":attTime, "attDate":attDate}
+            console.log(data);
+            	$("#attTime").html(data);
+            }
+    	 })
+     }); --%>
         const leaveTime=()=>{
            var leaveTime = document.getElementById('leaveTime');
            leaveTime.innerText = d.getHours()+":"+d.getMinutes();

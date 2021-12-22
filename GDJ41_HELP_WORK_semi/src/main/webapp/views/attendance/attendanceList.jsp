@@ -1,9 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page  language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp" %>
-<%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance, java.util.List" %>
+<%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance" %>
 <%
 	List<Attendance> list = (List<Attendance>)request.getAttribute("attendanceMonthly");
+ 
+	SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+	SimpleDateFormat date = new SimpleDateFormat("yyyy-mm-dd");
 
 %>
 <style>
@@ -18,7 +21,7 @@ table.attendanceType thead th {
   padding: 10px;
   font-weight: bold;
   vertical-align: top;
-  color: #369;
+  color: black;
   border-bottom: 3px solid #036;
 }
 table.attendanceType tbody th {
@@ -26,7 +29,7 @@ table.attendanceType tbody th {
   padding: 10px;
   font-weight: bold;
   vertical-align: top;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid black;
   background: #f3f6f7;
 }
 table.attendanceType td {
@@ -44,11 +47,14 @@ font-size:30px;
 }
 
 </style>
-<main>
 
-	<form id="frm" action="" method="post">
+
+
+<main>
+		<form id="frm" action="">
 		<span><input type="text" id="selectMonth" name="selectMonth" readonly/></input></span><br>
-		<input id="checkMonth" type="month" onchange="selectDate();"/>
+		<input id="checkMonth" type="month" name="checkMonth">
+		</form>
 
 
 		<table class="attendanceType">
@@ -60,9 +66,9 @@ font-size:30px;
 		    <th>상태</th>
 		  </tr>
 		  </thead>
-		  <tbody>
-			<% if(list.isEmpty()) { %>
-		  	<tr>
+		  <tbody id="ajaxTable">
+		 	<% if(list.isEmpty()) { %>
+		  	<tr id="result">
 		  		<td colspan="4">조회된 출퇴근 이력이 없습니다.</td>
 		  	</tr>
 		  	<%} else { 
@@ -85,22 +91,84 @@ font-size:30px;
 		  	}%>
 		
 		  </tbody>
+		
 		</table>
 
-	</form>
 </main>
 <script>
-document.getElementById('checkMonth').valueAsDate = new Date(); //기본으로 현재 달 표기
-$("#checkMonth").change(e=>{
-	$("#selectMonth").val($("#checkMonth").val())
-	<%-- $("#frm").attr("action","<%=request.getContextPath() %>/attendance/attendanceList.do")
-	$("#frm").attr("method","post")
-	$("#frm").submit() --%>
-});
-/* $(()=>{
-	$("#checkMonth").change();
-}); */
+  //document.getElementById('checkMonth').valueAsDate = new Date();  //기본으로 현재 달 표기
+ 	$("#checkMonth").change(e=>{
+ 		$("#ajaxTable").hide(); // 최초페이지에서 출력한 데이터 숨겨주고
+ 		$("#ajaxTable").remove(); 
+    	 const memberId ="<%=loginMember.getMemberId()%>";
+    	$("#selectMonth").val($("#checkMonth").val());
+		let month = $("#selectMonth").val();
+   
+    	 $.ajax({
+    		url : "<%=request.getContextPath()%>/attendance/attendanceListEnd.do",
+    		type:'post',
+			data : {"memberId":memberId,"month":month},
+			dataType : 'json',
+            success:data=>{
+				let tbody=$('tbody[id="changeAjax"]');
+				for(let i=0; i<data.length; i++){
+					let tr=$("<tr>");
+					let attDate=$("<td>").html(data[i]["attDate"]);
+					let attTime=$("<td>").html.(data[i]["attTime"]);
+					let leaveTime=$("<td>").html(data[i]["leaveTime"]);
+					let attStatus=$("<td>").html(data[i]["attStatus"]);
+					tr.append(attDate).append(attTime).append(leaveTime).append(attStatus);
+					tbody.append(tr);
+				}
+				$("#ajaxTable").html(data);
+				console.log(data);
+            }
+    	 })
+     });
+  
 
+<%--   $("#checkMonth").change(e=>{
+	$.ajax({
+		url:"<%=request.getContextPath()%>/attendance/attendanceListEnd.do",
+		type:"post",
+		data:{"monthData":$("#checkMonth").val()},
+		success:data=>{
+			for(let i=0; i<data.length; i++){
+			let tr=$('tr[id="result"]');
+			let attDate=$("<td>").html(data[i]["attDate"]);
+			let attTime=$("<td>").html(data[i]["attTime"]);
+			let leaveTime=$("<td>").html(data[i]["leaveTime"]);
+			let attStatus=$("<td>").html(data[i]["attStatus"]);
+			tr.append(attDate).append(attTime).append(leaveTime).append(attStatus);
+			table.append(tr);
+			}
+		}
+	})
+}) --%>
+
+
+<%-- var request = new XMLHttpRequest();
+function searchMonth(){
+	request.open("Post","<%=request.getContextPath()%>/JSONServlet",true);
+	request.onreadystatechange = searchProcess;
+	request.send(null);
+	
+}
+function searchProcess(){
+	var table = document.getElementById("ajaxTable");
+	table.innerHTML = "";
+	if(request.readyState)==4&&request.status=200){
+		var object = eval('('+request.responseText+')');
+		var result = object.result;
+		for(var i=0; i<result.length; i++){
+			var row = table.insertRow(0);
+			for(var j=0; j<result[i].length; j++){
+				var cell = row.insertCell(j);
+				cell.innerHTML = result[i][j].value;
+			}
+		}
+	}
+} --%>
 	
 
 </script>

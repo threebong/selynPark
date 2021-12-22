@@ -1,7 +1,7 @@
 package com.help.attendance.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.help.attendance.model.service.AttendanceService;
 import com.help.attendance.model.vo.Attendance;
 import com.help.member.model.vo.Member;
@@ -29,43 +30,48 @@ public class InsertAttTimeServlet extends HttpServlet {
 		HttpSession session=request.getSession();
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();
-	
-		//출근시간
+//		String memberId = request.getParameter("memberId");
+//		String attTime = request.getParameter("attTime");
+//		String attDate = request.getParameter("attDate");
+//		System.out.println(attTime+","+attDate);
+//		//출근시간
 		String attTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
-		//현재날짜
+//		//현재날짜
 		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		//출근,지각 비교시간
 		String workingTime = String.valueOf(LocalTime.of(9,  00, 00));
 		//출퇴근 상태값
 		String attStatus = null;
 		String msg="";
-		String loc="";
+//		String loc="";
 		//현재날짜 출퇴근 데이터 가져오기
-		//현재날짜에 등록된게 없을때
-//		if(a==null) { sqlexection 뜸
-		if(workingTime.compareTo(attTime)>=0) {
-			attStatus ="출근";
-		} else {
-			attStatus = "지각";
-		}
-		int result = new AttendanceService().insertAttTime(memberId, attTime,attDate,attStatus);
-//		} 
-		//출근 등록하고 다시 데이터 가져오기
 		Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
-		if(result>0) {
-			msg="출근 성공";
-			loc="/project/selectProjectMain.do";
-		} else {
-			//이건.....세션에 하루 저장???
+		if(a==null) { // a가 null이면 아직 출근 등록 전인 상태니까 출근 등록 로직
+			if(workingTime.compareTo(attTime)>=0) {
+				attStatus ="출근";
+			} else {
+				attStatus = "지각";
+			}
+			int result = new AttendanceService().insertAttTime(memberId, attTime,attDate,attStatus);
+			if(result>0) {
+				msg="출근 성공";
+			} else {
+				msg="출근 실패";
+			}	
+			a = new AttendanceService().outputAttTime(memberId,attDate); // 등록하고 다시 조회하기
+		} else { //a가 null이 아니면 이미 해당일자는 출근 등록 되어있는 상태 -> 하루 한번만 등록 가능함 중복등록x
 			msg="이미 출근하였습니다.";
-			loc="/project/selectProjectMain.do";
-		}	
+
+//			loc="member/memberLogin.do";
+		}
+
+		
+//		response.setContentType("application/json;charset=utf-8");
+//		new Gson().toJson(a,response.getWriter());
 		
 		
-		
-		request.setAttribute("outputAttTime", a);
 		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
+//		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 
 	

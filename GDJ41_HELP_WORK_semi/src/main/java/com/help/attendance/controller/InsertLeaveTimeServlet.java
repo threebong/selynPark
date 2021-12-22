@@ -36,6 +36,7 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 		//퇴근, 조퇴 비교시간
 		String workTime = String.valueOf( LocalTime.of(18,  00, 00));
 		String attStatus = null;
+		
 		if(leaveTime.compareTo(workTime)>=0) {
 			attStatus=" / 퇴근";
 		} else {
@@ -50,12 +51,12 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 		String msg="";
 		String loc="";
 		if(result>0) {
-			msg="퇴근 성공";
-			loc="/project/selectProjectMain.do";
-		} else {
-			msg="출근을 먼저 눌러야 합니다.";
-			loc="/project/selectProjectMain.do";
-		}
+			msg="퇴근 성공"; 
+			loc="/member/memberLogin.do";
+		} else { 
+			msg="이미 퇴근 상태 입니다.";
+			loc="/member/memberLogin.do";
+		} //다시 클릭했을때 메시지는 정상출력되나 SQLException 나옴...
 
 	
 		request.setAttribute("outputleaveTime", a);
