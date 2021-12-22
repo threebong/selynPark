@@ -295,11 +295,11 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					let memId=$("<td>").html(data[i]["memberId"]);
 					let date=$("<td>").html(data[i]["workDate"]);
 					let td7=$("<td>");
+					console.log(data[1]["workDate"]);
 				    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
 				    table.append(tbody);
 					}
 					$("#writeTable").html(table);
-					
 					/*속성추가*/
 					$("table").addClass('table');
 					$("table thead th").attr('scope','col');

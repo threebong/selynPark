@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -225,8 +226,7 @@ public class WorkDao {
 							.workTitle(rs.getString("WORK_TITLE"))
 							.memberId(rs.getString("MEMBER_ID"))
 							.managerId(rs.getString("MANAGER_ID"))
-							.workDate(rs.getDate("WORK_DATE"))
-							.build();
+							.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))							.build();
 					System.out.print(wo);
 					works.add(wo);
 				}
@@ -284,7 +284,7 @@ public class WorkDao {
 						.workTitle(rs.getString("WORK_TITLE"))
 						.memberId(rs.getString("MEMBER_ID"))
 						.managerId(rs.getString("MANAGER_ID"))
-						.workDate(rs.getDate("WORK_DATE"))
+						.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))
 						.build();
 				System.out.println("다오1 조인객체"+wo);
 				result.add(wo);
@@ -344,7 +344,7 @@ public class WorkDao {
 							.workRank(rs.getString("WORK_RANK"))
 							.workTitle(rs.getString("WORK_TITLE"))
 							.memberId(rs.getString("MEMBER_ID"))
-							.workDate(rs.getDate("WORK_DATE"))
+							.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))							
 							.build();
 					result.add(j);
 									
@@ -391,7 +391,10 @@ public class WorkDao {
 					pstmt.setString(3, ing);
 				}
 			rs=pstmt.executeQuery();
+			
+			
 			while(rs.next()) {
+				
 				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
 						.proName(rs.getString("PRO_NAME"))
 						.projectNo(rs.getInt("PROJECT_NO"))
@@ -401,7 +404,7 @@ public class WorkDao {
 						.workRank(rs.getString("WORK_RANK"))
 						.workTitle(rs.getString("WORK_TITLE"))
 						.memberId(rs.getString("MEMBER_ID"))
-						.workDate(rs.getDate("WORK_DATE"))
+						.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))
 						.build();
 				result.add(wo);
 			}
