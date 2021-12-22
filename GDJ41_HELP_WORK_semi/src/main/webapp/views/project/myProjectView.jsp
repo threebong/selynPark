@@ -122,18 +122,7 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 				%>
 			</div>
 		</div>
-
-
-
-
 	</div>
-
-
-
-
-
-
-
 
 </main>
 <%@ include file="/views/common/footer.jsp"%>

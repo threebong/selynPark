@@ -4,6 +4,7 @@ import com.help.member.model.vo.Member;
 import com.help.project.model.dao.ProjectDao;
 import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
+import com.help.project.model.vo.ProjectContent;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 import static com.help.common.JDBCTemplate.getConnection;
@@ -129,6 +130,32 @@ public class ProjectService {
 		}
 		close(conn);
 		
+		return result;
+	}
+
+	public List<ProjectAddMember> selectSearchMember(String searchType, String keyword) {
+		Connection conn = getConnection();
+		List <ProjectAddMember> searchMemberList = dao.selectSearchMember(conn,searchType,keyword);
+		close(conn);
+		
+		return searchMemberList;
+	}
+
+	public List<ProjectContent> selectAllProjectContent(int projectNo, int cPage, int numPerPage) {
+		
+
+		Connection conn = getConnection();
+		List <ProjectContent> ProjectContentList = dao.selectAllProjectContent(conn,projectNo,cPage,numPerPage);
+		close(conn);
+		
+		return ProjectContentList;
+		
+	}
+
+	public int selectAllProjectContentCount(int projectNo) {
+		Connection conn = getConnection();
+		int result = dao.selectAllProjectContentCount(conn,projectNo);
+		close(conn);
 		return result;
 	}
 

@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ import static com.help.common.JDBCTemplate.close;
 import com.help.member.model.vo.Member;
 import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
+import com.help.project.model.vo.ProjectContent;
 import com.help.project.normal.model.vo.NormalContent;
 import com.help.project.model.vo.ProMemberJoinMember;
 
@@ -360,6 +361,125 @@ public class ProjectDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+
+	public List<ProjectAddMember> selectSearchMember(Connection conn, String searchType, String keyword) {
+		//프로젝트 사원 검색
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ProjectAddMember> searchMemberList = new ArrayList();
+		ProjectAddMember m = null;
+		String sql = prop.getProperty("selectSearchMember");
+		sql = sql.replace("#COL", searchType);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%"+keyword+"%");
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				m = ProjectAddMember.builder()
+						.memberId(rs.getString("MEMBER_ID"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.memberProfile(rs.getString("MEMBER_PROFILE"))
+						.deptName(rs.getString("DEPT_NAME"))
+						.positionName(rs.getString("POSITION_NAME"))
+						.build();
+				
+				searchMemberList.add(m);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return searchMemberList;
+	}
+
+
+
+	public List<ProjectContent> selectAllProjectContent(Connection conn, int projectNo, int cPage, int numPerPage) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ProjectContent pc = null;
+		List<ProjectContent> pList = new ArrayList();
+		String sql = prop.getProperty("selectAllProjectContent");
+		
+		try {
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setInt(1, projectNo);
+			pstmt.setInt(2,(cPage-1)*numPerPage+1);
+			pstmt.setInt(3,cPage*numPerPage);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				pc = ProjectContent.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.contentNo(rs.getInt("CONTENT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.contentTitle(rs.getString("CONTENT_TITLE"))
+						.content(rs.getString("CONTENT"))
+						.startDate(rs.getDate("START_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("START_DATE")))
+						.endDate(rs.getDate("END_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("END_DATE")))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.address(rs.getString("ADDRESS"))
+						.placeName(rs.getString("PLACE_NAME"))
+						.readCount(rs.getInt("READCOUNT"))
+						.writeDate(rs.getDate("WRITE_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("WRITE_DATE")))
+						.dist(rs.getString("DIST"))
+						.build();
+				
+				pList.add(pc);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		
+		
+		return pList;
+	}
+
+
+
+	public int selectAllProjectContentCount(Connection conn,int projectNo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		String sql = prop.getProperty("selectAllProjectContentCount");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,projectNo);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				//컬럼이 한개니까 인덱스 번호로 쓸 수도 있다!
+				result = rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
 			close(pstmt);
 		}
 		
