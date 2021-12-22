@@ -22,9 +22,10 @@
 		memberName[i] = nameTemp;
 		managerId[i] = idTemp;
 	}
-	int count =0;
 %>
 <script>
+
+
 function memberListAjax(cPage){
 	let projectNo = $("#projectNo").val();
 	//프로젝트 게시글 가져오기
@@ -34,7 +35,6 @@ function memberListAjax(cPage){
 		data:{"projectNo":projectNo,"cPage":cPage},
 		dataType:"json",
 		success:data=>{
-			console.log(data);
 			
 			$("#contentArea").html("");
 			
@@ -46,14 +46,16 @@ function memberListAjax(cPage){
 			
 			for(let i = 0; i< memberList.length;i++){
 				
-				const tr = $("<tr scope='row'>");
+				const tr = $("<tr scope='row' onclick='contentView(this);'>");
 				const dist = $("<td>").html(memberList[i]['dist']);
-				const contentTitle = $("<td>").html(memberList[i]["contentTitle"]);
+				const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
 				const memberName = $("<td>").html(memberList[i]["memberName"]);
 				const writeDate = $("<td>").html(memberList[i]["writeDate"]);
 				const workIng = $("<td>").html(memberList[i]["workIng"]);
+				const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
+				const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
 				
-				tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng);
+				tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(memberId).append(contentNo);
 				table.append(tr);
 			}
 			
@@ -64,15 +66,77 @@ function memberListAjax(cPage){
 		
 	});
 }
+
+
+
+
+function proInMemberList(){
+	let projectNo = $("#projectNo").val();
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/selectProjectInMember.do",
+		type:"post",
+		data : {"projectNo":projectNo},
+		dataType:"json",
+		success:data=>{
+			console.log(data);
+			const creatorId = data["creatorId"];
+			$("#proCreator").html("<h3>"+creatorId+"</h3>");
+			
+			for(let i=0;i<data["proMemberList"].length;i++){
+				if(creatorId != data['proMemberList'][i]['memberId']){
+				const h3 =$("<h5>").html(data["proMemberList"][i]["memberName"]);
+				$("#proAttend").append(h3);
+				}		
+			}
+		}
+	});		
+}
+
+
 $(document).ready(()=>{
 	memberListAjax();
+	proInMemberList();
 });
+
+function contentView(e){
+	let contentInfoArr = [];
+	let str = "";
+	
+	let val = $(e).children();
+	val.each(function(i){
+		contentInfoArr.push(val.eq(i).text());
+	});
+	
+	//정보 받아와서 배열에 저장했으니까..이거 그대로 검색해서 조회 결과 가져오기..
+	$.ajax({
+	
+	});
+	
+
+}
+
 
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
+#contentView{
+	cursor: pointer;
+}
 </style>
 <main>
+
+
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id='contentView'  aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">게시글 제목</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    내용내용내용
+  </div>
+</div>
+
+
 
 <!-- 프로젝트 초대 모달 -->
 <div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -555,66 +619,10 @@ $("#sche_place_btn").click(e=>{
 		</div>
 	</div>
 </div>
-<!-- 게시글 보기 -->
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Colored with scrolling</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>Try scrolling the rest of the page to see this option in action.</p>
-  </div>
-</div>
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasWithBackdrop" aria-labelledby="offcanvasWithBackdropLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Offcanvas with backdrop</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>.....</p>
-  </div>
-</div>
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdroped with scrolling</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>Try scrolling the rest of the page to see this option in action.</p>
-  </div>
-</div>
+
 </main>
 
 <script>
-
-
-$(()=>{
-	let projectNo = $("#projectNo").val();
-	$.ajax({
-		url : "<%=request.getContextPath()%>/project/selectProjectInMember.do",
-		type:"post",
-		data : {"projectNo":projectNo},
-		dataType:"json",
-		success:data=>{
-			console.log(data);
-			const creatorId = data["creatorId"];
-			$("#proCreator").html("<h3>"+creatorId+"</h3>");
-			
-			for(let i=0;i<data["proMemberList"].length;i++){
-				if(creatorId != data['proMemberList'][i]['memberId']){
-				const h3 =$("<h5>").html(data["proMemberList"][i]["memberName"]);
-				$("#proAttend").append(h3);
-				}		
-			}
-		}
-	});	
-});
-
-
-
-	
-	
 	
 	//프로젝트에 참여중인 사원 목록
 
@@ -664,6 +672,7 @@ $("#proAddMember_submit").click(e=>{
 		data : {"addMemberArr":addMemberArr,
 				"projectNo":projectNo},
 		success: data=>{
+			proInMemberList();
 			$("#proAddMember_close").click();
 		},
 		error: a=>{
