@@ -62,6 +62,7 @@
 		</form>
 	</section>
 	<script>
+		//비밀번호 일치 확인
 	   	$(()=>{
 	   		$("#password_2").keyup(e=>{
 	   			if($(e.target).val().trim().length>3){
@@ -84,7 +85,7 @@
 	   		}
 	   		const password=$("#password_").val().trim();
 	   		if(password.length<8){
-	   			alert("패스워드는 8글자 이상 입력하세요!");
+	   			alert("비밀번호는 8글자 이상 입력하세요!");
 	   			$("#password_").focus();
 	   			return false;
 	   		}
@@ -135,23 +136,6 @@
 	   			reader.readAsDataURL(e.target.files[0]);
 	   		}
 	   	})
-	   	//이미지 업로드
-	   	<%-- $("#upload").click(e=>{
-			const frm=new FormData();
-			const fileInput=$("input[name=upProfile]");
-			frm.append("upfile",fileInput[0].files[0]);
-			$.ajax({
-				url:"<%=request.getContextPath()%>/member/profileUpload.do",
-				type:"post",
-				data:frm,
-				processData:false,
-				contentType:false,
-				success:data=>{
-					alert("파일업로드 성공");
-					$("input[name=upProfile]").val("");
-				}
-			});
-		}); --%>
    
    </script>
 </body>

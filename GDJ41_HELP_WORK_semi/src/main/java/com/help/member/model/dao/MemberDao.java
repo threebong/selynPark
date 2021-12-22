@@ -1,5 +1,7 @@
 package com.help.member.model.dao;
 
+import static com.help.common.JDBCTemplate.close;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -9,7 +11,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import com.help.member.model.vo.Member;
-import static com.help.common.JDBCTemplate.close;
 
 public class MemberDao {
 	
@@ -68,7 +69,11 @@ public class MemberDao {
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
 				m=Member.builder()
-						.memberId(rs.getString("userId"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.memberPwd(rs.getString("MEMBER_PWD"))
+						.memberPhone(rs.getString("MEMBER_PHONE"))
+						.memberProfile(rs.getString("MEMBER_PROFILE"))
+						.memberName(rs.getString("MEMBER_NAME"))
 						.build();
 			}
 		}catch(SQLException e) {
@@ -98,4 +103,42 @@ public class MemberDao {
 			close(pstmt);
 		}return result;
 	}
+	
+	//회원정보수정
+	public int updateMember(Connection conn,Member m) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		String sql=prop.getProperty("updateMember");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, m.getMemberPhone());
+			pstmt.setString(2, m.getMemberProfile());
+			pstmt.setString(3, m.getMemberName());
+			pstmt.setString(4, m.getMemberId());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	//비밀번호변경
+	public int updatePassword(Connection conn,String userId,String password) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		String sql=prop.getProperty("updatePassword");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, password);
+			pstmt.setString(2, userId);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
 }
