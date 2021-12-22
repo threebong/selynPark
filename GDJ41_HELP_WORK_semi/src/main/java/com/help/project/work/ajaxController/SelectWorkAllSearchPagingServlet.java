@@ -1,9 +1,8 @@
 package com.help.project.work.ajaxController;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,23 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.help.project.model.service.ProjectService;
-import com.help.project.model.vo.Project;
 import com.help.project.work.model.service.WorkService;
-import com.help.project.work.model.vo.Work;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 /**
- * Servlet implementation class SelectWorkManagerViewServlet
+ * Servlet implementation class SelectWorkAllSearchPagingServlet
  */
-@WebServlet("/work/SelectWorkManagerViewServlet.do")
-public class SelectWorkManagerViewServlet extends HttpServlet {
+@WebServlet("/work.SelectWorkAllSearchPagingServlet.do")
+public class SelectWorkAllSearchPagingServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SelectWorkManagerViewServlet() {
+    public SelectWorkAllSearchPagingServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,24 +34,33 @@ public class SelectWorkManagerViewServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String logId=request.getParameter("logId");//로그인한아이디
-		//System.out.println(logId);
-		List<Project> pro=new ProjectService().selectJoin(logId);//로그인한사람이 속한 플젝정보들
-		int totalData=pro.size();//전체 데이터 개수
+		String ing=request.getParameter("ing").trim().replace(" ","");//진행상황(요청,진행,피드백,완료,보류)
+		String prior=request.getParameter("prior").trim().replace(" ", "");//우선순위(긴급,높음,보통,낮음)
+		String h4=request.getParameter("h4").trim().replace(" ", "");
+		String logId=request.getParameter("logId");
+		
+		int cPage=Integer.parseInt(request.getParameter("cPage"));//현재 페이지
+		int numPerpage=Integer.parseInt(request.getParameter("numPerPage"));//페이지당 보여줄 개수 
+		
+		
+		
+		//페이징
+		
+		
+		
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		result=new WorkService().searchMine(ing, prior, h4,logId,cPage,numPerpage);
 		
 		
 		
 		
 		
 		
-	//	HashMap<Integer, List<Work>> myworks=new WorkService().selectWorkMine(pro,logId);//플젝번호-해당업무글들
-		List<WorkSelectManagerJoin> myworks=new WorkService().selectWorkMine(pro,logId);//플젝번호-해당업무글들
 		
 		
 		
 		response.setContentType("application/json;charset=utf-8");
-		new Gson().toJson(myworks,response.getWriter());
-		
+		new Gson().toJson(result,response.getWriter());	
 		
 	}
 
