@@ -1,6 +1,9 @@
-package com.help.work.model.vo;
+package com.help.project.work.model.vo;
 
 import java.sql.Date;
+import java.util.ArrayList;
+
+import com.help.member.model.vo.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Work {
+	
 	private int workNo;
 	private int projectNo;
 	private String memberId;
@@ -23,4 +27,6 @@ public class Work {
 	private String workRank;
 	private int workReadcount;
 	private Date workDate;
+	private ArrayList<String> join;
+	
 }

@@ -1,7 +1,5 @@
 package com.help.project.model.vo;
 
-import java.sql.Date;
-
 import com.help.member.model.vo.Member;
 
 import lombok.AllArgsConstructor;
@@ -13,16 +11,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project {
+public class ProjectAddMember {
 
-	private int projectNo;
+	
 	private String memberId;
-	private String proName;
-	private String proExplain;
-	private String proCommonYn;
-	private String proIsActive;
-	private Date proDate;
-//	private List<Work> workList=new ArrayList();
-
+	private String memberProfile;
+	private String memberName;
+	private String deptName;
+	private String positionName;
+	
 	
 }

@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="com.help.member.model.vo.Member" %>
+<%@ page import="com.help.member.model.vo.Member, com.help.attendance.model.vo.Attendance
+,java.text.SimpleDateFormat" %>
 <% 
-	Member loginMember=(Member)session.getAttribute("loginMember");
+   Member loginMember=(Member)session.getAttribute("loginMember");
+	Attendance a = (Attendance)request.getAttribute("outputAttTime");
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 %>
 <!DOCTYPE html>
 <html>
@@ -24,7 +27,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 window.addEventListener('DOMContentLoaded', event => {
-
     // Toggle the side navigation
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
@@ -38,119 +40,123 @@ window.addEventListener('DOMContentLoaded', event => {
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
-
 });
-
 </script>
+
    
 </head>
 
 <body class="sb-nav-fixed">
 
 <!--프로젝트 생성 Modal -->
-<form action="<%=request.getContextPath() %>/project/insertProject.do" method="post" onsubmit="return create_pro(this);" id="create_pro_frm">
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
- 		<div class="modal-dialog modal-dialog-centered">
-    		<div class="modal-content">
-      			<div class="modal-header">
-        			<h5 class="modal-title" id="exampleModalLabel">새 프로젝트 생성</h5>
-        			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      			</div>
-      			<div class="modal-body">
-			        <input class="form-control form-control-m" type="text" placeholder="프로젝트명(100자 이내)" aria-label=".form-control-lg example" name="proName" id="proName_" autocomplete="off">
-			        <span id="proName-result"></span>
-			        <div class="form-floating">
-        				<textarea class="form-control" placeholder="프로젝트 설명(600자이내)" id="floatingTextarea2"  style="height: 200px; margin-top: 10px; margin-bottom:10px; resize:none"
-        				name ="proExplain"></textarea>
-        				<label for="floatingTextarea2">프로젝트 설명(600자이내)</label>
-        				<span id="proExplain-result"></span>
-      				</div>
-        			<div class="form-check form-switch" style="padding: 0px;">
-
-			  			<label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
-			  			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
-			  			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
-					</div>
-      			</div>
-      			<div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>
-			        <button type="submit" class="btn btn-primary">프로젝트 생성</button>
-         		</div>
-       		</div>
-		</div>
-	</div>
-</form>
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-	<!-- Navbar Brand-->
-	<a class="navbar-brand ps-3" href="">HELP_WORK</a>
-	<!-- Sidebar Toggle-->
-	<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-	       class="fas fa-bars"></i></button>
-    <!-- Navbar Search-->
-    <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-    <!-- <div class="input-group">
-          <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-              aria-describedby="btnNavbarSearch" />
-     
-          <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
-                  class="fas fa-search"></i></button>
+ <form action="<%=request.getContextPath() %>/project/insertProject.do" method="post" onsubmit="return create_pro(this);" id="create_pro_frm">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">새 프로젝트 생성</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      -->
-	</div>
+      <div class="modal-body">
+        <input class="form-control form-control-m" type="text" placeholder="프로젝트명(100자 이내)" aria-label=".form-control-lg example" name="proName" id="proName_" autocomplete="off">
+        <span id="proName-result"></span>
+       <div class="form-floating">
+        <textarea class="form-control" placeholder="프로젝트 설명(600자이내)" id="floatingTextarea2"  style="height: 200px; margin-top: 10px; margin-bottom:10px; resize:none"
+        name ="proExplain"></textarea>
+        <label for="floatingTextarea2">프로젝트 설명(600자이내)</label>
+        <span id="proExplain-result"></span>
+      </div>
+        <div class="form-check form-switch" style="padding: 0px;">
 
-    <!-- Navbar-->
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-        <li class="nav-item">
-            <a class="nav-link">
-                <i class="fas fa-bell"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">
-                <i class="fas fa-comment-dots"></i>
-            </a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li class="dropdown-item"></li>
-                <li>
-                    <hr class="dropdown-divider" />
-                </li>
-                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/viewMember.do?userId=<%=loginMember.getMemberId()%>"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
-                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/logoutMember.do"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
+  			<label class="form-check-label" for="flexSwitchCheckDefault">회사 공용 프로젝트 여부</label>
+  			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" style="float:right;" name="proCommonYN">
+  			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
+		</div>
 
-            </ul>
-        </li>
-    </ul>
-</nav>
-<div id="layoutSidenav">
-	<div id="layoutSidenav_nav">
-		<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-        	<div class="sb-sidenav-menu">
-            	<div class="nav">
-                	<div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
-                    	<a class="nav-link" href="#" onclick="attTime();">
-	                        <div class="sb-nav-link-icon" style="color:green; "><i class="fas fa-battery-full"></i>
-	                        </div>
-	                        attendance&nbsp;<input type="button" value="attTime" style="display:none;"/>
-	                        <div class="sb-nav-link-icon"><span>
-	                        		<div id="attTime"></div>
-	                            </span>
-	                        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>
+        <button type="submit" class="btn btn-primary">프로젝트 생성</button>
+         </div>
+          </div>
+  </div>
+</div>
+  </form>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="">HELP_WORK</a>
+        <!-- Sidebar Toggle-->
+         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+
+        <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <!-- <div class="input-group">
+                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                    aria-describedby="btnNavbarSearch" />
+           
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
+                        class="fas fa-search"></i></button>
+            </div>
+            -->
+        </div>
+
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item">
+                <a class="nav-link">
+                    <i class="fas fa-bell"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">
+                    <i class="fas fa-comment-dots"></i>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li class="dropdown-item"></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="#!"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
+                    <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/logoutMember.do"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
+                        
+                          <a id="insertAttTime" class="nav-link" href="">
+                            <div class="sb-nav-link-icon" style="color:green; "><i class="fas fa-battery-full"></i>
+                            </div>
+                            attendance&nbsp;<input type="button" style="display:none;"/>
+                            <div class="sb-nav-link-icon"><span>
+                                    <div id="attTime"></div>
+                                </span>
+                            </div>
                         </a>
-                        <a class="nav-link" href="#" onclick="leaveTime();">
+                        
+                        
+                      
+                        <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertLeaveTime.do" onclick="leaveTime();">
                             <div class="sb-nav-link-icon" style="color:rgb(255, 38, 0);"><i class="fas fa-battery-empty"></i>
                             </div>
-                            attendance&nbsp;<input type="button" value="leaveTime" style="display:none;"/>
+                            leave work&nbsp;<input type="button" style="display:none;"/>
                             <div class="sb-nav-link-icon"><span>
                                     <div id="leaveTime"></div>
                                 </span>
                             </div>
                         </a>
-                        <a class="nav-link" href="<%=request.getContextPath()%>/attendance/attendanceList.do">
-                        <%-- ?userId=<%=loginMember!=null?loginMember.getUserId():""%>  이런식으로 do뒤에 붙어야함--%>
+                        <a id="attendanceList" class="nav-link" href="<%=request.getContextPath()%>/attendance/attendanceList.do">
                             <div class="sb-nav-link-icon" ><i class="fas fa-business-time"></i>
                             </div>
                             My A/L Information
@@ -213,11 +219,11 @@ window.addEventListener('DOMContentLoaded', event => {
                             오똔 프로젝트1
                         </a>
 
-					</div>
-				</div>
+                    </div>
+                </div>
 
-			</nav>
-		</div>
+            </nav>
+        </div>
       
         <div id="layoutSidenav_content">
         
@@ -270,16 +276,33 @@ window.addEventListener('DOMContentLoaded', event => {
            
         });
         
-        var d = new Date();
-        const attTime=()=>{
+         var d = new Date();
+         const attTime=()=>{
              var attTime = document.getElementById('attTime');
              attTime.innerText = d.getHours()+":"+d.getMinutes();
-        } //출근시간
+        }  //출근시간
+<%--     	$("#insertAttTime").click(e=>{
+    	 var d = new Date();
+    	 const memberId="<%=loginMember.getMemberId()%>";
+    	 var attTime = d.getHours()+":"+d.getMinutes();
+    	 var attDate = d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+    	 console.log(memberId);
+    	 console.log(attTime);
+    	 console.log(attDate);
+    	 $.ajax({
+    		url : "<%=request.getContextPath()%>/attendance/insertAttTime.do",
+    		type:'get'
+            success:data=>{
+    		data : {"memberId":memberId,"attTime":attTime, "attDate":attDate}
+            console.log(data);
+            	$("#attTime").html(data);
+            }
+    	 })
+     }); --%>
         const leaveTime=()=>{
            var leaveTime = document.getElementById('leaveTime');
            leaveTime.innerText = d.getHours()+":"+d.getMinutes();
         } //퇴근시간
         
-       
       
         </script>

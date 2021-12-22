@@ -14,7 +14,6 @@ public class ProMemberJoinMember {
 	private int proMemberNo;//참여자번호
 	private int projectNo;//프로젝트번호
 	private String memberId;//사원아이디
-	private String isManager;//관리자여부
 	private String deptCode;
 	private String positionCode;
 	private String memberPhone;

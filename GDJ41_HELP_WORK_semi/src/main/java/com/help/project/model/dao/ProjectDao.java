@@ -20,8 +20,9 @@ import java.util.Properties;
 import static com.help.common.JDBCTemplate.close;
 
 import com.help.member.model.vo.Member;
-import com.help.project.model.vo.NormalContent;
 import com.help.project.model.vo.Project;
+import com.help.project.model.vo.ProjectAddMember;
+import com.help.project.normal.model.vo.NormalContent;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 
@@ -133,72 +134,7 @@ public class ProjectDao {
 	}
 
 
-	public int insertNormalContnet(Connection conn, NormalContent nc) {
-
-		PreparedStatement pstmt = null;
-		int result = 0;
-		String sql = prop.getProperty("insertNormalContnet");
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setInt(1, nc.getProjectNo());
-			pstmt.setString(2, nc.getMemberId());
-			pstmt.setString(3, nc.getNormalContentTitle());
-			pstmt.setString(4, nc.getNormalContentContent());
-			
-			result =pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			close(pstmt);
-		}
-		
-		return result;
-	}
-
-
-
-	public int insertNormalContentFile(Connection conn, List<Map<String, Object>> fileList, int normalContNo) {
-
-		PreparedStatement pstmt = null;
-		int result = 0;
-		String sql = prop.getProperty("insertNormalContentFile");
-
-		
-		try {
-			
-			for(int i =0; i<fileList.size();i++) {
-				pstmt = conn.prepareStatement(sql);
-								
-					pstmt.setInt(1, normalContNo);
-					pstmt.setString(2,(String)fileList.get(i).get("oriName"));
-					pstmt.setString(3,(String)fileList.get(i).get("newFileName"));
-					pstmt.setString(4,(String)fileList.get(i).get("exts"));
-					pstmt.setString(5,(String)fileList.get(i).get("filePath"));
-				
-				pstmt.executeUpdate();
-			}
-			
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			close(pstmt);
-		}
-		
-		if(result == fileList.size()) {
-			return 1;
-		}else {
-			return 0;	
-		}
-	}
-
-
+	
 
 	public Project selectProjectNewinsert(Connection conn) {
 		
@@ -295,35 +231,6 @@ public class ProjectDao {
 
 
 
-	public int selectNormalConNo(Connection conn, NormalContent nc) {
-		
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = prop.getProperty("selectNormalConNo");
-		int normalNo = 0;
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, nc.getProjectNo());
-			pstmt.setString(2, nc.getMemberId());
-			pstmt.setString(3,nc.getNormalContentTitle());
-			pstmt.setString(4, nc.getNormalContentContent());
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				normalNo = rs.getInt("NORMAL_CONTENT_NO");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			close(rs);
-			close(pstmt);
-		}
-		
-		return normalNo;
-	}
 
 
 
@@ -348,7 +255,6 @@ public class ProjectDao {
 						.proMemberNo(rs.getInt("PRO_MEMBER_NO"))
 						.projectNo(rs.getInt("PROJECT_NO"))
 						.memberId(rs.getString("MEMBER_ID"))
-						.isManager(rs.getString("IS_MANAGER"))
 						.deptCode(rs.getString("DEPT_CODE"))
 						.positionCode(rs.getString("POSITION_CODE"))
 						.memberPhone(rs.getString("MEMBER_PHONE"))
@@ -368,6 +274,96 @@ public class ProjectDao {
 		}
 		
 		return mList;
+	}
+
+
+
+	public int selectProjectNo(Connection conn, Project pinfo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int projectNo =0;
+		String sql = prop.getProperty("selectProjectNo");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pinfo.getMemberId());
+			pstmt.setString(2, pinfo.getProName());
+			pstmt.setString(3, pinfo.getProExplain());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next())projectNo = rs.getInt(1);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return projectNo;
+	}
+
+
+
+	public List<ProjectAddMember> selectAllMember(Connection conn) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ProjectAddMember> mAllList = new ArrayList();
+		ProjectAddMember m = null;
+		String sql = prop.getProperty("selectAllMember");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				m = ProjectAddMember.builder()
+						.memberId(rs.getString("MEMBER_ID"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.memberProfile(rs.getString("MEMBER_PROFILE"))
+						.deptName(rs.getString("DEPT_NAME"))
+						.positionName(rs.getString("POSITION_NAME"))
+						.build();
+				
+				mAllList.add(m);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return mAllList;
+	}
+
+
+
+	public int insertProMember(Connection conn, List<Map<String, Object>> mList) {
+		//프로젝트 사원 추가
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertProMemberCreator");
+		
+		try {
+			for(int i=0;i<mList.size();i++) {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, (int)mList.get(i).get("projectNo"));
+			pstmt.setString(2, (String)mList.get(i).get("memberId"));
+			
+			result = pstmt.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 
 }
