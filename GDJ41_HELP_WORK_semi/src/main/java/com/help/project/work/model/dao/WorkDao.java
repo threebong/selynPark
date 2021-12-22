@@ -358,9 +358,45 @@ public class WorkDao {
 			close(pstmt);
 		}return result;
 	}
+	public List<WorkSelectManagerJoin> selectWorkAll(Connection conn,List<Integer> proNum,int cPage,int numPerPage){
+		//내가 속한 프로젝트의 모든 업무 게시글들---페이징처리 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("selectWorkAllPaging");
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		try {
+			pstmt=conn.prepareStatement(sql);
+			for(Integer i : proNum) {
+				pstmt.setInt(1, i);
+				pstmt.setInt(2, (cPage-1)*numPerPage+1);
+				pstmt.setInt(3, cPage*numPerPage);
+				rs=pstmt.executeQuery();
+				while(rs.next()) {
+					WorkSelectManagerJoin j=WorkSelectManagerJoin.builder()
+							.proName(rs.getString("PRO_NAME"))
+							.projectNo(rs.getInt("PROJECT_NO"))
+							.workNo(rs.getInt("WORK_NO"))
+							.workIng(rs.getString("WORK_ING"))
+							.workRank(rs.getString("WORK_RANK"))
+							.workTitle(rs.getString("WORK_TITLE"))
+							.memberId(rs.getString("MEMBER_ID"))
+							.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))							
+							.build();
+					result.add(j);
+									
+				}
+				
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
-	public List<WorkSelectManagerJoin> searchAll(Connection conn,String ing,String prior,List<Integer> proNum){
-		//전체업무 --검색기능
+	public List<WorkSelectManagerJoin> searchAll(Connection conn,String ing,String prior,List<Integer> proNum,int cPage,int numPerPage){
+		//전체업무 --검색기능 //페이징 
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
@@ -369,21 +405,87 @@ public class WorkDao {
 			for(Integer i : proNum) {
 		
 				if(ing.equals("진행상황")&&!prior.equals("우선순위")) {//우선순위 조건
-					sql = prop.getProperty("searchWorkAllPrior").replace("#COL", "W.WORK_RANK");
+					sql = prop.getProperty("searchWorkAllPriorPaging").replace("#COL", "WORK_RANK");
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setInt(1, i);//Project_no
+					pstmt.setString(2, prior);
+					pstmt.setInt(3, (cPage-1)*numPerPage+1);
+					pstmt.setInt(4, cPage*numPerPage);
+					System.out.println("우선순위");
+					
+				}else if(!ing.equals("진행상황")&&prior.equals("우선순위")){//진행상황조건
+					sql = prop.getProperty("searchWorkAllPriorPaging").replace("#COL", "WORK_ING");
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setInt(1, i);//project_no
+					pstmt.setString(2, ing);
+					pstmt.setInt(3, (cPage-1)*numPerPage+1);
+					pstmt.setInt(4, cPage*numPerPage);
+					System.out.println("진행상황");
+					
+				}else if(!ing.equals("진행상황")&&!prior.equals("우선순위")){//우선순위&&진행상황 조건
+					sql = prop.getProperty("searchWorkAllPriorTwoPaging").replace("#COL", "WORK_RANK").replace("#BOL","WORK_ING");
+					
 					pstmt=conn.prepareStatement(sql);
 					pstmt.setInt(1, i);
+					pstmt.setString(2, prior);
+					pstmt.setString(3, ing);
+					pstmt.setInt(4, (cPage-1)*numPerPage+1);
+					pstmt.setInt(5, cPage*numPerPage);
+				}
+			rs=pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				
+				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
+						.proName(rs.getString("PRO_NAME"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workNo(rs.getInt("WORK_NO"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.workTitle(rs.getString("WORK_TITLE"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))
+						.build();
+				result.add(wo);
+			}
+			}
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+		
+	}
+	public List<WorkSelectManagerJoin> searchAll(Connection conn,String ing,String prior,List<Integer> proNum){
+		//전체업무 --검색기능 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		String sql="";
+		try {
+			for(Integer i : proNum) {
+		
+				if(ing.equals("진행상황")&&!prior.equals("우선순위")) {//우선순위 조건
+					sql = prop.getProperty("searchWorkAllPrior").replace("#COL", "WORK_RANK");
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setInt(1, i);//Project_no
 					pstmt.setString(2, prior);
 					System.out.println("우선순위");
 					
 				}else if(!ing.equals("진행상황")&&prior.equals("우선순위")){//진행상황조건
-					sql = prop.getProperty("searchWorkAllPrior").replace("#COL", "W.WORK_ING");
+					sql = prop.getProperty("searchWorkAllPrior").replace("#COL", "WORK_ING");
 					pstmt=conn.prepareStatement(sql);
-					pstmt.setInt(1, i);
+					pstmt.setInt(1, i);//project_no
 					pstmt.setString(2, ing);
 					System.out.println("진행상황");
 					
 				}else if(!ing.equals("진행상황")&&!prior.equals("우선순위")){//우선순위&&진행상황 조건
-					sql = prop.getProperty("searchWorkAllPriorTwo").replace("#COL", "W.WORK_RANK").replace("#BOL","W.WORK_ING");
+					sql = prop.getProperty("searchWorkAllPriorTwo").replace("#COL", "WORK_RANK").replace("#BOL","WORK_ING");
 					
 					pstmt=conn.prepareStatement(sql);
 					pstmt.setInt(1, i);

@@ -43,8 +43,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 								<ul class="dropdown-menu dropdown-menu-dark"
 									aria-labelledby="navbarDarkDropdownMenuLink">
 									<li><a class="dropdown-item" id="mywork">내 업무</a></li>
-									<li><a class="dropdown-item" id="allwork">전체
-											업무</a></li>
+									<li><a class="dropdown-item" id="allwork" onclick="workAllPaging();">전체 업무</a></li>
 								</ul></li>
 						</ul>
 					</form>
@@ -72,7 +71,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					<option value="낮음">낮음</option>
 				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건2</label>
 				<button id="filterWork">검색</button>
-				<button id="filterWorkAll">검색all</button>
+				<button id="filterWorkAll" onclick="workSearchPaging();">검색all</button>
 			</div>
 		</div>
 
@@ -95,7 +94,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 							<th scope="col">등록일?수정일?</th>
 						</tr>
 					</thead>
-					<tbody >
+					<tbody>
 						<%
 						for (Entry<Integer, List<Work>> entry : works.entrySet()) {
 							if (entry.getKey() == p.getProjectNo()) {
@@ -121,12 +120,11 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			}
 			%>
 		</div>
-		
-		<!--ajax로 테이블 변경할 구역-->
-		<div id="writeTable">
-		</div>
 
-	
+		<!--ajax로 테이블 변경할 구역-->
+		<div id="writeTable"></div>
+
+
 
 
 	</div>
@@ -252,123 +250,153 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			});
 		});
 		
-		
-		//전체 업무 조회(모든 업무 list) : 내가 참여한 프로젝트의 모든 업무 ---하는중
-		$(document).on('click','#allwork',function(){
-			$("#deleteTable").show();//default테이블 
-			$("#writeTable").hide();//새로 보여줄 테이블	
+//-----------------------------------------------------------------------------페이징처리 시작		
+		//전체 업무 조회(모든 업무 list) : 내가 참여한 프로젝트의 모든 업무 
+			
+	 /* 	$(document).on('click','#allwork',function (){//검색버튼을 누르면
+			workAllPaging();
+			
+			$("#deleteTable").toggle();
+			$("#writeTable").toggle();	 */
+			//-----------------------------------
+			//function workAllPaging(cPage,numPerPage)
+			function workAllPaging(cPage){//전체업무조회 리스트 페이징처리까지 완료 
+			$("#deleteTable").hide();//default테이블 
+			$("#writeTable").show();//새로 보여줄 테이블	
 			$("#filterWorkAll").show();
 			$("#filterWork").hide();
 			
+			alert("클릭");
 			const logId="<%=loginMember.getMemberId()%>";//로그인한 아이디
-			$("#deleteTable").toggle();
-			$("#writeTable").toggle();	
-			$.ajax({
-				url : "<%=request.getContextPath()%>/work/SelectWorkAllViewServlet.do",
-				type : 'post',
-				data: {"logId":logId},
-				dataType : 'json',
-				success : data=>{
-					let table=$("<table>");
-					let h4=$("<h4>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 //이름바꾸면안됨
-					let thead=$("<thead>");
-					let tr=$("<tr>");
-					let td=$("<th>").html("No");
-					let td8=$("<th>").html("프로젝트");
-					let td9=$("<th>").html("업무No");
-					let td1=$("<th>").html("상태");
-					let td2=$("<th>").html("우선순위");
-					let td3=$("<th>").html("제목");
-					let td4=$("<th>").html("작성자");
-					let td6=$("<th>").html("등록일");
-					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
-					
-					let tbody=$("<tbody>");
-					for(let i=0;i<data.length;i++){
-					let tr2=$("<tr>");
-					let proNo=$("<th>").html(data[i]["projectNo"]);
-					let proName=$("<td>").html(data[i]["proName"]);
-					let workNo=$("<td>").html(data[i]["workNo"]);
-					let working=$("<td>").html(data[i]["workIng"]);
-					let rank=$("<td>").html(data[i]["workRank"]);
-					let title=$("<td>").html(data[i]["workTitle"]);
-					let memId=$("<td>").html(data[i]["memberId"]);
-					let date=$("<td>").html(data[i]["workDate"]);
-					let td7=$("<td>");
-					console.log(data[1]["workDate"]);
-				    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
-				    table.append(tbody);
-					}
-					$("#writeTable").html(table);
-					/*속성추가*/
-					$("table").addClass('table');
-					$("table thead th").attr('scope','col');
-					$("table tbody th").attr('scope','col');
-				}
-			});//id값 보내
-		});
-		
-		//전체 업무 ---검색기능 
-		$("#filterWorkAll").click(e=>{
-			let ing=$("#working").val();//진행상황
-			let prior=$("#priority").val();//우선순위
-			let h4=$("table h4").text();//나의 업무
-			const logId="<%=loginMember.getMemberId()%>";
-			$.ajax({
-				url: "<%=request.getContextPath()%>/work/SelectWorkAllSearchServlet.do",
-				type : 'post',
-				data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId},
-				dataType : 'json',
-				success : data=>{   
-					console.log(data);
-					let table=$("<table>");
-					let h4=$("<h4>").html("전체 업무");//문구 변경 금지 (다중조회와 관련)
-					let thead=$("<thead>");
-					let tr=$("<tr>");
-					let td=$("<th>").html("No");
-					let td8=$("<th>").html("프로젝트");
-					let td9=$("<th>").html("업무No");
-					let td1=$("<th>").html("상태");
-					let td2=$("<th>").html("우선순위");
-					let td3=$("<th>").html("제목");
-					let td4=$("<th>").html("작성자");
-					let td6=$("<th>").html("등록일");
-					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
-					
-					let tbody=$("<tbody>");
-					
-					if(data.length==0){//조회결과 X 
-						let nottr=$("<tr>");
-						let notth=$("<td>").html("조회결과가 없습니다.");
-						notth.attr("colspan","9");
-						nottr.css("text-align","center");
-						nottr.append(notth);
-						table.append(nottr);
-					}else{//조회 결과 O 
-						for(let i=0;i<data.length;i++){
+			 	$.ajax({
+					url : "<%=request.getContextPath()%>/work/SelectWorkAllViewServlet.do",
+					type : 'post',
+					data: {"logId":logId,"cPage":cPage},
+					dataType : 'json',
+					success : data=>{
+						alert("실행");
+						const workList=data["list"];
+						const pageBar=data["pageBar"];
+						
+						let table=$("<table>");
+						let h4=$("<h4>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 //이름바꾸면안됨
+						let thead=$("<thead>");
+						let tr=$("<tr>");
+						let td=$("<th>").html("No");
+						let td8=$("<th>").html("프로젝트");
+						let td9=$("<th>").html("업무No");
+						let td1=$("<th>").html("상태");
+						let td2=$("<th>").html("우선순위");
+						let td3=$("<th>").html("제목");
+						let td4=$("<th>").html("작성자");
+						let td6=$("<th>").html("등록일");
+						table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
+						
+						let tbody=$("<tbody>");
+						for(let i=0;i<workList.length;i++){
 						let tr2=$("<tr>");
-						let proNo=$("<th>").html(data[i]["projectNo"]);
-						let proName=$("<td>").html(data[i]["proName"]);
-						let workNo=$("<td>").html(data[i]["workNo"]);
-						let working=$("<td>").html(data[i]["workIng"]);
-						let rank=$("<td>").html(data[i]["workRank"]);
-						let title=$("<td>").html(data[i]["workTitle"]);
-						let memId=$("<td>").html(data[i]["memberId"]);
-						let date=$("<td>").html(data[i]["workDate"]);
+						let proNo=$("<th>").html(workList[i]["projectNo"]);
+						let proName=$("<td>").html(workList[i]["proName"]);
+						let workNo=$("<td>").html(workList[i]["workNo"]);
+						let working=$("<td>").html(workList[i]["workIng"]);
+						let rank=$("<td>").html(workList[i]["workRank"]);
+						let title=$("<td>").html(workList[i]["workTitle"]);
+						let memId=$("<td>").html(workList[i]["memberId"]);
+						let date=$("<td>").html(workList[i]["workDate"]);
 						let td7=$("<td>");
 					    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
 					    table.append(tbody);
 						}
-					}
-					$("#writeTable").html(table);
 						
-					/*속성추가*/
-					$("table").addClass('table');
-					$("table thead th").attr('scope','col');
-					$("table tbody th").attr('scope','col');
-				}
-			});//id값 보내
-		});
+						//페이징처리---
+						const div=$("<div>").attr("id","pageBar").html(pageBar);
+						//$("#container").append(table).append(div);
+						table.append(div);
+						
+						$("#writeTable").html(table);
+						/*속성추가*/
+						$("table").addClass('table paginated');
+						$("table thead th").attr('scope','col');
+						$("table tbody th").attr('scope','col');
+					}
+				});//id값 보내
+			}
+		//});    
+		
+		//전체 업무 ---검색기능 
+		/* $("#filterWorkAll").click(e=>{
+			workSearchPaging();
+			alert("클릭");
+		});	 */
+		function workSearchPaging(cPage){
+			let ing=$("#working").val();//진행상황
+			let prior=$("#priority").val();//우선순위
+			let h4=$("table h4").text();// 전체업무
+			const logId="<%=loginMember.getMemberId()%>";
+				$.ajax({
+					url: "<%=request.getContextPath()%>/work/SelectWorkAllSearchServlet.do",
+					type : 'post',
+					data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId, "cPage":cPage},
+					dataType : 'json',
+					success : data=>{   
+						alert("실행");
+						
+						const workList=data["list"];
+						const pageBar=data["pageBar"];
+						
+						console.log(data);
+						let table=$("<table>");
+						let h14=$("<h4>").html("전체 업무");//문구 변경 금지 (다중조회와 관련)
+						let thead=$("<thead>");
+						let tr=$("<tr>");
+						let td=$("<th>").html("No");
+						let td8=$("<th>").html("프로젝트");
+						let td9=$("<th>").html("업무No");
+						let td1=$("<th>").html("상태");
+						let td2=$("<th>").html("우선순위");
+						let td3=$("<th>").html("제목");
+						let td4=$("<th>").html("작성자");
+						let td6=$("<th>").html("등록일");
+						table.append(h14).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
+						
+						let tbody=$("<tbody>");
+						
+						if(data.workList==0){//조회결과 X 
+							let nottr=$("<tr>");
+							let notth=$("<td>").html("조회결과가 없습니다.");
+							notth.attr("colspan","9");
+							nottr.css("text-align","center");
+							nottr.append(notth);
+							table.append(nottr);
+						}else{//조회 결과 O 
+							for(let i=0;i<workList.length;i++){
+							let tr2=$("<tr>");
+							let proNo=$("<th>").html(workList[i]["projectNo"]);
+							let proName=$("<td>").html(workList[i]["proName"]);
+							let workNo=$("<td>").html(workList[i]["workNo"]);
+							let working=$("<td>").html(workList[i]["workIng"]);
+							let rank=$("<td>").html(workList[i]["workRank"]);
+							let title=$("<td>").html(workList[i]["workTitle"]);
+							let memId=$("<td>").html(workList[i]["memberId"]);
+							let date=$("<td>").html(workList[i]["workDate"]);
+							let td7=$("<td>");
+						    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
+						    table.append(tbody);
+							}
+						}
+						
+						const div=$("<div>").attr("id","pageBar").html(pageBar);
+						table.append(div);
+						$("#writeTable").html(table);
+						
+						/*속성추가*/
+						$("table").addClass('table');
+						$("table thead th").attr('scope','col');
+						$("table tbody th").attr('scope','col');
+					}
+				});//id값 보내
+			}
+		//});
 		
 		
 	
