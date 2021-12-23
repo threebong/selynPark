@@ -42,7 +42,7 @@ public class SelectWorkManagerSearchServlet extends HttpServlet {
 		
 		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
 		//if(!ing.equals("진행상황")||!prior.equals("우선순위")) {
-			result=new WorkService().searchMine(ing, prior, h4,logId);
+		//이따살려	result=new WorkService().searchMine(ing, prior, h4,logId);
 			System.out.println("받아?"+result);
 		//}
 		
