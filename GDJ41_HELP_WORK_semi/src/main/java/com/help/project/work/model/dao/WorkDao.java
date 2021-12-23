@@ -251,10 +251,11 @@ public class WorkDao {
 		String sql=prop.getProperty("selectWorkMinePaging");
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(3, logId);
-			//for(Project p:pro) {
-			pstmt.setInt(1, (cPage-1)*numPerPage+1);
-			pstmt.setInt(2, cPage*numPerPage);
+			pstmt.setString(1, logId);//로그인한 아이디 
+			for(Project p:pro) {//해당하는 프로젝트 번호따라 돌려 돌려 
+			pstmt.setInt(2, (cPage-1)*numPerPage+1);
+			pstmt.setInt(3, cPage*numPerPage);
+			pstmt.setInt(4, p.getProjectNo());
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
@@ -272,7 +273,7 @@ public class WorkDao {
 				works.add(wo);
 			}
 				//works.put(p.getProjectNo(), w);//플젝번호-해당업무들
-		//	}
+			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
