@@ -128,6 +128,22 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 
 
 	</div>
+	
+	
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-title" id="contentWriterView"></div>
+   
+  <div class="offcanvas-body" id="contentBody"></div>
+</div>
 
 
 	<script>
@@ -141,14 +157,12 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			$("#writeTable").show();	
 			$("#filterWorkAll").hide();
 			$("#filterWork").show();
-			alert("클릭함 ");
 			$.ajax({
 				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
 				type : 'post',
 				data: {"logId":logId, "cPage":cPage },
 				dataType : 'json',
 				success : data=>{
-					alert("성공");
 					const workList=data["list"];
 					const pageBar=data["pageBar"];
 					
@@ -169,19 +183,19 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					
 					let tbody=$("<tbody>");
 					for(let i=0;i<workList.length;i++){
-					let tr2=$("<tr>");
-					let proNo=$("<th>").html(workList[i]["projectNo"]);
-					let proName=$("<td>").html(workList[i]["proName"]);
-					let workNo=$("<td>").html(workList[i]["workNo"]);
-					let working=$("<td>").html(workList[i]["workIng"]);
-					let rank=$("<td>").html(workList[i]["workRank"]);
-					let title=$("<td>").html(workList[i]["workTitle"]);
-					let memId=$("<td>").html(workList[i]["memberId"]);
-					let manaId=$("<td>").html(workList[i]["managerId"]);
-					let date=$("<td>").html(workList[i]["workDate"]);
-					let td7=$("<td>");
-				    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
-				    table.append(tbody);
+						let tr2=$("<tr scope='row' onclick='contentView(this);'>");//상세페이지하는중 
+						let proNo=$("<th>").html(workList[i]["projectNo"]);
+						let proName=$("<td>").html(workList[i]["proName"]);
+						let workNo=$("<td>").html(workList[i]["workNo"]);
+						let working=$("<td>").html(workList[i]["workIng"]);
+						let rank=$("<td>").html(workList[i]["workRank"]);
+						let title=$("<td>").html(workList[i]["workTitle"]);
+						let memId=$("<td>").html(workList[i]["memberId"]);
+						let manaId=$("<td>").html(workList[i]["managerId"]);
+						let date=$("<td>").html(workList[i]["workDate"]);
+						let td7=$("<td>");
+					    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
+					    table.append(tbody);
 					}
 					
 					const div=$("<div>").attr("id","pageBar").html(pageBar);
@@ -199,6 +213,15 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 	//	});
 		
 		
+		//상세내용 조회 	
+/* function contentView(e){
+		let val = $(e).children();//이벤트발생한곳의 자식들
+		let vals = v
+			
+			
+		}		 */	
+			
+			
 		//본인 업무 조회 (조건 선택 )  --- 페이징 
 		//$("#filterWork").click(e=>{
 			
@@ -209,7 +232,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			let h4=$("table h4").text();//나의 업무
 			const logId="<%=loginMember.getMemberId()%>";
 			
-			alert("눌렀다");
 			
 			$.ajax({
 				url: "<%=request.getContextPath()%>/work/SelectWorkManagerSearchServlet.do",
@@ -217,7 +239,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId, "cPage":cPage},
 				dataType : 'json',
 				success : data=>{   
-					alert("실행");
 					const workList=data["list"];
 					const pageBar=data["pageBar"];
 					console.log(workList);
@@ -295,7 +316,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			$("#filterWorkAll").show();
 			$("#filterWork").hide();
 			
-			alert("클릭");
 			const logId="<%=loginMember.getMemberId()%>";//로그인한 아이디
 			 	$.ajax({
 					url : "<%=request.getContextPath()%>/work/SelectWorkAllViewServlet.do",
@@ -303,7 +323,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					data: {"logId":logId,"cPage":cPage},
 					dataType : 'json',
 					success : data=>{
-						alert("실행");
 						const workList=data["list"];
 						const pageBar=data["pageBar"];
 						
@@ -368,7 +387,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId, "cPage":cPage},
 					dataType : 'json',
 					success : data=>{   
-						alert("실행");
 						
 						const workList=data["list"];
 						const pageBar=data["pageBar"];

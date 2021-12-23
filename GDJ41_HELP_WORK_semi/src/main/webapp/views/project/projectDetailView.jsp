@@ -175,6 +175,7 @@ function contentView(e){
   <div class="offcanvas-body" id="contentBody"></div>
 </div>
 
+
 <!-- 업무 게시글 상세화면 -->
 
 <button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
