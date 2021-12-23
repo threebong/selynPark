@@ -23,7 +23,10 @@ import com.help.member.model.vo.Member;
 import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
 import com.help.project.model.vo.ProjectContent;
+import com.help.project.model.vo.ScheAttendName;
+import com.help.project.model.vo.WorkManagerName;
 import com.help.project.normal.model.vo.NormalContent;
+import com.help.project.work.model.vo.WorkManager;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 
@@ -530,5 +533,75 @@ public class ProjectDao {
 		
 		return pc;
 	}
+
+
+
+	public List<WorkManagerName> selectWorkManager(Connection conn, int contentNo) {
+		//업무 담당쟈 갸져오깅
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectWorkManagerName");
+		WorkManagerName wm = null;
+		List<WorkManagerName> wmList = new ArrayList();
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,contentNo);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				wm = WorkManagerName.builder()
+						.workNo(rs.getInt("WORK_NO"))
+						.managerId(rs.getString("MANAGER_ID"))
+						.managerName(rs.getString("MEMBER_NAME")).build();
+				wmList.add(wm);
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return wmList;
+	}
+
+
+
+	public List<ScheAttendName> selectScheAttendName(Connection conn, int contentNo) {
+		//업무 담당쟈 갸져오깅
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = prop.getProperty("selectScheAttendName");
+				ScheAttendName sa = null;
+				List<ScheAttendName> saList = new ArrayList();
+				
+				try {
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1,contentNo);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						
+						sa = ScheAttendName.builder()
+								.scheduleNo(rs.getInt("SCHEDULE_NO"))
+								.memberId(rs.getString("MEMBER_ID"))
+								.memberName(rs.getString("MEMBER_NAME"))
+								.build();
+						saList.add(sa);
+						
+					}
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}finally {
+					close(rs);
+					close(pstmt);
+				}
+				return saList;
+			}
+
 
 }

@@ -5,6 +5,10 @@ import com.help.project.model.dao.ProjectDao;
 import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
 import com.help.project.model.vo.ProjectContent;
+import com.help.project.model.vo.ScheAttendName;
+import com.help.project.model.vo.WorkManagerName;
+import com.help.project.schedule.model.vo.ScheduleAttend;
+import com.help.project.work.model.vo.WorkManager;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 import static com.help.common.JDBCTemplate.getConnection;
@@ -167,6 +171,23 @@ public class ProjectService {
 		return pc;
 		
 		
+	}
+
+	public List<WorkManagerName> selectWorkManager(int contentNo) {
+		// 업무 담당자 가져오기
+		Connection conn = getConnection();
+		List <WorkManagerName> wmList = dao.selectWorkManager(conn,contentNo);
+		close(conn);
+		
+		return wmList;
+	}
+
+	public List<ScheAttendName> selectScheAttendName(int contentNo) {
+		Connection conn = getConnection();
+		List <ScheAttendName> saList = dao.selectScheAttendName(conn,contentNo);
+		close(conn);
+		
+		return saList;
 	}
 
 }
