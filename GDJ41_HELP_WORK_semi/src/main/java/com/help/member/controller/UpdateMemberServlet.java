@@ -1,5 +1,6 @@
 package com.help.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -17,16 +18,16 @@ import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 /**
- * Servlet implementation class EnrollMemberEndServlet
+ * Servlet implementation class UpdateMemberServlet
  */
-@WebServlet("/member/enrollMemberEnd.do")
-public class EnrollMemberEndServlet extends HttpServlet {
+@WebServlet("/member/updateMember.do")
+public class UpdateMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EnrollMemberEndServlet() {
+    public UpdateMemberServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,32 +39,42 @@ public class EnrollMemberEndServlet extends HttpServlet {
 		
 		if(!ServletFileUpload.isMultipartContent(request)) {
 			request.setAttribute("msg", "잘못된 요청입니다 관리자에게 문의하세요 HELP");
-			request.setAttribute("loc", "/member/enrollMember.do");
-			request.getRequestDispatcher("views/common/msg.jsp").forward(request, response);
+			request.setAttribute("loc", "/member/updateMember.do");
+			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 			return;
 		}
-		
-		String path=request.getServletContext().getRealPath("/upfile/member");
+		String path=request.getServletContext().getRealPath("/upfile/member/");
 		int maxSize=1024*1024*20;
-		String encode="UTF-8";
 		
-		MultipartRequest mr=new MultipartRequest(request,path,maxSize,encode,new DefaultFileRenamePolicy());
+		MultipartRequest mr=new MultipartRequest(request,path,maxSize,"UTF-8",new DefaultFileRenamePolicy());
 		
 		Member m=Member.builder()
 				.memberId(mr.getParameter("userId"))
 				.memberPwd(mr.getParameter("password"))
 				.memberName(mr.getParameter("userName"))
 				.memberPhone(mr.getParameter("phone"))
-				.memberProfile(mr.getFilesystemName("upProfile"))
 				.build();
 		
-		int result=new MemberService().insertMember(m);
+		File f=mr.getFile("upProfile");
+		System.out.println(mr.getFilesystemName("upProfile"));
+		if(f!=null&&f.length()>0) {
+			//이전파일삭제
+			File deleteProfile=new File(path+mr.getParameter("oriProfile"));
+			deleteProfile.delete();
+			m.setMemberProfile(mr.getFilesystemName("upProfile"));
+			
+		}else {
+			//업로드파일이 없음
+			m.setMemberProfile(mr.getParameter("oriProfile"));
+		}
+		
+		int result=new MemberService().updateMember(m);
 		if(result>0) {
-			JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
-			response.sendRedirect(request.getContextPath());
+			JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다.");
+			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
 		}else {			
-			JOptionPane.showMessageDialog(null, "회원가입이 실패했습니다.");
-			request.getRequestDispatcher("/member/enrollMember.do").forward(request, response);
+			JOptionPane.showMessageDialog(null, "회원정보 수정이 실패했습니다.");
+			request.getRequestDispatcher("/member/viewMember.do").forward(request, response);
 		}
 	
 	}
