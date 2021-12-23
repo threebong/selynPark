@@ -2,6 +2,7 @@ package com.help.project.ajaxController;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.ProjectContent;
+import com.help.project.model.vo.ScheAttendName;
+import com.help.project.model.vo.WorkManagerName;
 
 /**
  * Servlet implementation class SelectContentViewServlet
@@ -39,8 +42,27 @@ public class SelectContentViewServlet extends HttpServlet {
 		
 		ProjectContent pc = new ProjectService().selectContentOne(dist,contentNo);
 		
+		
 		response.setContentType("application/json; charset=utf-8");
-		new Gson().toJson(pc,response.getWriter());
+		
+		Map<String, Object> param = null;
+		
+		//업무 담당자 가져오기
+		if(dist.equals("업무")) {
+			List<WorkManagerName> wmList = new ProjectService().selectWorkManager(contentNo);
+			param = Map.of("memberNameList",wmList,"pc",pc);
+			new Gson().toJson(param,response.getWriter());
+		}else if(dist.equals("일정")) {
+			List<ScheAttendName> saList = new ProjectService().selectScheAttendName(contentNo);
+			param = Map.of("memberNameList",saList,"pc",pc);
+			new Gson().toJson(param,response.getWriter());
+		}else {
+			System.out.println(pc);
+			new Gson().toJson(pc,response.getWriter());
+		}
+		
+		
+		
 	}
 
 	/**

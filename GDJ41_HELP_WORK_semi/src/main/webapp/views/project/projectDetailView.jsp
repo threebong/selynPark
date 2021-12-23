@@ -78,7 +78,7 @@ function proInMemberList(){
 		data : {"projectNo":projectNo},
 		dataType:"json",
 		success:data=>{
-			console.log(data);
+			
 			const creatorId = data["creatorId"];
 			$("#proCreator").html("<h3>"+creatorId+"</h3>");
 			
@@ -112,39 +112,47 @@ function contentView(e){
 		traditional : true,
 		datatype:"json",
 		success:data=>{
-			console.log(data);
-			const dist = data["dist"];	
-			
+			const normalpc = data;
+			const pc = data["pc"];
+			const memberNameList = data["memberNameList"];
+			console.log(memberNameList.length);
+
 			switch(dist){
 				case '게시글' : 
-					$("#contentTitleView").html("");
-					$("#contentBody").html("");
-					const title = $("<h4>").html(data["contentTitle"]);			
-					const content = $("<div>").html(data["content"]);
-					$("#writerName").html(data["memberName"]);
-					$("#writeDate").html(data["writeDate"])
-					$("#contentTitleView").html(data["contentTitle"]);
-					$("#contentBody").append(content);
+					$("#writerName").html(normalpc["memberName"]);
+					$("#writeDate").html(normalpc["writeDate"]);
+					$("#contentTitleView").html(normalpc["contentTitle"]);
+					$("#contentBody").html(normalpc["content"]);
 					
 					$("#viewBtn").click();
 					
 				break;
 				case '업무' :
+						
+					   $("#workWriterName").html(pc["memberName"]);
+		               $("#workWriteDate").html(pc["writeDate"]);
+		               $("#workContentTitleView").html(pc["contentTitle"]);
+		               
+		               $("#workIngView").html(pc["workIng"]);
+		               
+		               for(let i=0;i<memberNameList.length;i++){
+		            	   const span = $("<span>");
+		            	   span.html(memberNameList[i]["managerName"]);
+		            	   $("#workManager").append(span);
+		               }
+		               
+		               $("#workStartDate_view").html(pc["startDate"]);
+		               $("#workEndDate_view").html(pc["endDate"]);
+		               $("#workRank_view").html(pc["workRank"])
+		               $("#workCotent_view").html(pc["content"]);
+
 					
-					
-					
-					$("#viewBtn").click();
+					$("#workViewBtn").click();
 				break;
 				case '일정' : 
-					$("#viewBtn").click();
-					
 					
 				break;
 			}
-			
-					
-				
-
 		}
 	});
 	
@@ -160,7 +168,7 @@ function contentView(e){
 <main>
 
 <!-- 일반 게시글 상세화면 -->
-<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -169,15 +177,13 @@ function contentView(e){
    		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
    		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
    		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
-   </div>
-  <div class="offcanvas-title" id="contentWriterView"></div>
-   
+   </div>   
   <div class="offcanvas-body" id="contentBody"></div>
 </div>
 
 <!-- 업무 게시글 상세화면 -->
 
-<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<button class="btn btn-primary"  id="workViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -185,14 +191,16 @@ function contentView(e){
    <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
    		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
    		<span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   		<h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
    </div>
-  <div class="offcanvas-title" id="contentWriterView"></div>
-   
-  <div class="offcanvas-body" id="contentBody"></div>
+  <div class="offcanvas-body" id="contentBody">
+  		<div id="workIngView"></div>
+  		<div id="workManager"></div>
+  		<div id="workStartDate_view"></div>
+  		<div id="workEndDate_view"></div>
+  		<div id="workCotent_view"></div>
+  </div>
 </div>
-
-
 
 <!-- 프로젝트 초대 모달 -->
 <div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
