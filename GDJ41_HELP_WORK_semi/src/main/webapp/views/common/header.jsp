@@ -136,6 +136,8 @@ window.addEventListener('DOMContentLoaded', event => {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        
+                        <% if(!(loginMember.getMemberId().equals("admin"))){%>	
                         <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
                         
                           <a  class="nav-link" href="#"id="insertAttTime">
@@ -165,6 +167,28 @@ window.addEventListener('DOMContentLoaded', event => {
                             My A/L Information
                             
                         </a>
+                        <%} else{%>
+                     	<div class="sb-sidenav-menu-heading">사원</div>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            </div>
+                            사원관리
+                        </a>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndJobList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            </div>
+                            부서/직급관리
+                        </a>
+                        
+                        <div class="sb-sidenav-menu-heading">근태</div>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberAttendanceList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            </div>
+                            근태관리
+                        </a>
+                        
+                        
+                        <%}%>
                         <div class="sb-sidenav-menu-heading">MY PROJECT</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/project/selectProjectMain.do">
                             <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
@@ -220,6 +244,11 @@ window.addEventListener('DOMContentLoaded', event => {
                         <a class="nav-link" href="#">
                             <div class="sb-nav-link-icon"><i class="fas fa-certificate"></i></div>
                             오똔 프로젝트1
+                        </a>
+                        <div class="sb-sidenav-menu-heading">관리자권한</div>
+                        <a class="nav-link" href="#">
+                            <div class="sb-nav-link-icon"><i class="fas fa-certificate"></i></div>
+                            프로젝트 관리
                         </a>
 
                     </div>
@@ -314,6 +343,9 @@ window.addEventListener('DOMContentLoaded', event => {
      				}
      		})
      	});
+        
+        
+
         
       
         </script>
