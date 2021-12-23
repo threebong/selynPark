@@ -78,7 +78,7 @@ function proInMemberList(){
 		data : {"projectNo":projectNo},
 		dataType:"json",
 		success:data=>{
-			console.log(data);
+			
 			const creatorId = data["creatorId"];
 			$("#proCreator").html("<h3>"+creatorId+"</h3>");
 			
@@ -99,23 +99,65 @@ $(document).ready(()=>{
 });
 
 function contentView(e){
-	let contentInfoArr = [];
-	let str = "";
 	
 	let val = $(e).children();
-	val.each(function(i){
-		contentInfoArr.push(val.eq(i).text());
-	});
 	
-	//정보 받아와서 배열에 저장했으니까..이거 그대로 검색해서 조회 결과 가져오기..
+	let dist = val.eq(0).text();
+	let contentNo = val.eq(6).text();
+	
 	$.ajax({
-	
+		url:"<%=request.getContextPath()%>/project/selectContentView.do",
+		type:"post",
+		data : {"dist":dist,"contentNo":contentNo},
+		traditional : true,
+		datatype:"json",
+		success:data=>{
+			const normalpc = data;
+			const pc = data["pc"];
+			const memberNameList = data["memberNameList"];
+			console.log(memberNameList.length);
+
+			switch(dist){
+				case '게시글' : 
+					$("#writerName").html(normalpc["memberName"]);
+					$("#writeDate").html(normalpc["writeDate"]);
+					$("#contentTitleView").html(normalpc["contentTitle"]);
+					$("#contentBody").html(normalpc["content"]);
+					
+					$("#viewBtn").click();
+					
+				break;
+				case '업무' :
+						
+					   $("#workWriterName").html(pc["memberName"]);
+		               $("#workWriteDate").html(pc["writeDate"]);
+		               $("#workContentTitleView").html(pc["contentTitle"]);
+		               
+		               $("#workIngView").html(pc["workIng"]);
+		               
+		               for(let i=0;i<memberNameList.length;i++){
+		            	   const span = $("<span>");
+		            	   span.html(memberNameList[i]["managerName"]);
+		            	   $("#workManager").append(span);
+		               }
+		               
+		               $("#workStartDate_view").html(pc["startDate"]);
+		               $("#workEndDate_view").html(pc["endDate"]);
+		               $("#workRank_view").html(pc["workRank"])
+		               $("#workCotent_view").html(pc["content"]);
+
+					
+					$("#workViewBtn").click();
+				break;
+				case '일정' : 
+					
+				break;
+			}
+		}
 	});
 	
 
 }
-
-
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
@@ -125,18 +167,40 @@ function contentView(e){
 </style>
 <main>
 
-
-<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id='contentView'  aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">게시글 제목</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+<!-- 일반 게시글 상세화면 -->
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling"></button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
-    내용내용내용
-  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   </div>   
+  <div class="offcanvas-body" id="contentBody"></div>
 </div>
 
+<!-- 업무 게시글 상세화면 -->
 
+<button class="btn btn-primary"  id="workViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling"></button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-body" id="contentBody">
+  		<div id="workIngView"></div>
+  		<div id="workManager"></div>
+  		<div id="workStartDate_view"></div>
+  		<div id="workEndDate_view"></div>
+  		<div id="workCotent_view"></div>
+  </div>
+</div>
 
 <!-- 프로젝트 초대 모달 -->
 <div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

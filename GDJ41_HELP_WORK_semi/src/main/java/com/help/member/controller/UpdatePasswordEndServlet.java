@@ -4,27 +4,25 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.swing.JOptionPane;
 
 import com.help.member.model.service.MemberService;
 import com.help.member.model.vo.Member;
 
 /**
- * Servlet implementation class LoginMemberServlet
+ * Servlet implementation class UpdatePasswordEndServlet
  */
-@WebServlet("/member/memberLogin.do")
-public class LoginMemberServlet extends HttpServlet {
+@WebServlet("/member/updatePasswordEnd.do")
+public class UpdatePasswordEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginMemberServlet() {
+    public UpdatePasswordEndServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,36 +31,28 @@ public class LoginMemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//로그인		
-		String userId=request.getParameter("userId");
-		String password=request.getParameter("password");
-		
-		Member m=new MemberService().login(userId,password);
 
-		//아이디값 저장하기
-		String saveId=request.getParameter("saveId");
+		String userId=request.getParameter("userId");
+		String curPassword=request.getParameter("password");
 		
-		if(saveId!=null) {
-			Cookie c=new Cookie("saveId",userId);
-			c.setMaxAge(24*60*60*7);
-			response.addCookie(c);
-		}else {
-			Cookie c=new Cookie("saveId",userId);
-			c.setMaxAge(0);
-			response.addCookie(c);			
-		}
-		
+		//현재 비밀번호가 맞는지 확인
+		Member m=new MemberService().login(userId,curPassword);
 		if(m!=null) {
-			HttpSession session=request.getSession();
-			session.setAttribute("loginMember", m);
-			JOptionPane.showMessageDialog(null, "접속을 환영합니다.");
-			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
-		}else {			
-			JOptionPane.showMessageDialog(null, "로그인에 실패했습니다.");
-			response.sendRedirect(request.getContextPath());
+			String newPassword=request.getParameter("password_new");
+			//현재 비밀번호가 일치
+			int result=new MemberService().updatePassword(userId,newPassword);
+			if(result>0) {
+				JOptionPane.showMessageDialog(null, "비밀번호 변경 완료");
+				request.setAttribute("script", "opener.location.href='"+request.getContextPath()+"/member/logoutMember.do';close();");
+			}else {
+				JOptionPane.showMessageDialog(null, "비밀번호 변경 실패");
+				request.getRequestDispatcher("/member.updatePassword.do?userId="+userId);
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "현재 비밀번호가 일치하지 않습니다.");
+			request.getRequestDispatcher("/member.updatePassword.do?userId="+userId);
 		}
-		
-			
+	
 	
 	
 	}

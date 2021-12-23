@@ -4,13 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
 <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<section id=enroll-container>
 		<h2>회원 가입 정보 입력</h2>
-    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return memberEnrollValidate();" >
+    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
     		<table>
 				<tr>
 					<th>아이디</th>
@@ -37,20 +37,20 @@
 				<tr>
 					<th>이름</th>
 					<td>	
-						<input type="text"  name="userName" id="userName" ><br>
+						<input type="text"  name="userName" id="userName" required><br>
 					</td>
 				</tr>
 				<tr>
 					<th>휴대폰</th>
 					<td>	
-						<input type="tel" placeholder="(-없이)01012345678" name="phone" id="phone" maxlength="15" required><br>
+						<input type="tel" placeholder="휴대폰번호를 '-'없이 입력" name="phone" id="phone" maxlength="15" required><br>
 					</td>
 				</tr>
 				<tr>
 					<th>프로필사진</th>
 					<td>	
 						<div id="imageContainer"></div>
-						<input type="file" name="upProfile" id="upProfile"><!-- <button id="upload">프로필사진 업로드</button> -->
+						<input type="file" name="upProfile" id="upProfile">
 					</td>
 				</tr>
 			</table>
@@ -62,6 +62,7 @@
 		</form>
 	</section>
 	<script>
+		//비밀번호 일치 확인
 	   	$(()=>{
 	   		$("#password_2").keyup(e=>{
 	   			if($(e.target).val().trim().length>3){
@@ -74,20 +75,40 @@
 	   		});
 	   	});
 	   
-	   //아이디,비번 확인
-	   	const memberEnrollValidate=()=>{
-	   		const userId=$("#userId_").val().trim();
-	   		if(!userId.match("@")){
+	   //아이디,비번,전화번호,이름 확인(정규표현식 적용)
+	   	const checks=()=>{
+	   		const checkId=RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+	   		const checkPw=RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,25}$/);
+			const checkPhone=RegExp(/^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/);
+			const getName= RegExp(/^[가-힣]+$/);
+			
+			if(!checkId.test($("#userId_").val())){
 	   			alert("이메일 형식으로 작성해주세요");
+	   			$("#userId_").val("");
 	   			$("#userId_").focus();
 	   			return false;
 	   		}
-	   		const password=$("#password_").val().trim();
-	   		if(password.length<8){
-	   			alert("패스워드는 8글자 이상 입력하세요!");
+
+			if(!checkPw.test($("#password_").val())){
+				alert("비밀번호는 영문 대소문자+숫자+특수문자 조합 최소 8자리 이상으로 작성해주세요");				
+	   			$("#password_").val("");
 	   			$("#password_").focus();
 	   			return false;
-	   		}
+			}
+			
+			if(!checkPhone.test($("#phone").val())){
+				alert("전화번호를 정확하게 입력해주세요!");
+				$("#phone").val("");
+				$("#phone").focus();
+				return false;
+			}
+			
+			if (!getName.test($("#userName").val())) {
+		        alert("이름 똑띠 쓰세용");
+		        $("#userName").val("");
+		        $("#userName").focus();
+		        return false;
+		      }
 	   		
 	   	}
 	   	
@@ -100,8 +121,6 @@
 	   				const title="idDuplicate";
 	   				const style="width=300,height=200";
 	   				open("",title,style);
-	   				console.log(idDuplicateFrm);
-	   				console.log(idDuplicateFrm.userId);
 	   				idDuplicateFrm.userId.value=userId;
 	   				idDuplicateFrm.action=url;
 	   				idDuplicateFrm.method="post";
@@ -134,24 +153,7 @@
 	   			}
 	   			reader.readAsDataURL(e.target.files[0]);
 	   		}
-	   	})
-	   	//이미지 업로드
-	   	<%-- $("#upload").click(e=>{
-			const frm=new FormData();
-			const fileInput=$("input[name=upProfile]");
-			frm.append("upfile",fileInput[0].files[0]);
-			$.ajax({
-				url:"<%=request.getContextPath()%>/member/profileUpload.do",
-				type:"post",
-				data:frm,
-				processData:false,
-				contentType:false,
-				success:data=>{
-					alert("파일업로드 성공");
-					$("input[name=upProfile]").val("");
-				}
-			});
-		}); --%>
+	   	});
    
    </script>
 </body>

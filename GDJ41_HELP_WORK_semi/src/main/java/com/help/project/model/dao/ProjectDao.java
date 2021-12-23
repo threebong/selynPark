@@ -23,7 +23,10 @@ import com.help.member.model.vo.Member;
 import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
 import com.help.project.model.vo.ProjectContent;
+import com.help.project.model.vo.ScheAttendName;
+import com.help.project.model.vo.WorkManagerName;
 import com.help.project.normal.model.vo.NormalContent;
+import com.help.project.work.model.vo.WorkManager;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 
@@ -485,5 +488,120 @@ public class ProjectDao {
 		
 		return result;
 	}
+
+
+
+	public ProjectContent selectContentOne(Connection conn, String dist, int contentNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ProjectContent pc = null;
+		String sql = prop.getProperty("selectContentOne");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,dist);
+			pstmt.setInt(2,contentNo);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				//컬럼이 한개니까 인덱스 번호로 쓸 수도 있다!
+				pc = ProjectContent.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.contentNo(rs.getInt("CONTENT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.contentTitle(rs.getString("CONTENT_TITLE"))
+						.content(rs.getString("CONTENT"))
+						.startDate(rs.getDate("START_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("START_DATE")))
+						.endDate(rs.getDate("END_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("END_DATE")))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.address(rs.getString("ADDRESS"))
+						.placeName(rs.getString("PLACE_NAME"))
+						.readCount(rs.getInt("READCOUNT"))
+						.writeDate(rs.getDate("WRITE_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("WRITE_DATE")))
+						.dist(rs.getString("DIST"))
+						.build();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return pc;
+	}
+
+
+
+	public List<WorkManagerName> selectWorkManager(Connection conn, int contentNo) {
+		//업무 담당쟈 갸져오깅
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectWorkManagerName");
+		WorkManagerName wm = null;
+		List<WorkManagerName> wmList = new ArrayList();
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,contentNo);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				wm = WorkManagerName.builder()
+						.workNo(rs.getInt("WORK_NO"))
+						.managerId(rs.getString("MANAGER_ID"))
+						.managerName(rs.getString("MEMBER_NAME")).build();
+				wmList.add(wm);
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return wmList;
+	}
+
+
+
+	public List<ScheAttendName> selectScheAttendName(Connection conn, int contentNo) {
+		//업무 담당쟈 갸져오깅
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = prop.getProperty("selectScheAttendName");
+				ScheAttendName sa = null;
+				List<ScheAttendName> saList = new ArrayList();
+				
+				try {
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1,contentNo);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						
+						sa = ScheAttendName.builder()
+								.scheduleNo(rs.getInt("SCHEDULE_NO"))
+								.memberId(rs.getString("MEMBER_ID"))
+								.memberName(rs.getString("MEMBER_NAME"))
+								.build();
+						saList.add(sa);
+						
+					}
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}finally {
+					close(rs);
+					close(pstmt);
+				}
+				return saList;
+			}
+
 
 }

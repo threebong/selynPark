@@ -27,7 +27,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 window.addEventListener('DOMContentLoaded', event => {
-
     // Toggle the side navigation
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
@@ -41,9 +40,7 @@ window.addEventListener('DOMContentLoaded', event => {
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
-
 });
-
 </script>
 
    
@@ -124,7 +121,7 @@ window.addEventListener('DOMContentLoaded', event => {
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
-                    <li><a class="dropdown-item" href="#!"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
+                    <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/viewMember.do?userId=<%=loginMember.getMemberId()%>"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
                     <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/logoutMember.do"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
 
                 </ul>

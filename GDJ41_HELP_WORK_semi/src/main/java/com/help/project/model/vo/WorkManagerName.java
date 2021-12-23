@@ -1,7 +1,6 @@
-package com.help.project.work.model.vo;
+package com.help.project.model.vo;
 
 import java.sql.Date;
-import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkManager {
-
+public class WorkManagerName {
 	
-	private int workManagerNo;
 	private int workNo;
-	private String memberId;
-	
-	
+	private String managerId;
+	private String managerName;
+
 }
