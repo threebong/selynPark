@@ -22,15 +22,177 @@
 		memberName[i] = nameTemp;
 		managerId[i] = idTemp;
 	}
-	int count =0;
 %>
 <script>
 
+
+function memberListAjax(cPage){
+	let projectNo = $("#projectNo").val();
+	//프로젝트 게시글 가져오기
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/selectAllProjcetContent.do",
+		type:"post",
+		data:{"projectNo":projectNo,"cPage":cPage},
+		dataType:"json",
+		success:data=>{
+			
+			$("#contentArea").html("");
+			
+			const memberList = data["pList"];
+			
+			const table = $("<table class='table' style='text-align:center;'>");
+			const thead = "<thead><tr><th scope='col'>구분</th><th scope='col'>제목</th><th scope='col'>작성자</th><th scope='col'>작성일</th><th scope='col'>상태</th></tr></thead>";
+			table.append(thead);
+			
+			for(let i = 0; i< memberList.length;i++){
+				
+				const tr = $("<tr scope='row' onclick='contentView(this);'>");
+				const dist = $("<td>").html(memberList[i]['dist']);
+				const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
+				const memberName = $("<td>").html(memberList[i]["memberName"]);
+				const writeDate = $("<td>").html(memberList[i]["writeDate"]);
+				const workIng = $("<td>").html(memberList[i]["workIng"]);
+				const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
+				const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
+				
+				tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(memberId).append(contentNo);
+				table.append(tr);
+			}
+			
+			const div=$("<div>").attr("id","pageBar").html(data["pageBar"]);
+			$("#contentArea").append(table).append(div);
+			
+		}
+		
+	});
+}
+
+
+
+
+function proInMemberList(){
+	let projectNo = $("#projectNo").val();
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/selectProjectInMember.do",
+		type:"post",
+		data : {"projectNo":projectNo},
+		dataType:"json",
+		success:data=>{
+			console.log(data);
+			const creatorId = data["creatorId"];
+			$("#proCreator").html("<h3>"+creatorId+"</h3>");
+			
+			for(let i=0;i<data["proMemberList"].length;i++){
+				if(creatorId != data['proMemberList'][i]['memberId']){
+				const h3 =$("<h5>").html(data["proMemberList"][i]["memberName"]);
+				$("#proAttend").append(h3);
+				}		
+			}
+		}
+	});		
+}
+
+
+$(document).ready(()=>{
+	memberListAjax();
+	proInMemberList();
+});
+
+function contentView(e){
+	
+	let val = $(e).children();
+	
+	let dist = val.eq(0).text();
+	let contentNo = val.eq(6).text();
+	
+	$.ajax({
+		url:"<%=request.getContextPath()%>/project/selectContentView.do",
+		type:"post",
+		data : {"dist":dist,"contentNo":contentNo},
+		traditional : true,
+		datatype:"json",
+		success:data=>{
+			console.log(data);
+			const dist = data["dist"];	
+			
+			switch(dist){
+				case '게시글' : 
+					$("#contentTitleView").html("");
+					$("#contentBody").html("");
+					const title = $("<h4>").html(data["contentTitle"]);			
+					const content = $("<div>").html(data["content"]);
+					$("#writerName").html(data["memberName"]);
+					$("#writeDate").html(data["writeDate"])
+					$("#contentTitleView").html(data["contentTitle"]);
+					$("#contentBody").append(content);
+					
+					$("#viewBtn").click();
+					
+				break;
+				case '업무' :
+					
+					
+					
+					$("#viewBtn").click();
+				break;
+				case '일정' : 
+					$("#viewBtn").click();
+					
+					
+				break;
+			}
+			
+					
+				
+
+		}
+	});
+	
+
+}
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
+#contentView{
+	cursor: pointer;
+}
 </style>
 <main>
+
+<!-- 일반 게시글 상세화면 -->
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-title" id="contentWriterView"></div>
+   
+  <div class="offcanvas-body" id="contentBody"></div>
+</div>
+
+<!-- 업무 게시글 상세화면 -->
+
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-title" id="contentWriterView"></div>
+   
+  <div class="offcanvas-body" id="contentBody"></div>
+</div>
+
+
 
 <!-- 프로젝트 초대 모달 -->
 <div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -41,22 +203,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div>
-		<div >
-			<div class="input-group mb-3">
-				<div style="width: 100px;">
-				<select class="form-select" aria-label=".form-select-sm example">
-					  <option selected>검색</option>
-					  <option value="1">사원명</option>
-					  <option value="2">부서명</option>
-					  <option value="3">직급명</option>
+		<div>
+			<div id="searchType_Member">
+			<select class="form-select" aria-label=".form-select-sm example" id="searchType_select">
+					  
+					  <option value="M.MEMBER_NAME">사원명</option>
+					  <option value="D.DEPT_NAME">부서명</option>
+					  <option value="P.POSITION_NAME">직급명</option>
 				</select>
-				</div>
-				<div>
-					<input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
-					<button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
-				</div>
-				
 			</div>
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchKeyword_Member">
+					<button class="btn btn-outline-secondary" type="button" id="search_Member_btn">검색</button>
+				</div>
 		</div>
 		
       </div>
@@ -74,10 +233,6 @@
     </div>
   </div>
 </div>
-<script>
-
-		
-</script>
 
 <!-- 프로젝트정보 -->
 
@@ -493,27 +648,49 @@ $("#sche_place_btn").click(e=>{
 </div>
 	<hr style="margin-top: 5px;">
 <div id="pro_container">
+	<div id="inner_pro_container">
 	<div id="inputContent_container">
 		<div id="input-group">
 			<div id="insertNormal"><a href="#"><span><i class="fas fa-edit"></i></span>&nbsp;글</a></div>
 			<div id="insertWork"><a href="#"><span><i class="fas fa-list"></i></span>&nbsp;업무</a></div>
 			<div id="insertSche"><a href="#"><span><i class="far fa-calendar"></i></span>&nbsp;일정</a></div>
-			<div id="insertTodo"><a href="#"><span><i class="fas fa-check-square"></i></span>&nbsp;할일</a></div>
 		</div>
 	</div>
-	<div id="content_section"></div>
+	
+	<div id="contentContainer">
+		<div id ="contentArea">
+		
+
+		</div>
+	</div>
+	
+	</div>
+	<div id="proMemberViewContainer">
+		<div id="innder_proMemberViewContainer">
+			<h4>프로젝트 생성자</h4>
+				<div id="proCreator"></div>
+			<hr>
+			<h4>참여자</h4>
+			<div id="proAttend"></div>
+		</div>
+	</div>
 </div>
 
 </main>
 
 <script>
+	
+	//프로젝트에 참여중인 사원 목록
+
 //사원 프로젝트 초대
 $("#add_btn").click(e=>{
+	let projectNo = $("#projectNo").val();
 	$.ajax({
 		url: "<%=request.getContextPath()%>/project/selectAllMember.do",
 		dataType:"json",
+		data:{"projectNo":projectNo},
 		success : data=>{
-			console.log(data);
+		
 			$("#addProjectMemberListContainer").find("table").remove();
 			const table = $("<table class='table' style='text-align:center;'>");
 			table.html("<thead><tr><th scope='col'>이름</th><th scope='col'>부서명</th><th scope='col'>직급</th><th scope='col'>선택</th></tr></thead>");
@@ -537,6 +714,7 @@ $("#add_btn").click(e=>{
 $("#proAddMember_submit").click(e=>{
 	let addMemberArr = new Array();
 	let projectNo = $("#projectNo").val();
+	
 	//체크박스로 선택된 사원 아이디 가져와서 배열에 저장함
 	$("input[name=proAddMember_Ck]:checked").each(function(){
 		let temp = $(this).val();
@@ -544,14 +722,13 @@ $("#proAddMember_submit").click(e=>{
 	});
 	//tb_pro_member 테이블에 보내줘야함.
 	
-	console.log(addMemberArr);
-	
 	$.ajax({
 		url : "<%=request.getContextPath()%>/project/addProjectMember.do",
 		type:"post",
 		data : {"addMemberArr":addMemberArr,
 				"projectNo":projectNo},
 		success: data=>{
+			proInMemberList();
 			$("#proAddMember_close").click();
 		},
 		error: a=>{
@@ -560,7 +737,37 @@ $("#proAddMember_submit").click(e=>{
 	});
 });
 
+//사원 초대에서 검색 기능
+$("#search_Member_btn").click(e=>{
+	let searchType =  $("#searchType_select").val();
+	let searchKeyword = $("#searchKeyword_Member").val();
+	let projectNo = $("#projectNo").val();
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/searchAddMember.do",
+		data : {"searchType":searchType,"searchKeyword":searchKeyword,"projectNo":projectNo},
+		dataType:"json",
+		success : data=>{
+			$("#addProjectMemberListContainer").find("table").remove();
+			const table = $("<table class='table' style='text-align:center;'>");
+			table.html("<thead><tr><th scope='col'>이름</th><th scope='col'>부서명</th><th scope='col'>직급</th><th scope='col'>선택</th></tr></thead>");
+			for(let i=0;i<data.length;i++){
+			const tr = $("<tr scope='row'>");
+			const memberName = $("<td>").html(data[i]["memberName"]);
+			const deptName = $("<td>").html(data[i]["deptName"]);
+			const positionName = $("<td>").html(data[i]["positionName"]);
+			const check = $("<td>");
+			check.html("<input type='checkbox' name='proAddMember_Ck' value='"+data[i]["memberId"]+"'>");
+			tr.append(memberName).append(deptName).append(positionName).append(check);
+			table.append(tr);
+			}
+			$("#addProjectMemberListContainer").append(table);				
+		}
+	});
+	
+});
 
+	
 	/* 1.일반 게시글 작성 로직 */
 	$("#insertNormal").click(e=>{
 		$("#insertNormal_").click();
@@ -616,6 +823,7 @@ $("#proAddMember_submit").click(e=>{
 				$("#uploadNormal").val("");
 				$("#fileNameList").find("p").remove();			
 				$("#close_content").click();
+				memberListAjax();	
 			},
 			error:(a)=>{
 				alert("실팽");
@@ -623,8 +831,8 @@ $("#proAddMember_submit").click(e=>{
 			
 		});
 
-	}
-		
+		}
+			
 	});
 	
 	/* 2.업무 게시글 작성 로직 */
@@ -671,8 +879,7 @@ $("#proAddMember_submit").click(e=>{
 		managerId = managerId.substring(1,managerId.length-1);
 		managerId = managerId.split(",");//프로젝트에 참가한 사람 아이디 다 가지고 있음
 		
-		console.log(memberName);//ok
-		console.log(managerId);//ok
+
 		
 		//업무 관리자 ID값으로 옵션에 value 넣어주기
 						
@@ -713,7 +920,6 @@ $("#proAddMember_submit").click(e=>{
 			
 			//span에서 삭제하면 배열에서도 삭제해주기
 			span.click(e=>{
-				console.log(selectedManagerId);
 				
 				for(let i=0;i<memberName.length;i++){
 					if(selectedManagerId.includes(span.val())){
@@ -805,7 +1011,7 @@ $("#proAddMember_submit").click(e=>{
 					$("#workFileNameContainer").find("p").remove();
 					$("#work_addMember_area").find("span").remove();
 					$("#close_work_content").click();
-					
+					memberListAjax();	
 				},
 				error:(a)=>{
 					alert("실팽");
@@ -928,6 +1134,7 @@ $("#proAddMember_submit").click(e=>{
 					$("sche_addMember_area").find("span").remove();
 					$("#searchResultContainer").find("p").remove();
 					$("#close_sche_content").click();
+					memberListAjax();	
 				},
 				error:(a)=>{
 					alert("실팽");

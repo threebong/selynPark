@@ -5,7 +5,6 @@
 <% 
    Member loginMember=(Member)session.getAttribute("loginMember");
 	Attendance a = (Attendance)request.getAttribute("outputAttTime");
-	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 %>
 <!DOCTYPE html>
 <html>
@@ -20,6 +19,7 @@
     <link href="<%=request.getContextPath() %>/css/styles.css" type="text/css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <script src="<%=request.getContextPath() %>/js/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <!-- CSS only -->
@@ -138,22 +138,22 @@ window.addEventListener('DOMContentLoaded', event => {
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
                         
-                          <a id="insertAttTime" class="nav-link" href="">
+                          <a  class="nav-link" href="#"id="insertAttTime">
+                          
                             <div class="sb-nav-link-icon" style="color:green; "><i class="fas fa-battery-full"></i>
                             </div>
-                            attendance&nbsp;<input type="button" style="display:none;"/>
+                            attendance&nbsp;
                             <div class="sb-nav-link-icon"><span>
                                     <div id="attTime"></div>
                                 </span>
                             </div>
+                             
                         </a>
                         
-                        
-                      
-                        <a class="nav-link" href="<%=request.getContextPath() %>/attendance/insertLeaveTime.do" onclick="leaveTime();">
+                        <a class="nav-link" href="#" id="insertLeaveTime">
                             <div class="sb-nav-link-icon" style="color:rgb(255, 38, 0);"><i class="fas fa-battery-empty"></i>
                             </div>
-                            leave work&nbsp;<input type="button" style="display:none;"/>
+                            leave work&nbsp;
                             <div class="sb-nav-link-icon"><span>
                                     <div id="leaveTime"></div>
                                 </span>
@@ -279,34 +279,41 @@ window.addEventListener('DOMContentLoaded', event => {
            
         });
         
-         var d = new Date();
-         const attTime=()=>{
-             var attTime = document.getElementById('attTime');
-             attTime.innerText = d.getHours()+":"+d.getMinutes();
-        }  //출근시간
-
-<%--     	$("#insertAttTime").click(e=>{
-    	 var d = new Date();
-    	 const memberId="<%=loginMember.getMemberId()%>";
-    	 var attTime = d.getHours()+":"+d.getMinutes();
-    	 var attDate = d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
-    	 console.log(memberId);
-    	 console.log(attTime);
-    	 console.log(attDate);
-    	 $.ajax({
-    		url : "<%=request.getContextPath()%>/attendance/insertAttTime.do",
-    		type:'get'
-            success:data=>{
-    		data : {"memberId":memberId,"attTime":attTime, "attDate":attDate}
-            console.log(data);
-            	$("#attTime").html(data);
-            }
-    	 })
-     }); --%>
-        const leaveTime=()=>{
-           var leaveTime = document.getElementById('leaveTime');
-           leaveTime.innerText = d.getHours()+":"+d.getMinutes();
-        } //퇴근시간
+        //출근등록
+     	$("#insertAttTime").click(e=>{
+        	var d = new Date();
+          	var attTime = moment(d).format('HH:mm');
+     		const memberId ="<%=loginMember.getMemberId()%>";
+     		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/insertAttTime.do",
+     			type:'post',
+     			data : {"memberId":memberId,"attTime":attTime},
+     			dataType:'json',
+     				success:data=>{
+     					console.log(data);
+     					$("#attTime").html(data["attTime"]);
+     					alert(data["attSuccess"]);
+     				}
+     		})
+     	});
+        
+        //퇴근등록
+     	$("#insertLeaveTime").click(e=>{
+        	var d = new Date();
+          	var leaveTime = moment(d).format('HH:mm');
+     		const memberId ="<%=loginMember.getMemberId()%>";
+     		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/insertLeaveTime.do",
+     			type:'post',
+     			data : {"memberId":memberId,"leaveTime":leaveTime},
+     			dataType:'json',
+     				success:data=>{
+     					console.log(data);
+     					$("#leaveTime").html(data["leaveTime"]);
+     					alert(data["leaveSuccess"]);
+     				}
+     		})
+     	});
         
       
         </script>

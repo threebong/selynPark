@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -48,7 +49,7 @@ public class AttendanceDao {
 		}
 		return result;
 	}
-	//출근시간 출력
+	//출근/퇴근시간 출력
 	public Attendance outputAttTime(Connection conn, String memberId, String attDate) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -64,9 +65,9 @@ public class AttendanceDao {
 			if(rs.next()) {
 				a = Attendance.builder()
 						.memberId(rs.getString("MEMBER_ID"))
-						.attTime(rs.getDate("ATT_TIME"))
-						.leaveTime(rs.getDate("LEAVE_TIME"))
-						.attDate(rs.getDate("ATT_DATE"))
+						.attTime(new SimpleDateFormat("HH:mm").format(rs.getDate("ATT_TIME")))
+						.leaveTime(rs.getDate("LEAVE_TIME")==null?"퇴근 정보가 없습니다": new SimpleDateFormat("HH:mm").format(rs.getDate("LEAVE_TIME")))
+						.attDate(rs.getString("ATT_DATE"))
 						.attStatus(rs.getString("ATT_STATUS"))
 						.build();
 			}
@@ -118,11 +119,11 @@ public class AttendanceDao {
 	
 		while(rs.next()) {
 			Attendance a = Attendance.builder()
-					.memberId(rs.getString("member_Id"))
-					.attTime(rs.getDate("att_Time"))
-					.leaveTime(rs.getDate("leave_Time"))
-					.attDate(rs.getDate("att_Date"))
-					.attStatus(rs.getString("att_status"))
+					.memberId(rs.getString("MEMBER_ID"))
+					.attTime(new SimpleDateFormat("HH시 mm분").format(rs.getDate("ATT_TIME")))
+					.leaveTime(rs.getDate("LEAVE_TIME")==null?"퇴근 정보가 없습니다": new SimpleDateFormat("HH시 mm분").format(rs.getDate("LEAVE_TIME")))
+					.attDate(new SimpleDateFormat("yyyy년 MM월 dd일").format(rs.getDate("ATT_DATE")))
+					.attStatus(rs.getString("ATT_STATUS"))
 					.build();
 			list.add(a);
 		}

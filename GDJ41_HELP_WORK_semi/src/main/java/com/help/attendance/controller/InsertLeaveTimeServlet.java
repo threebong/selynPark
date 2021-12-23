@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+
 import com.help.attendance.model.service.AttendanceService;
 import com.help.attendance.model.vo.Attendance;
 import com.help.member.model.vo.Member;
@@ -29,42 +31,41 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 		HttpSession session=request.getSession();
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();	
-		//퇴근시간
-		String leaveTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
-		//현재날짜
-		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd"));
-		//퇴근, 조퇴 비교시간
-		String workTime = String.valueOf( LocalTime.of(18,  00, 00));
-		String attStatus = null;
 		
+		String leaveTime = request.getParameter("leaveTime"); //퇴근시간, 등록하고 나서 시간나오고 이미 등록했을때는 등록했던 시간 나오게
+		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy/MM/dd")); //현재날짜
+		String workTime = String.valueOf( LocalTime.of(18,  00, 00)); // 퇴근,조퇴 비교
+		String attStatus = null;
+		JSONObject jo = new JSONObject();
+
 		if(leaveTime.compareTo(workTime)>=0) {
 			attStatus=" / 퇴근";
 		} else {
 			attStatus = " / 조퇴";
 		}
-		int result = new AttendanceService().updateLeaveTime(memberId, leaveTime, attDate, attStatus);
+		int result;
+		Attendance a=null;
+		try {
+			result = new AttendanceService().updateLeaveTime(memberId, leaveTime, attDate, attStatus);
+			a = new AttendanceService().outputAttTime(memberId,attDate);
+			if(result>0) {
+				//조회 되나 정상 업데이트 > 퇴근성공
+				jo.put("leaveSuccess", "퇴근 성공");
+			} else { 
+				//조회가 되나 업데이트 불가 > 이미 퇴근상태
+				jo.put("leaveSuccess", "이미 퇴근 상태입니다.");
+			}
+			jo.put("leaveTime", a.getLeaveTime());
+			
+		} catch(NullPointerException e) {
+			//업데이트, 조회가 되지 않으니 아직 해당일자 출근 데이터 없는 상태
+			jo.put("leaveSuccess", "출근 전 상태입니다. 출근을 먼저 등록해주세요");
+		}
 		
-		//현재날짜 출퇴근데이터 가져오기
-		Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
+		System.out.println(a);
 		
-	
-		String msg="";
-		String loc="";
-		if(result>0) {
-			msg="퇴근 성공"; 
-			loc="/member/memberLogin.do";
-		} else { 
-			msg="이미 퇴근 상태 입니다.";
-			loc="/member/memberLogin.do";
-		} //다시 클릭했을때 메시지는 정상출력되나 SQLException 나옴...
-
-	
-		request.setAttribute("outputleaveTime", a);
-		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
-
-		
+		response.setContentType("application/json;charset=utf-8");
+		response.getWriter().print(jo);
 		
 	}
 

@@ -21,30 +21,50 @@
 	min-height: 1000px;
 	padding: 0px;
 	margin: 0px;
-	position: relative;
+	display: flex;
+	justify-content: center;
 }
-
-#content_section {
+#inner_pro_container{
+	width: 1300px;
 	border: 1px solid black;
-	width: 750px;
-	padding: 0px;
-	margin: 0px;
-	position: absolute;
-	left: 20%;
-	min-height: 300px;
-	top: 45%;
 }
 
-#inputContent_container {
+#proMemberViewContainer{
+	width: 200px;
+	border :1px solid black;
+
+	
+}
+#innder_proMemberViewContainer{
+	position: fixed;
+	border :1px solid black;
+	
+}
+#contentContainer {
 	border: 1px solid black;
 	padding-top: 40px;
 	margin: 0px;
-	width: 750px;
-	height: 200px;
-	position: absolute;
-	left: 20%;
-	top: 15%;
-	justify-content: center;
+	width: 500px;
+	left: 300px;
+}
+@media screen and (max-width:1400px)
+ { 
+ #proMemberViewContainer { display: none;}
+}
+#inputContent_container{
+	border: 1px solid black;
+	margin: 0px;
+	width: 50%;
+	margin-left: 300px;
+	margin-top: 50px;
+	
+}
+#contentContainer{
+	border: 1px solid black;
+	margin: 0px;
+	width: 100%;
+	margin-top: 150px;
+	
 }
 
 #input-group {
@@ -54,7 +74,7 @@
 
 #input-group div {
 	display: inline-block;
-	width: 180px;
+	width: 150px;
 	font-size: 30px;
 	text-align: center;
 }
@@ -329,6 +349,9 @@
 		url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
 		no-repeat;
 }
+
+
+
 #placesList .item .marker_1 {background-position: 0 -10px;}
 #placesList .item .marker_2 {background-position: 0 -56px;}
 #placesList .item .marker_3 {background-position: 0 -102px}

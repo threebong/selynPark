@@ -22,6 +22,7 @@ public class NormalContent {
 	private String normalContentContent;
 	private Date normalContentDate;
 	private int normalContentReadCount;
+	private String dist;
 	
 	
 	

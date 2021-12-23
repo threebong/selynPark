@@ -3,7 +3,6 @@ package com.help.attendance.controller;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,19 +28,13 @@ public class AttendanceListServlet extends HttpServlet {
 		HttpSession session=request.getSession();
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();
-//		String month = request.getParameter("checkMonth");
-		
-//		if(month==null || month.isEmpty()) {
-			String month=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-//		}
-		
+		//최초 현재 월을 보여주기 위함
+		String month=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-		//아이디 정보 가져와서 아이디와 일치하는 출퇴근이력 전체조회 리스트
-		//월별로 나와야함 yy/MM형태로 지금은 현재달, 선택한 달의 데이터가 이쪽으로 넘어와야함
 
 		List<Attendance> list = new AttendanceService().selectAttendanceMonthly(memberId,month);
+		System.out.println("가져오나ㅣ"+list);
 
-		System.out.println(list);
 		request.setAttribute("attendanceMonthly", list);
 		request.getRequestDispatcher("/views/attendance/attendanceList.jsp").forward(request, response);
 	
