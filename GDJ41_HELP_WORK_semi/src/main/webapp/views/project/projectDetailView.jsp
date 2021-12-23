@@ -99,23 +99,57 @@ $(document).ready(()=>{
 });
 
 function contentView(e){
-	let contentInfoArr = [];
-	let str = "";
 	
 	let val = $(e).children();
-	val.each(function(i){
-		contentInfoArr.push(val.eq(i).text());
-	});
 	
-	//정보 받아와서 배열에 저장했으니까..이거 그대로 검색해서 조회 결과 가져오기..
+	let dist = val.eq(0).text();
+	let contentNo = val.eq(6).text();
+	
 	$.ajax({
-	
+		url:"<%=request.getContextPath()%>/project/selectContentView.do",
+		type:"post",
+		data : {"dist":dist,"contentNo":contentNo},
+		traditional : true,
+		datatype:"json",
+		success:data=>{
+			console.log(data);
+			const dist = data["dist"];	
+			
+			switch(dist){
+				case '게시글' : 
+					$("#contentTitleView").html("");
+					$("#contentBody").html("");
+					const title = $("<h4>").html(data["contentTitle"]);			
+					const content = $("<div>").html(data["content"]);
+					$("#writerName").html(data["memberName"]);
+					$("#writeDate").html(data["writeDate"])
+					$("#contentTitleView").html(data["contentTitle"]);
+					$("#contentBody").append(content);
+					
+					$("#viewBtn").click();
+					
+				break;
+				case '업무' :
+					
+					
+					
+					$("#viewBtn").click();
+				break;
+				case '일정' : 
+					$("#viewBtn").click();
+					
+					
+				break;
+			}
+			
+					
+				
+
+		}
 	});
 	
 
 }
-
-
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
@@ -125,15 +159,37 @@ function contentView(e){
 </style>
 <main>
 
+<!-- 일반 게시글 상세화면 -->
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-title" id="contentWriterView"></div>
+   
+  <div class="offcanvas-body" id="contentBody"></div>
+</div>
 
-<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id='contentView'  aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">게시글 제목</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+<!-- 업무 게시글 상세화면 -->
+
+<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
-    내용내용내용
-  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-title" id="contentWriterView"></div>
+   
+  <div class="offcanvas-body" id="contentBody"></div>
 </div>
 
 

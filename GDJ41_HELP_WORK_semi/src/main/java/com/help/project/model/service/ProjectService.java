@@ -159,4 +159,14 @@ public class ProjectService {
 		return result;
 	}
 
+	public ProjectContent selectContentOne(String dist, int contentNo) {
+		
+		Connection conn = getConnection();
+		ProjectContent pc = dao.selectContentOne(conn,dist,contentNo);
+		close(conn);
+		return pc;
+		
+		
+	}
+
 }

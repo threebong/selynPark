@@ -486,4 +486,49 @@ public class ProjectDao {
 		return result;
 	}
 
+
+
+	public ProjectContent selectContentOne(Connection conn, String dist, int contentNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ProjectContent pc = null;
+		String sql = prop.getProperty("selectContentOne");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,dist);
+			pstmt.setInt(2,contentNo);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				//컬럼이 한개니까 인덱스 번호로 쓸 수도 있다!
+				pc = ProjectContent.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.contentNo(rs.getInt("CONTENT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.contentTitle(rs.getString("CONTENT_TITLE"))
+						.content(rs.getString("CONTENT"))
+						.startDate(rs.getDate("START_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("START_DATE")))
+						.endDate(rs.getDate("END_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("END_DATE")))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.address(rs.getString("ADDRESS"))
+						.placeName(rs.getString("PLACE_NAME"))
+						.readCount(rs.getInt("READCOUNT"))
+						.writeDate(rs.getDate("WRITE_DATE")==null?"":new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("WRITE_DATE")))
+						.dist(rs.getString("DIST"))
+						.build();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return pc;
+	}
+
 }
