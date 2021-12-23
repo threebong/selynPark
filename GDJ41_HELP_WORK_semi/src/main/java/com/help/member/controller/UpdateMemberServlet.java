@@ -1,5 +1,6 @@
 package com.help.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -7,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
@@ -41,35 +43,39 @@ public class UpdateMemberServlet extends HttpServlet {
 			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
 			return;
 		}
-		String path=request.getServletContext().getRealPath("/upload/member");
+		String path=request.getServletContext().getRealPath("/upfile/member/");
 		int maxSize=1024*1024*20;
-		String encode="UTF-8";
 		
-		MultipartRequest mr=new MultipartRequest(request,path,maxSize,encode,new DefaultFileRenamePolicy());
+		MultipartRequest mr=new MultipartRequest(request,path,maxSize,"UTF-8",new DefaultFileRenamePolicy());
 		
 		Member m=Member.builder()
 				.memberId(mr.getParameter("userId"))
 				.memberPwd(mr.getParameter("password"))
 				.memberName(mr.getParameter("userName"))
 				.memberPhone(mr.getParameter("phone"))
-				.memberProfile(mr.getFilesystemName("upProfile"))
 				.build();
 		
-		int result=new MemberService().updateMember(m);
-		String msg="";
-		String loc="";
-		if(result>0) {
-			msg="회원정보수정완료";
-			loc="/project/selectProjectMain.do";
+		File f=mr.getFile("upProfile");
+		System.out.println(mr.getFilesystemName("upProfile"));
+		if(f!=null&&f.length()>0) {
+			//이전파일삭제
+			File deleteProfile=new File(path+mr.getParameter("oriProfile"));
+			deleteProfile.delete();
+			m.setMemberProfile(mr.getFilesystemName("upProfile"));
+			
 		}else {
-			msg="회원정보수정실패";
-			loc="/member/viewMember.do";
+			//업로드파일이 없음
+			m.setMemberProfile(mr.getParameter("oriProfile"));
 		}
-		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/views/common/msg.jsp")
-		.forward(request, response);
-	
+		
+		int result=new MemberService().updateMember(m);
+		if(result>0) {
+			JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다.");
+			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
+		}else {			
+			JOptionPane.showMessageDialog(null, "회원정보 수정이 실패했습니다.");
+			request.getRequestDispatcher("/member/viewMember.do").forward(request, response);
+		}
 	
 	}
 

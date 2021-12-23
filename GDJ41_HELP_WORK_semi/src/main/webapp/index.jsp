@@ -143,10 +143,10 @@
             </div>
             <div class="login_etc">
                 <div class="forgot_email">
-                	<a href="">아이디를 잊으셨나요?</a>
+                	<a href="<%=request.getContextPath()%>/member/findMemberId.do">아이디 찾기</a>
             	</div>
                 <div class="forgot_pw">
-                	<a href="">패스워드를 잊으셨나요?</a>
+                	<a href="<%=request.getContextPath()%>/member/findMemberPwd.do">패스워드 찾기</a>
             	</div>
             </div>
             <div class="submit">

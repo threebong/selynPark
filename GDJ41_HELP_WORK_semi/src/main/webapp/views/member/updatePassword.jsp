@@ -20,7 +20,7 @@
 </head>
 <body>
     <div id="updatePassword-container">
-		<form name="updatePwdFrm" action="<%=request.getContextPath()%>/member/updatePasswordEnd.do" method="post" onsubmit="return passwordValidate()" >
+		<form name="updatePwdFrm" action="<%=request.getContextPath()%>/member/updatePasswordEnd.do" method="post" onsubmit="return passwordValidate();" >
 			<table>
 				<tr>
 					<th>현재 비밀번호</th>

@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 
 import com.help.member.model.service.MemberService;
 import com.help.member.model.vo.Member;
@@ -36,27 +37,21 @@ public class UpdatePasswordEndServlet extends HttpServlet {
 		
 		//현재 비밀번호가 맞는지 확인
 		Member m=new MemberService().login(userId,curPassword);
-		String msg="";
-		String loc="";
 		if(m!=null) {
 			String newPassword=request.getParameter("password_new");
 			//현재 비밀번호가 일치
 			int result=new MemberService().updatePassword(userId,newPassword);
 			if(result>0) {
-				msg="비밀번호 변경 완료";
+				JOptionPane.showMessageDialog(null, "비밀번호 변경 완료");
 				request.setAttribute("script", "opener.location.href='"+request.getContextPath()+"/member/logoutMember.do';close();");
 			}else {
-				msg="비밀번호 변경 실패";
-				loc="/member/updatePassword.do?userId="+userId;
+				JOptionPane.showMessageDialog(null, "비밀번호 변경 실패");
+				request.getRequestDispatcher("/member.updatePassword.do?userId="+userId);
 			}
 		}else {
-			msg="현재 비밀번호가 일치하지 않습니다.";
-			loc="/member/updatePassword.do?userId="+userId;
+			JOptionPane.showMessageDialog(null, "현재 비밀번호가 일치하지 않습니다.");
+			request.getRequestDispatcher("/member.updatePassword.do?userId="+userId);
 		}
-		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/views/common/msg.jsp")
-		.forward(request, response);
 	
 	
 	

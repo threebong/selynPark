@@ -19,9 +19,8 @@
 		<%}else {%>
 			[<span id="duplicated"><%=m.getMemberId() %></span>]는 사용중입니다.
 			<br><br>
-			<!-- 아이디 재입력창 구성 -->
-			<form action="<%=request.getContextPath() %>/member/memberIdDuplicate.do" 
-			method="post">
+			<form action="<%=request.getContextPath() %>/member/idDuplicate.do" 
+			method="post" onsubmit="checks">
 				<input type="text" name="userId" id="userId">
 				<input type="submit" value="중복검사" >
 			</form>
@@ -34,6 +33,16 @@
 			opener.enrollMemberFrm.password.focus();
 			close();
 		});
+		
+		const checks=()=>{
+			const checkId=RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+			if(!checkId.test($("#userId").val())){
+	   			alert("이메일 형식으로 작성해주세요");
+	   			$("#userId").val("");
+	   			$("#userId").focus();
+	   			return false;
+	   		}
+		}
 	</script>
 
 </body>

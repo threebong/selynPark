@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
@@ -42,7 +43,7 @@ public class EnrollMemberEndServlet extends HttpServlet {
 			return;
 		}
 		
-		String path=request.getServletContext().getRealPath("/upload/member");
+		String path=request.getServletContext().getRealPath("/upfile/member");
 		int maxSize=1024*1024*20;
 		String encode="UTF-8";
 		
@@ -57,19 +58,13 @@ public class EnrollMemberEndServlet extends HttpServlet {
 				.build();
 		
 		int result=new MemberService().insertMember(m);
-		String msg="";
-		String loc="";
 		if(result>0) {
-			msg="회원가입이 완료되었습니다.";
-			loc="/";
-		}else {
-			msg="회원가입이 실패했습니다";
-			loc="/member/enrollMember.do";
+			JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+			response.sendRedirect(request.getContextPath());
+		}else {			
+			JOptionPane.showMessageDialog(null, "회원가입이 실패했습니다.");
+			request.getRequestDispatcher("/member/enrollMember.do").forward(request, response);
 		}
-		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
-		
 	
 	}
 

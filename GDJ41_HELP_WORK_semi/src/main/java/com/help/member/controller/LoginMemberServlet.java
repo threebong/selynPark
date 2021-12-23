@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.JOptionPane;
 
 import com.help.member.model.service.MemberService;
 import com.help.member.model.vo.Member;
@@ -54,11 +55,11 @@ public class LoginMemberServlet extends HttpServlet {
 		if(m!=null) {
 			HttpSession session=request.getSession();
 			session.setAttribute("loginMember", m);
-			request.getRequestDispatcher("/project/selectProjectMain.do").forward(request, response);
-		}else {
-			request.setAttribute("msg", "로그인에 실패하셨습니다.");
-			request.setAttribute("loc","/");
-			request.getRequestDispatcher("/views/common/msg.jsp").forward(request, response);
+			JOptionPane.showMessageDialog(null, "접속을 환영합니다.");
+			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
+		}else {			
+			JOptionPane.showMessageDialog(null, "로그인에 실패했습니다.");
+			response.sendRedirect(request.getContextPath());
 		}
 		
 			

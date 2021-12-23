@@ -57,5 +57,13 @@ public class MemberService {
 		close(conn);
 		return result;
 	}
+	
+	//아이디 찾기
+	public String findMemberId(String userName,String phone) {
+		Connection conn=getConnection();
+		String userId=dao.findMemberId(conn,userName,phone);
+		close(conn);
+		return userId;
+	}
 
 }

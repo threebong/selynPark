@@ -141,4 +141,27 @@ public class MemberDao {
 		return result;
 	}
 	
+	//아이디 찾기
+	public String findMemberId(Connection conn,String userName,String phone) {
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String userId=null;
+		String sql=prop.getProperty("findMemberId");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userName);
+			pstmt.setString(2, phone);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				userId = rs.getString("MEMBER_ID"); 
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return userId;
+	}
 }

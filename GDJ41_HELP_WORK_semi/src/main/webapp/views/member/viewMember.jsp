@@ -7,7 +7,7 @@
 
 	<section id=enroll-container>
 		<h2>회원 정보 수정</h2>
-    	<form name="updateMemberFrm" method="post" >
+    	<form name="updateMemberFrm" action="<%=request.getContextPath() %>/member/updateMember.do" method="post" enctype="multipart/form-data"  >
     		<table>
 				<tr>
 					<th>아이디</th>
@@ -33,9 +33,22 @@
 						<div id="imageContainer"></div>
 						<input type="file" name="upProfile" id="upProfile">
 					</td>
+				<tr>
+					<td>
+						<%if(m.getMemberProfile()!=null){ %>
+						<img src="<%=request.getContextPath() %>/upfile/member/<%=m.getMemberProfile() %>" width=100px height=100px>
+						<%}else{ %>
+						<span>업로드한 프로필사진이 없습니다.</span>
+						<%} %>
+						<span>현재 프로필사진</span>
+					</td>
+				</tr>
+					<td>
+						<input type="hidden" name="oriProfile" value="<%=m.getMemberProfile() %>">
+					</td>
 				</tr>
 			</table>
-			<input type="button" value="회원정보수정" onclick="updateMember();" >
+			<input type="submit" value="회원정보수정" >
 			<input type="button" value="비밀번호 변경" id="pwChangeBtn" onclick="updatePassword();">
 			<input type="button" value="탈퇴" >
 		</form>
