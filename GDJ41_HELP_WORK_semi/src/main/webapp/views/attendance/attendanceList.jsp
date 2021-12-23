@@ -4,9 +4,6 @@
 <%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance" %>
 <%
 	List<Attendance> list = (List<Attendance>)request.getAttribute("attendanceMonthly");
- 
-	SimpleDateFormat time = new SimpleDateFormat("HH:mm");
-	SimpleDateFormat date = new SimpleDateFormat("yyyy-mm-dd");
 
 %>
 <style>
@@ -68,7 +65,7 @@ font-size:30px;
 		  </thead>
 		  <tbody id="ajaxTable">
 		 	<% if(list.isEmpty()) { %>
-		  	<tr id="result">
+		  	<tr>
 		  		<td colspan="4">조회된 출퇴근 이력이 없습니다.</td>
 		  	</tr>
 		  	<%} else { 
@@ -76,14 +73,13 @@ font-size:30px;
 		  	%>
 		  	<tr>
 		  		<td><%=aMonth.getAttDate()%></td>
-		  		<td><%=sdf.format(aMonth.getAttTime()) %></td>
+		  		<td><%=aMonth.getAttTime()%></td>
 		  		<td>
-		  	
-		  		 <% try { %> 
-		  		 <%=sdf.format(aMonth.getLeaveTime()) %>
+		  	 	 <% try { %> 
+		  			<%=aMonth.getLeaveTime()%>
 		  		 <% } catch(Exception e){ %>
 		  		 퇴근정보가 없습니다.
-		  		<%} %> 
+		  		<%} %>  
 		  		</td>
 		  		<td><%=aMonth.getAttStatus() %></td>
 		  	</tr>
@@ -91,15 +87,15 @@ font-size:30px;
 		  	}%>
 		
 		  </tbody>
+		  <tbody id="changeAjax">
+		  </tbody>
 		
 		</table>
 
 </main>
 <script>
-  //document.getElementById('checkMonth').valueAsDate = new Date();  //기본으로 현재 달 표기
+  //document.getElementById('selectMonth').valueAsDate = new Date();  //기본으로 현재 달 표기
  	$("#checkMonth").change(e=>{
- 		$("#ajaxTable").hide(); // 최초페이지에서 출력한 데이터 숨겨주고
- 		$("#ajaxTable").remove(); 
     	 const memberId ="<%=loginMember.getMemberId()%>";
     	$("#selectMonth").val($("#checkMonth").val());
 		let month = $("#selectMonth").val();
@@ -110,65 +106,32 @@ font-size:30px;
 			data : {"memberId":memberId,"month":month},
 			dataType : 'json',
             success:data=>{
+ 	 			$("#ajaxTable").remove();
 				let tbody=$('tbody[id="changeAjax"]');
-				for(let i=0; i<data.length; i++){
+				tbody.empty();
+				if(data.length==0){
 					let tr=$("<tr>");
-					let attDate=$("<td>").html(data[i]["attDate"]);
-					let attTime=$("<td>").html.(data[i]["attTime"]);
-					let leaveTime=$("<td>").html(data[i]["leaveTime"]);
-					let attStatus=$("<td>").html(data[i]["attStatus"]);
-					tr.append(attDate).append(attTime).append(leaveTime).append(attStatus);
-					tbody.append(tr);
+					let ntd=$("<td>").html("조회결과가 없습니다.");
+					ntd.attr("colspan","4");
+					tr.css("text-align","center");
+					tbody.append(tr).append(ntd);
+				}else{
+					for(let i=0; i<data.length; i++){
+						let tr=$("<tr>");
+						let attDate=$("<td>").html(data[i]["attDate"]);
+						let attTime=$("<td>").html(data[i]["attTime"]);
+						let leaveTime=$("<td>").html(data[i]["leaveTime"]);
+						let attStatus=$("<td>").html(data[i]["attStatus"]);
+						tbody.append(tr).append(attDate).append(attTime).append(leaveTime).append(attStatus);
+					}	
 				}
-				$("#ajaxTable").html(data);
-				console.log(data);
+				tbody.html(tr);
+				console.log(data.length);
             }
     	 })
      });
-  
+ 
 
-<%--   $("#checkMonth").change(e=>{
-	$.ajax({
-		url:"<%=request.getContextPath()%>/attendance/attendanceListEnd.do",
-		type:"post",
-		data:{"monthData":$("#checkMonth").val()},
-		success:data=>{
-			for(let i=0; i<data.length; i++){
-			let tr=$('tr[id="result"]');
-			let attDate=$("<td>").html(data[i]["attDate"]);
-			let attTime=$("<td>").html(data[i]["attTime"]);
-			let leaveTime=$("<td>").html(data[i]["leaveTime"]);
-			let attStatus=$("<td>").html(data[i]["attStatus"]);
-			tr.append(attDate).append(attTime).append(leaveTime).append(attStatus);
-			table.append(tr);
-			}
-		}
-	})
-}) --%>
-
-
-<%-- var request = new XMLHttpRequest();
-function searchMonth(){
-	request.open("Post","<%=request.getContextPath()%>/JSONServlet",true);
-	request.onreadystatechange = searchProcess;
-	request.send(null);
-	
-}
-function searchProcess(){
-	var table = document.getElementById("ajaxTable");
-	table.innerHTML = "";
-	if(request.readyState)==4&&request.status=200){
-		var object = eval('('+request.responseText+')');
-		var result = object.result;
-		for(var i=0; i<result.length; i++){
-			var row = table.insertRow(0);
-			for(var j=0; j<result[i].length; j++){
-				var cell = row.insertCell(j);
-				cell.innerHTML = result[i][j].value;
-			}
-		}
-	}
-} --%>
 	
 
 </script>

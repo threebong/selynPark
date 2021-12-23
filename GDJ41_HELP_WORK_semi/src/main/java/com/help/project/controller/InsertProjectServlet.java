@@ -55,10 +55,6 @@ public class InsertProjectServlet extends HttpServlet {
 			//생성 완료시 프로젝트 번호 가져옴
 			int projectNo = new ProjectService().selectProjectNo(pinfo);
 			List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
-			
-			
-			
-				
 				request.setAttribute("ProMemberJoinMember", mList);
 				request.setAttribute("projectInfo", pinfo);
 				request.getRequestDispatcher("/views/project/projectDetailView.jsp?").forward(request, response);

@@ -31,14 +31,33 @@ public class WorkService {
 		
 	}
 	
-	public List<WorkSelectManagerJoin> searchMine(String ing,String prior,String h4,String logId){
-		//다중 검색--내가 담당자인 업무들
+	public List<WorkSelectManagerJoin> searchMine(String ing,String prior,String h4,String logId,int cPage,int numPerPage){
+		//다중 검색--내가 담당자인 업무들//페이징
 		Connection conn=getConnection();
 		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
 		
 		if(h4.equals("나의업무")) {
 			 result=dao.searchMine(conn,ing,prior,logId);
 			 System.out.println("서비스"+result);
+		}else if(h4.equals("전체업무")) {
+			//해야함
+			List<Integer> proNum=dao.selectProjectNo(conn, logId);
+			 result=dao.searchAll(conn,ing,prior,proNum,cPage,numPerPage);
+			 System.out.println("서비스"+result);
+			
+		}
+		return result;
+		
+	}
+	
+	public List<WorkSelectManagerJoin> searchMine(String ing,String prior,String h4,String logId){
+		//다중 검색--내가 담당자인 업무들//
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
+		
+		if(h4.equals("나의업무")) {
+			// result=dao.searchMine(conn,ing,prior);
+			// System.out.println("서비스"+result);
 		}else if(h4.equals("전체업무")) {
 			//해야함
 			List<Integer> proNum=dao.selectProjectNo(conn, logId);
@@ -49,8 +68,6 @@ public class WorkService {
 		return result;
 		
 	}
-	
-	
 	public int insertWorkContent(Work w) {
 		//업무 게시글 작성
 		Connection conn = getConnection();
@@ -111,9 +128,16 @@ public class WorkService {
 	}
 	
 	public List<WorkSelectManagerJoin> selectWorkAll(List<Integer> proNum){
-		//내가 참여한 프로젝트의 모든 업무들 
+		//내가 참여한 프로젝트의 모든 업무들 ---개수구하는데 사용 
 		Connection conn=getConnection();
 		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,proNum);
+		close(conn);
+		return result;
+	}
+	public List<WorkSelectManagerJoin> selectWorkAll(List<Integer> proNum,int cPage,int numPerPage){
+		//내가 참여한 프로젝트의 모든 업무들 ---페이징처리 
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,proNum,cPage,numPerPage);
 		close(conn);
 		return result;
 	}

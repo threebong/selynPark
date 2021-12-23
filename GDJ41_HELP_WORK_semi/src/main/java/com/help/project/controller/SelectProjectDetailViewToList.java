@@ -42,9 +42,6 @@ public class SelectProjectDetailViewToList extends HttpServlet {
 		//해당 프로젝트에 참여중인 사원 리스트
 		List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
 	
-		//List<ProjectAddMember> mAllList = new ProjectService().selectAllMember();
-		
-		//request.setAttribute("memberList", mAllList);
 		
 		request.setAttribute("ProMemberJoinMember", mList);
 		
