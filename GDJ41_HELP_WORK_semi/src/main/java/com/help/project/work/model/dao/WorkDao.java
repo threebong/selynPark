@@ -241,6 +241,47 @@ public class WorkDao {
 		}return works;
 	}
 	
+	
+	public List<WorkSelectManagerJoin> selectWorkMine(Connection conn,List<Project> pro,String logId,int cPage,int numPerPage){
+		//내가 담당자인 업무들만 ----페이징
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		//HashMap<Integer, List<Work>> works=new HashMap<Integer, List<Work>>();
+		List<WorkSelectManagerJoin> works=new ArrayList<WorkSelectManagerJoin>();
+		String sql=prop.getProperty("selectWorkMinePaging");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(3, logId);
+			//for(Project p:pro) {
+			pstmt.setInt(1, (cPage-1)*numPerPage+1);
+			pstmt.setInt(2, cPage*numPerPage);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				WorkSelectManagerJoin wo=WorkSelectManagerJoin.builder()
+						.proName(rs.getString("PRO_NAME"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workNo(rs.getInt("WORK_NO"))
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.workTitle(rs.getString("WORK_TITLE"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.managerId(rs.getString("MANAGER_ID"))
+						.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))							.build();
+				System.out.print(wo);
+				works.add(wo);
+			}
+				//works.put(p.getProjectNo(), w);//플젝번호-해당업무들
+		//	}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return works;
+	}
+	
 	//------------나의 업무 조건 검색
 	public List<WorkSelectManagerJoin> searchMine(Connection conn,String ing,String prior,String logId){
 		PreparedStatement pstmt=null;

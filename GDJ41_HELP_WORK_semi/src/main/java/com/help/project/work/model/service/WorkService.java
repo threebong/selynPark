@@ -30,6 +30,14 @@ public class WorkService {
 		return works;
 		
 	}
+	public List<WorkSelectManagerJoin> selectWorkMine(List<Project> pro,String logId,int cPage,int numPerPage){
+		//내가 담당자인 업무들 조회----페이징 
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> works=dao.selectWorkMine(conn,pro,logId,cPage,numPerPage);
+		close(conn);
+		return works;
+		
+	}
 	
 	public List<WorkSelectManagerJoin> searchMine(String ing,String prior,String h4,String logId,int cPage,int numPerPage){
 		//다중 검색--내가 담당자인 업무들//페이징
