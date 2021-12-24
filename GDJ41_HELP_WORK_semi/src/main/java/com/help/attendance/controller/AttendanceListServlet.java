@@ -33,7 +33,6 @@ public class AttendanceListServlet extends HttpServlet {
 
 
 		List<Attendance> list = new AttendanceService().selectAttendanceMonthly(memberId,month);
-		System.out.println("가져오나ㅣ"+list);
 
 		request.setAttribute("attendanceMonthly", list);
 		request.getRequestDispatcher("/views/attendance/attendanceList.jsp").forward(request, response);

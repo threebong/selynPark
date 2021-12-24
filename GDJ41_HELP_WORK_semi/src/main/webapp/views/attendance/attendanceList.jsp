@@ -126,7 +126,6 @@ font-size:30px;
 					}	
 				}
 				tbody.html(tr);
-				console.log(data.length);
             }
     	 })
      });
