@@ -10,18 +10,6 @@
 <%
 	Project p = (Project)request.getAttribute("projectInfo");
 	List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
-	//List<ProjectAddMember> memberList = (List)request.getAttribute("memberList");
-	
-	
-	String[] memberName = new String[pMember.size()];
-	String[] managerId = new String[pMember.size()];
-	
-	for(int i =0; i<pMember.size();i++){
-		String nameTemp = (String)pMember.get(i).getMemberName();
-		String idTemp = (String)pMember.get(i).getMemberId();
-		memberName[i] = nameTemp;
-		managerId[i] = idTemp;
-	}
 %>
 <script>
 
@@ -82,12 +70,14 @@ function proInMemberList(){
 			const creatorId = data["creatorId"];
 			$("#proCreator").html("<h3>"+creatorId+"</h3>");
 			
+			$("#proAttend").html("");
 			for(let i=0;i<data["proMemberList"].length;i++){
 				if(creatorId != data['proMemberList'][i]['memberId']){
 				const h3 =$("<h5>").html(data["proMemberList"][i]["memberName"]);
 				$("#proAttend").append(h3);
 				}		
 			}
+			
 		}
 	});		
 }
@@ -96,6 +86,7 @@ function proInMemberList(){
 $(document).ready(()=>{
 	memberListAjax();
 	proInMemberList();
+	
 });
 
 function contentView(e){
@@ -115,7 +106,7 @@ function contentView(e){
 			const normalpc = data;
 			const pc = data["pc"];
 			const memberNameList = data["memberNameList"];
-			console.log(memberNameList.length);
+			
 
 			switch(dist){
 				case '게시글' : 
@@ -135,22 +126,39 @@ function contentView(e){
 		               
 		               $("#workIngView").html(pc["workIng"]);
 		               
+		               $("#workManager").children().remove();
 		               for(let i=0;i<memberNameList.length;i++){
-		            	   const span = $("<span>");
-		            	   span.html(memberNameList[i]["managerName"]);
-		            	   $("#workManager").append(span);
+		            		   const span = $("<span>");
+			            	   span.html(memberNameList[i]["managerName"]);
+			            	   $("#workManager").append(span);   
 		               }
 		               
 		               $("#workStartDate_view").html(pc["startDate"]);
 		               $("#workEndDate_view").html(pc["endDate"]);
 		               $("#workRank_view").html(pc["workRank"])
-		               $("#workCotent_view").html(pc["content"]);
+		               $("#workContent_view").html(pc["content"]);
 
 					
 					$("#workViewBtn").click();
 				break;
 				case '일정' : 
-					
+					 $("#scheWriterName").html(pc["memberName"]);
+		               $("#scheWriteDate").html(pc["writeDate"]);
+		               $("#scheContentTitleView").html(pc["contentTitle"]);
+		               
+		               $("#scheAttendPeople").children().remove();
+		               for(let i=0;i<memberNameList.length;i++){
+		            	   const span = $("<span>");
+		            	   span.html(memberNameList[i]["memberName"]);
+		            	   $("#scheAttendPeople").append(span);
+		               }
+		               
+		               $("#scheStartDate_view").html(pc["startDate"]);
+		               $("#scheEndDate_view").html(pc["endDate"]);
+		               $("#schePlaceName").html(pc["placeName"]);
+		               $("#schePlaceAddr").html(pc["address"]);
+		               $("#scheContent_view").html(pc["content"]);
+		               $("#scheViewBtn").click();
 				break;
 			}
 		}
@@ -198,9 +206,35 @@ function contentView(e){
   		<div id="workManager"></div>
   		<div id="workStartDate_view"></div>
   		<div id="workEndDate_view"></div>
-  		<div id="workCotent_view"></div>
+  		<div id="workContent_view"></div>
   </div>
 </div>
+
+<!-- 업무 게시글 상세화면 -->
+
+<button class="btn btn-primary"  id="scheViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#scheContentView" aria-controls="offcanvasScrolling"></button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="scheContentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="scheWriterName" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="scheWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="scheContentTitleView" style="margin-top: 20px;"></h4>
+   </div>
+  <div class="offcanvas-body" id="contentBody">
+  		<div id="scheAttendPeople"></div>
+  		<div id="scheStartDate_view"></div>
+  		<div id="scheEndDate_view"></div>
+  		<div id="schePlaceName"></div>
+  		<div id="schePlaceAddr"></div>
+  		<div id="scheContent_view"></div>
+  </div>
+</div>
+
+
+
+
 
 <!-- 프로젝트 초대 모달 -->
 <div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -213,8 +247,7 @@ function contentView(e){
       <div>
 		<div>
 			<div id="searchType_Member">
-			<select class="form-select" aria-label=".form-select-sm example" id="searchType_select">
-					  
+			<select class="form-select" aria-label=".form-select-sm example" id="searchType_select">				  
 					  <option value="M.MEMBER_NAME">사원명</option>
 					  <option value="D.DEPT_NAME">부서명</option>
 					  <option value="P.POSITION_NAME">직급명</option>
@@ -665,10 +698,23 @@ $("#sche_place_btn").click(e=>{
 		</div>
 	</div>
 	
+	
+	
 	<div id="contentContainer">
+	<div class="input-group mb-3"  style="width: 400px;">
+		<div>
+		<select class="form-select" aria-label="Default select example" style="width: 100px;">
+			  <option selected>검색</option>
+			  <option value="1">One</option>
+			  <option value="2">Two</option>
+			  <option value="3">Three</option>
+			</select>
+		</div>
+		  
+		<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+		<button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+	</div>
 		<div id ="contentArea">
-		
-
 		</div>
 	</div>
 	
@@ -685,7 +731,11 @@ $("#sche_place_btn").click(e=>{
 </div>
 
 </main>
-
+<style>
+	.form-select{
+		width: 120px;
+	}
+	</style>
 <script>
 	
 	//프로젝트에 참여중인 사원 목록
@@ -845,9 +895,83 @@ $("#search_Member_btn").click(e=>{
 	
 	/* 2.업무 게시글 작성 로직 */
 	
+	let selectedMember; //최종 선택된 멤버 이름
+	let selectedManagerId; //최종 선택된 멤버 아이디
+	let memberName;//현재 프로젝트에 참여중인 멤버 이름
+	let managerId;// 현재 프로젝트에 참여중인 멤버 아이디
+	let creatorPro = "<%=p.getMemberId()%>"; //프로젝트 생성자
+	
+	
+	function selectAddWorkMember(){
+		let projectNo = $("#projectNo").val();
+		$.ajax({
+			
+			url : "<%=request.getContextPath()%>/project/selectAddWorkMember.do",
+			type:"post",
+			dataType:"json",
+			data:{projectNo:projectNo},
+			success:data=>{
+				memberName = new Array();//현재 프로젝트에 참여중인 멤버 이름
+				managerId = new Array();// 현재 프로젝트에 참여중인 멤버 아이디
+				const select = $("#work_addMember");
+				const ophead = $("<option>").text("담당자 추가");
+				select.children().remove();
+				select.append(ophead);
+				for(let i=0;i<data.length;i++){
+					if(data[i]["memberId"] != creatorPro){
+						memberName.push(data[i]["memberName"]);
+						managerId.push(data[i]["memberId"]);
+						const option = $("<option>");
+						option.text(memberName[i]);
+						option.val(managerId[i]);
+						select.append(option);
+					}
+				}
+			}
+		});
+	}
+	 //일정 참석자 리스트
+	 
+	
+	function selectAddscheMember(){
+		let projectNo = $("#projectNo").val();
+		$.ajax({
+			
+			url : "<%=request.getContextPath()%>/project/selectAddWorkMember.do",
+			type:"post",
+			dataType:"json",
+			data:{projectNo:projectNo},
+			success:data=>{
+				memberName = new Array();//현재 프로젝트에 참여중인 멤버 이름
+				managerId = new Array();// 현재 프로젝트에 참여중인 멤버 아이디
+				
+				const selectSche = $("#sche_addMember");
+				const opheadSche = $("<option>").text("참석자 추가");
+				
+				selectSche.children().remove();
+				selectSche.append(opheadSche);
+				for(let i=0;i<data.length;i++){
+					if(data[i]["memberId"] != creatorPro){
+						memberName.push(data[i]["memberName"]);
+						managerId.push(data[i]["memberId"]);
+						const option = $("<option>");
+						option.text(memberName[i]);
+						option.val(managerId[i]);
+						selectSche.append(option);
+					}
+				}
+			}
+		});
+	}
+	
+	//해당 업무 관리자 리스트 .. 업무 작성시
+	
 	
 	$("#insertWork").click(e=>{
-		$("#insertWork_").click();	
+		$("#insertWork_").click();
+		selectedMember = new Array();
+		selectedManagerId = new Array();
+		selectAddWorkMember();
 	});
 	
 	$("#uploadWorkfile_").change(e=>{
@@ -867,39 +991,7 @@ $("#search_Member_btn").click(e=>{
 			}
 	});
 
-		//해당 업무 관리자 리스트 .. 업무 작성시
-		const select = $("#work_addMember");
-		const ophead = $("<option>").text("담당자 추가");
-		
-		select.append(ophead);
-		
-		let memberName = new Array();
-		let managerId = new Array();
-		
-		let selectedMember = new Array(); //최종 선택된 멤버 이름
-		let selectedManagerId = new Array(); //최종 선택된 멤버 아이디
-		
-		memberName = "<%=Arrays.toString(memberName)%>";
-		memberName = memberName.substring(1,memberName.length-1);
-		memberName = memberName.split(","); //프로젝트에 참가한 사람 이름 다 가지고있음
-		
-		managerId ="<%=Arrays.toString(managerId)%>";
-		managerId = managerId.substring(1,managerId.length-1);
-		managerId = managerId.split(",");//프로젝트에 참가한 사람 아이디 다 가지고 있음
-		
-
-		
-		//업무 관리자 ID값으로 옵션에 value 넣어주기
-						
-		for(let i=0; i<memberName.length;i++){
-			const option = $("<option>");
-			option.text(memberName[i].trim());
-			option.val(managerId[i].trim());
-			select.append(option);
-		}
-		
 		$(select).change(e=>{
-				
 			//선택된 유저 아이디 span으로 보여줌
 			let span = $("<span>");
 			let selectMemberName = $("#work_addMember option:selected").text();		
@@ -919,8 +1011,6 @@ $("#search_Member_btn").click(e=>{
 				}
 				
 			}
-			
-			
 			
 			if($("#work_addMember_area").find("span").length > memberName.length){
 				span.remove();
@@ -1008,7 +1098,7 @@ $("#search_Member_btn").click(e=>{
 				processData:false,
 				contentType:false,
 				success:data=>{
-					$("#work_addMember").prop("selected", true);
+					$("#work_addMember").find('option:first').attr('selected', 'selected');
 					$("#workTitle").val("");
 					$("#workStart").val("");
 					$("#workEnd").val("");
@@ -1018,6 +1108,8 @@ $("#search_Member_btn").click(e=>{
 					$("input[name=uploadWorkfile]").val("");	
 					$("#workFileNameContainer").find("p").remove();
 					$("#work_addMember_area").find("span").remove();
+					workStart = document.getElementById('workStart').value= new Date().toISOString().substring(0, 10);
+					workEnd = document.getElementById('workEnd').value= new Date().toISOString().substring(0, 10);
 					$("#close_work_content").click();
 					memberListAjax();	
 				},
@@ -1033,23 +1125,12 @@ $("#search_Member_btn").click(e=>{
 	//일정 작성
 	$("#insertSche").click(e=>{
 		$("#insertSche_").click();
+		selectedMember = new Array();
+		selectedManagerId = new Array();
+		selectAddscheMember();
 	});
 	
-	 //일정 참석자 리스트
-	 const selectSche = $("#sche_addMember");
-	 const opheadSche = $("<option>").text("참석자 추가");
-	 selectSche.append(opheadSche);
-	
-					
-	for(let i=0; i<memberName.length;i++){
-		const option = $("<option>");
-		option.text(memberName[i].trim());
-		option.val(managerId[i].trim());
-		selectSche.append(option);
-	}
-	
 	$(selectSche).change(e=>{
-		
 		
 		let span = $("<span>");
 		let selectMemberName = $("#sche_addMember option:selected").text();		
@@ -1059,6 +1140,7 @@ $("#search_Member_btn").click(e=>{
 		
 		//선택된 유저id 배열에 넣어주기
 		for(let i =0; i<memberName.length;i++){
+
 			if(!selectedManagerId.includes(selectManaId)){
 				selectedManagerId.push(selectManaId);
 				$("#sche_addMember_area").append(span);
@@ -1070,7 +1152,9 @@ $("#search_Member_btn").click(e=>{
 		if($("#sche_addMember_area").find("span").length > memberName.length){
 			span.remove();
 		}
-		
+		if($("#sche_addMember_area").find("span").text =="참석자 추가"){
+			span.remove();
+		}
 		
 		//span에서 삭제하면 배열에서도 삭제해주기
 		span.click(e=>{
@@ -1089,8 +1173,8 @@ $("#search_Member_btn").click(e=>{
 	});
 	
 	//일정 기본 날짜
-	let = scheStartDate = document.getElementById('scheStartDate').value= new Date().toISOString().substring(0, 10);
-	let = scheEndDate = document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
+	let scheStartDate = document.getElementById('scheStartDate').value= new Date().toISOString().substring(0, 10);
+	let scheEndDate = document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
 	
 	//일정등록
 	$("#sche_submit_Btn").click(e=>{
@@ -1136,12 +1220,15 @@ $("#search_Member_btn").click(e=>{
 				},
 				success:data=>{
 					$("#scheTitle").val("");
-					$("#sche_addMember").val("");
 					$("#searchKeyword").val("");
 					$("#scheContent").val("");
-					$("sche_addMember_area").find("span").remove();
+					$("#sche_addMember").find('option:first').attr('selected', 'selected');
+					$("#sche_addMember_area").find("span").remove();
 					$("#searchResultContainer").find("p").remove();
 					$("#close_sche_content").click();
+					
+					scheStartDate = document.getElementById('scheStartDate').value= new Date().toISOString().substring(0, 10);
+					scheEndDate = document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
 					memberListAjax();	
 				},
 				error:(a)=>{
