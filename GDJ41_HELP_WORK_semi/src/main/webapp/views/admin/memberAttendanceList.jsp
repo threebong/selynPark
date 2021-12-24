@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import = "com.help.admin.model.vo.AdminAttendance" %>
 <%@ include file="/views/common/header.jsp" %>
 
+<%
+	List<AdminAttendance> list = (List<AdminAttendance>)request.getAttribute("attendanceDay");
+
+%>
 <style>
 table.attendanceType {
   border-collapse: collapse;
@@ -62,7 +67,25 @@ font-size:30px;
 		  </tr>
 	  </thead>
 	  <tbody id="ajaxTable">
+	  <% if(list.isEmpty()){ %>
+	 	<tr>
+	 		<td colspan="7">조회된 출퇴근 내역이 없습니다.</td>
+	 	</tr>
+	 <%} else { 
+	 		for(AdminAttendance day : list) {
+	 %>
+	 <tr>
+	 	<td><%=day.getMemberName() %></td>
+	 	<td><%=day.getMemberId() %></td>
+	 	<td><%=day.getDeptName() %></td>
+	 	<td><%=day.getPositionName() %></td>
+	 	<td><%=day.getAttTime() %></td>
+	 	<td><%=day.getLeaveTime() %></td>
+	 	<td><button>수정</button></td>
 	 
+	 </tr>
+	 	<%}
+	 }%>
 	
 	  </tbody>
 	 
@@ -78,5 +101,15 @@ $("#checkDate").change(e=>{
 	var c2 = $("#checkDate").val();
 	var t = moment(c2).format('yyyy년 MM월 DD일');
 	$("#selectDate").text(t);
+	
+	$("#selectDate").val($("#checkDate").val());
+	let day = $("#checkDate").val();
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/admin/attendanceListEnd.do",
+		
+		
+		
+	})
 })
 </script>

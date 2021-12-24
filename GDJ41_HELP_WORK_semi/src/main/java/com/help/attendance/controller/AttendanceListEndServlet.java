@@ -45,8 +45,6 @@ public class AttendanceListEndServlet extends HttpServlet {
 //		}
 //			   
 //		formatMonth = afterFormat.format(tempDate);
-		System.out.println(memberId);
-		System.out.println(month);
 
 		List<Attendance> list = new AttendanceService().selectAttendanceMonthly(memberId, month);
 		

@@ -50,7 +50,7 @@ table td {
 	<div id="menu-container">
 		<ul class="nav">
 			<li class="nav-item"><a class="nav-link active" aria-current="page" href="#" onclick="adminMemberList();">직원현황</a></li>
-			<li class="nav-item"><a class="nav-link" href="#">대기현황</a></li>
+			<li class="nav-item"><a class="nav-link" href="#" onclick="waitMemberList();">대기현황</a></li>
 		</ul>
 	</div>
 	<hr style="margin-top: 5px;">
@@ -90,7 +90,7 @@ function adminMemberList(cPage){
 				let dName = $("<td>").html(memberList[i]["deptName"]);
 				let pName = $("<td>").html(memberList[i]["positionName"]);
 				let phone = $("<td>").html(memberList[i]["memberPhone"]);
-				let note = $("<td>").html("없음");
+				let note = $("<td>").html("<button>수정");
 				tbody.append(tr2).append(name).append(id).append(dName).append(pName).append(phone).append(note);
 				table.append(tbody);
 			}
@@ -101,6 +101,43 @@ function adminMemberList(cPage){
 		}
 	});
 };
+
+
+function waitMemberList(){
+	$.ajax({
+		url:"<%=request.getContextPath()%>/admin/waitMemberListEnd.do",
+		type:'post',
+		dataType : 'json',
+		success:data=>{
+			const table=$('<table>');
+			let thead=$("<thead>");
+			let tbody=$('<tbody>');
+			let tr=$("<tr>");
+			let th1=$("<th>").html("이름");
+			let th2=$("<th>").html("아이디");
+			let th3=$("<th>").html("부서");
+			let th4=$("<th>").html("직책");
+			let th5=$("<th>").html("연락처");
+			let th6=$("<th>").html("비고");
+			thead.append(tr).append(th1).append(th2).append(th3).append(th4).append(th5).append(th6);
+			table.append(thead);
+			for(let i=0; i<data.length; i++){
+				let tr2 = $("<tr>");
+				let name = $("<td>").html(data[i]["memberName"]);
+				let id = $("<td>").html(data[i]["memberId"]);
+				let dName = $("<td>").html(data[i]["deptName"]);
+				let pName = $("<td>").html(data[i]["positionName"]);
+				let phone = $("<td>").html(data[i]["memberPhone"]);
+				let note = $("<td>").html("<button>수정");
+				tbody.append(tr2).append(name).append(id).append(dName).append(pName).append(phone).append(note);
+				table.append(tbody);
+			}
+			$("#writeTable").html(table);
+		}
+	})
+}
+
+
 </script>
 
 
