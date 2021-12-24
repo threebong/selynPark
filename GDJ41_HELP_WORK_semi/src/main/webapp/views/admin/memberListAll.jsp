@@ -61,6 +61,10 @@ table td {
 
 </main>
 <script>
+$(document).ready(()=>{
+	adminMemberList();
+});
+
 //관리자 -> 사원관리
 function adminMemberList(cPage){
 	$.ajax({

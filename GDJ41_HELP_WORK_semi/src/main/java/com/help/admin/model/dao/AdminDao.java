@@ -67,7 +67,7 @@ public class AdminDao {
 	
 	
 	//등록사원 총 인원수
-	public int MemberAllCount(Connection conn) {
+	public int memberAllCount(Connection conn) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int result = 0;
@@ -123,8 +123,8 @@ public class AdminDao {
 	}
 	
 	
-	//출퇴근 조회 첫 페이지
-	public List<AdminAttendance> adminAttendanceFirst(Connection conn, String day){
+	//출퇴근 조회 페이징
+	public List<AdminAttendance> adminAttendance(Connection conn, String day, int cPage, int numPerPage){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<AdminAttendance> list = new ArrayList();
@@ -132,6 +132,8 @@ public class AdminDao {
 		try {
 			pstmt = conn.prepareStatement(prop.getProperty("adminAttendance"));
 			pstmt.setString(1, day);
+			pstmt.setInt(2, (cPage-1)*numPerPage+1);
+			pstmt.setInt(3, cPage*numPerPage);
 			rs= pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -144,7 +146,6 @@ public class AdminDao {
 						.leaveTime(rs.getDate("LEAVE_TIME")==null?"퇴근 전": new SimpleDateFormat("HH시 mm분").format(rs.getDate("LEAVE_TIME")))
 						.build();
 				list.add(aa);
-				System.out.println(list);
 			}
 			
 		}catch(SQLException e) {
@@ -155,6 +156,32 @@ public class AdminDao {
 		} return list;
 		
 		
+	}
+	
+	//출퇴근 조회 count
+	public int adminAttendanceCount(Connection conn, String day) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		String sql = prop.getProperty("adminAttendanceCount");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, day);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt("COUNT(*)");
+			}
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+			
+		} return result;
+
 	}
 	
 

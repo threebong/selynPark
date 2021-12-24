@@ -8,21 +8,21 @@
 
 %>
 <style>
-table.attendanceType {
+table {
   border-collapse: collapse;
   text-align: center;
   line-height: 1.5;
   width:100%;
 
 }
-table.attendanceType thead th {
+table thead th {
   padding: 10px;
   font-weight: bold;
   vertical-align: top;
   color: black;
   border-bottom: 3px solid #036;
 }
-table.attendanceType tbody th {
+table tbody th {
   width: 150px;
   padding: 10px;
   font-weight: bold;
@@ -30,7 +30,7 @@ table.attendanceType tbody th {
   border-bottom: 1px solid black;
   background: #f3f6f7;
 }
-table.attendanceType td {
+table td {
   
   padding: 10px;
   vertical-align: top;
@@ -50,11 +50,12 @@ font-size:30px;
 <h1>근태관리</h1><br>
 <h3 id="selectDate"></h3>
 	<form id="frm" action="">
-	<input id="checkDate" type="date" name="checkDate">
+	<input id="checkDate" type="date" name="checkDate" onchange="adminAttendanceList();">
+	<input id="hiddenDate" type="hidden">
 	</form>
 
 
-	<table class="attendanceType">
+<%-- 	<table class="attendanceType">
 	  <thead>
 		  <tr>
 		    <th>이름</th>
@@ -89,27 +90,81 @@ font-size:30px;
 	
 	  </tbody>
 	 
-	</table>
+	</table> --%>
+	<div id="writeTable"></div>
 
 </main>
 <script>
 
-var today = moment(c).format('yyyy년 MM월 DD일');
-var c = $("#checkDate").val();
+//오늘 날짜 출력
+var today = moment(checkDay).format('yyyy년 MM월 DD일');
+var checkDay = $("#checkDate").val();
 $("#selectDate").text(today);
-$("#checkDate").change(e=>{
-	var c2 = $("#checkDate").val();
-	var t = moment(c2).format('yyyy년 MM월 DD일');
-	$("#selectDate").text(t);
+
+//함수 먼저 실행
+$(document).ready(()=>{
+	adminAttendanceList();
 	
-	$("#selectDate").val($("#checkDate").val());
-	let day = $("#checkDate").val();
-	
-	$.ajax({
-		url : "<%=request.getContextPath()%>/admin/attendanceListEnd.do",
-		
-		
-		
-	})
-})
+});
+
+//페이징 처리 ajax
+function adminAttendanceList(cPage){
+	$("#checkDate").change(e=>{ //input change마다 이벤트 발생
+		var checkDay2 = $("#checkDate").val();
+		var momentFormat = moment(checkDay2).format('yyyy년 MM월 DD일'); 
+		$("#selectDate").text(momentFormat); //보여지는 날짜포맷
+		$("#hiddenDate").val(checkDay2); // hidden에 날짜 넣고
+		let changeDays = $("#hiddenDate").val(); //파라미터로 보내기 위한 날짜
+		$.ajax({
+			url:"<%=request.getContextPath()%>/admin/memberAttendanceListEnd.do",
+			type:'post',
+			data:{cPage:cPage, changeDays:changeDays},
+			dataType : 'json',
+			success:data=>{
+				const memberList = data["list"];
+				console.log(memberList);
+				const table=$('<table>');
+				let thead=$("<thead>");
+				let tbody=$('<tbody>');
+				let tr=$("<tr>");
+				let th1=$("<th>").html("이름");
+				let th2=$("<th>").html("아이디");
+				let th3=$("<th>").html("부서");
+				let th4=$("<th>").html("직책");
+				let th5=$("<th>").html("출근시간");
+				let th6=$("<th>").html("퇴근시간");
+				let th7=$("<th>").html("비고");
+				thead.append(tr).append(th1).append(th2).append(th3).append(th4).append(th5).append(th6).append(th7);
+				table.append(thead);
+				if(memberList.length==0){
+					let tr2 = $("<tr>");
+					let ntd=$("<td>").html("조회결과가 없습니다.");
+					ntd.attr("colspan","7");
+					tr.css("text-align","center");
+					tbody.append(tr).append(ntd);
+					table.append(tbody);
+				} else{
+					for(let i=0; i<memberList.length; i++){
+						let tr2 = $("<tr>");
+						let name = $("<td>").html(memberList[i]["memberName"]);
+						let id = $("<td>").html(memberList[i]["memberId"]);
+						let dName = $("<td>").html(memberList[i]["deptName"]);
+						let pName = $("<td>").html(memberList[i]["positionName"]);
+						let attTime = $("<td>").html(memberList[i]["attTime"]);
+						let leaveTime = $("<td>").html(memberList[i]["leaveTime"]);
+						let note = $("<td>").html("<button>수정");
+						tbody.append(tr2).append(name).append(id).append(dName).append(pName).append(attTime).append(leaveTime).append(note);
+						table.append(tbody);
+					}
+				}
+				const div=$("<div>").attr("id","pageBar").html(data["pageBar"]);
+				table.append(div);
+				$("#writeTable").html(table);
+				
+			}
+		});
+	});
+};
+
+
 </script>

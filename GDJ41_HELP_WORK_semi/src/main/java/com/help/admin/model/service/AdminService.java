@@ -22,12 +22,11 @@ public class AdminService {
 	}
 	
 	
-	public int MemberAllCount() {
+	public int memberAllCount() {
 		Connection conn = getConnection();
-		int result = dao.MemberAllCount(conn);
+		int result = dao.memberAllCount(conn);
 		close(conn);
 		return result;
-		
 	}
 	
 	public List<AdminListMember> waitMemberAll() {
@@ -38,11 +37,19 @@ public class AdminService {
 	}
 	
 	
-	public List<AdminAttendance> adminAttendanceFirst(String day){
+	public List<AdminAttendance> adminAttendance(String day, int cPage, int numPerPage){
 		Connection conn = getConnection();
-		List<AdminAttendance> list = dao.adminAttendanceFirst(conn, day);
+		List<AdminAttendance> list = dao.adminAttendance(conn, day, cPage, numPerPage);
 		close(conn);
 		return list;
+	}
+	
+	
+	public int adminAttendanceCount(String day) {
+		Connection conn = getConnection();
+		int result = dao.adminAttendanceCount(conn, day);
+		close(conn);
+		return result;
 	}
 
 }
