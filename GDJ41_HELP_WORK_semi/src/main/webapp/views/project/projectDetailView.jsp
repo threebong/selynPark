@@ -6,7 +6,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2117f58ed9ba4b4e13a9bca2bc216232&&APIKEY&libraries=services"></script>
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2117f58ed9ba4b4e13a9bca2bc216232&&APIKEY&libraries=services"></script>
 <%
 	Project p = (Project)request.getAttribute("projectInfo");
 	List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
@@ -159,248 +160,312 @@ function contentView(e){
 
 }
 </script>
-<link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/css/projectDetailView.css"
+	type="text/css">
 <style>
-#contentView{
+#contentView {
 	cursor: pointer;
 }
 </style>
 <main>
 
-<!-- 일반 게시글 상세화면 -->
-<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling"></button>
-<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header"> 
-  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
-   		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
-   		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
-   </div>   
-  <div class="offcanvas-body" id="contentBody"></div>
-</div>
+	<!-- 일반 게시글 상세화면 -->
+	<button class="btn btn-primary" type="button" id="viewBtn"
+		style="display: none;" data-bs-toggle="offcanvas"
+		data-bs-target="#contentView" aria-controls="offcanvasScrolling"></button>
+	<div class="offcanvas offcanvas-end" style="width: 40%;"
+		data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+		id="contentView" aria-labelledby="offcanvasScrollingLabel">
+		<div class="offcanvas-header">
+			<button type="button" class="btn-close text-reset"
+				data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-title"
+			style="border-bottom: 1px solid lightgray">
+			<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
+			<span id="writeDate"
+				style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+			<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
+		</div>
+		<div class="offcanvas-body" id="contentBody"></div>
+	</div>
 
 
-<!-- 업무 게시글 상세화면 -->
+	<!-- 업무 게시글 상세화면 -->
 
-<button class="btn btn-primary"  id="workViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling"></button>
-<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header"> 
-  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
-   		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
-   		<span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-   		<h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
-   </div>
-  <div class="offcanvas-body" id="contentBody">
-  		<div id="workIngView"></div>
-  		<div id="workManager"></div>
-  		<div id="workStartDate_view"></div>
-  		<div id="workEndDate_view"></div>
-  		<div id="workCotent_view"></div>
-  </div>
-</div>
+	<button class="btn btn-primary" id="workViewBtn" type="button"
+		style="display: none;" data-bs-toggle="offcanvas"
+		data-bs-target="#workContentView" aria-controls="offcanvasScrolling"></button>
+	<div class="offcanvas offcanvas-end" style="width: 40%;"
+		data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+		id="workContentView" aria-labelledby="offcanvasScrollingLabel">
+		<div class="offcanvas-header">
+			<button type="button" class="btn-close text-reset"
+				data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-title"
+			style="border-bottom: 1px solid lightgray">
+			<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
+			<span id="workWriteDate"
+				style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+			<h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
+		</div>
+		<div class="offcanvas-body" id="contentBody">
+			<div id="workIngView"></div>
+			<div id="workManager"></div>
+			<div id="workStartDate_view"></div>
+			<div id="workEndDate_view"></div>
+			<div id="workCotent_view"></div>
+		</div>
+	</div>
 
-<!-- 프로젝트 초대 모달 -->
-<div class="modal fade" id="addProjectMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">사원 목록</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div>
-		<div>
-			<div id="searchType_Member">
-			<select class="form-select" aria-label=".form-select-sm example" id="searchType_select">
-					  
-					  <option value="M.MEMBER_NAME">사원명</option>
-					  <option value="D.DEPT_NAME">부서명</option>
-					  <option value="P.POSITION_NAME">직급명</option>
-				</select>
-			</div>
-				<div class="input-group mb-3">
-					<input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchKeyword_Member">
-					<button class="btn btn-outline-secondary" type="button" id="search_Member_btn">검색</button>
+	<!-- 프로젝트 초대 모달 -->
+	<div class="modal fade" id="addProjectMemberModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">사원 목록</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
 				</div>
+				<div>
+					<div>
+						<div id="searchType_Member">
+							<select class="form-select" aria-label=".form-select-sm example"
+								id="searchType_select">
+
+								<option value="M.MEMBER_NAME">사원명</option>
+								<option value="D.DEPT_NAME">부서명</option>
+								<option value="P.POSITION_NAME">직급명</option>
+							</select>
+						</div>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control"
+								aria-label="Recipient's username"
+								aria-describedby="button-addon2" id="searchKeyword_Member">
+							<button class="btn btn-outline-secondary" type="button"
+								id="search_Member_btn">검색</button>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-body">
+					<div id="addProjectMemberListContainer">
+						<table class="table table-hover" style="text-align: center;">
+
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal" id="proAddMember_close">Close</button>
+					<button type="button" class="btn btn-primary"
+						id="proAddMember_submit">추가</button>
+				</div>
+			</div>
 		</div>
-		
-      </div>
-      <div class="modal-body">
-       	<div id="addProjectMemberListContainer">
-       		<table class="table table-hover" style="text-align: center;">
-       			
-       		</table>
-       	</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="proAddMember_close">Close</button>
-        <button type="button" class="btn btn-primary" id="proAddMember_submit">추가</button>
-      </div>
-    </div>
-  </div>
-</div>
+	</div>
 
-<!-- 프로젝트정보 -->
+	<!-- 프로젝트정보 -->
 
-<input type="hidden" id="memberId" value="<%=loginMember.getMemberId()%>">
-<input type="hidden" id="projectNo" value="<%=p.getProjectNo()%>">
+	<input type="hidden" id="memberId"
+		value="<%=loginMember.getMemberId()%>"> <input type="hidden"
+		id="projectNo" value="<%=p.getProjectNo()%>">
 
-<!-- 일반게시글 작성 모달 -->
-<button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" id="insertNormal_">글작성</button>
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" onsubmit="return checkContent();">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">게시물 작성</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="normalTitle" name="title">
-      <span id="titleResult"></span>
-        <textarea class="form-control" placeholder="내용을 입력하세요" id="normalContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
-		  <div class="mb-3">
- 		<label for="formFile" class="form-label"></label>
-  		<input class="form-control" type="file" id="uploadNormal" name="upfile" multiple>
+	<!-- 일반게시글 작성 모달 -->
+	<button style="display: none;" type="button" class="btn btn-primary"
+		data-bs-toggle="modal" data-bs-target="#exampleModal1"
+		id="insertNormal_">글작성</button>
+	<div class="modal fade" id="exampleModal1" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true"
+		onsubmit="return checkContent();">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">게시물 작성</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input class="form-control" type="text" placeholder="제목"
+						aria-label="default input example" id="normalTitle" name="title">
+					<span id="titleResult"></span>
+					<textarea class="form-control" placeholder="내용을 입력하세요"
+						id="normalContent"
+						style="height: 200px; margin-top: 20px; margin-bottom: 10px; resize: none"></textarea>
+					<div class="mb-3">
+						<label for="formFile" class="form-label"></label> <input
+							class="form-control" type="file" id="uploadNormal" name="upfile"
+							multiple>
+					</div>
+					<div id="fileNameList"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal" id="close_content">닫기</button>
+					<button type="button" class="btn btn-primary"
+						id="normal_submit_Btn">등록</button>
+				</div>
+			</div>
 		</div>
-		<div id="fileNameList">
-			
+	</div>
+
+	<!-- 업무게시글 작성 모달 -->
+	<button style="display: none;" type="button" class="btn btn-primary"
+		data-bs-toggle="modal" data-bs-target="#exampleModal2"
+		id="insertWork_">글작성</button>
+
+	<div class="modal fade" id="exampleModal2" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">업무 작성</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input class="form-control" type="text" placeholder="제목"
+						aria-label="default input example" id="workTitle"> <span
+						id="work_titleResult"></span>
+					<div id="work_Ing_container">
+						<span><i class="fas fa-history"></i></span> <input type="radio"
+							value="요청" id="call" name="work_ing"><label for="call">요청</label>
+						<input type="radio" value="진행" id="ing" name="work_ing"><label
+							for="ing">진행</label> <input type="radio" value="피드백"
+							id="feedback" name="work_ing"><label for="feedback">피드백</label>
+						<input type="radio" value="보류" id="hold" name="work_ing"><label
+							for="hold">보류</label> <input type="radio" value="완료"
+							id="complete" name="work_ing"><label for="complete">완료</label>
+					</div>
+					<div id="work_addMember_container">
+						<span><i class="fas fa-user"></i></span>
+						<div>
+							<select class="form-select" id="work_addMember"></select>
+						</div>
+						<div id="work_addMember_area"></div>
+					</div>
+					<div id="workStart_container">
+						<span><i class="fas fa-calendar-plus"></i></span> <input
+							type="date" id="workStart">
+					</div>
+					<div id="workEnd_container">
+						<span><i class="fas fa-calendar-check"></i></span> <input
+							type="date" id="workEnd">
+					</div>
+					<div id="workRank_container">
+						<span><i class="fas fa-flag"></i></span> <input type="radio"
+							value="보통" id="normal" name="work_rank"><label
+							for="normal">보통</label> <input type="radio" value="낮음" id="row"
+							name="work_rank"><label for="row">낮음</label> <input
+							type="radio" value="긴급" id="emergency" name="work_rank"><label
+							for="emergency">긴급</label> <input type="radio" value="높음"
+							id="high" name="work_rank"><label for="high">높음</label>
+					</div>
+
+					<textarea class="form-control" placeholder="내용을 입력하세요"
+						id="workContent"
+						style="height: 200px; margin-top: 20px; margin-bottom: 10px; resize: none"></textarea>
+					<div class="mb-3">
+						<label for="formFile" class="form-label"></label> <input
+							class="form-control" type="file" id="uploadWorkfile_"
+							name="uploadWorkfile" multiple>
+					</div>
+					<div id="workFileNameContainer"></div>
+					<input type="hidden" id="memberId" value="admin"> <input
+						type="hidden" id="projectNo" value="3">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal" id="close_work_content">닫기</button>
+					<button type="button" class="btn btn-primary" id="work_submit_Btn">등록</button>
+				</div>
+			</div>
 		</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_content">닫기</button>
-        <button type="button" class="btn btn-primary" id="normal_submit_Btn">등록</button>
-      </div>
-    </div>
-  </div>
-</div>
+	</div>
 
-<!-- 업무게시글 작성 모달 -->
-<button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="insertWork_">글작성</button>
+	<!-- 일정게시글 작성 모달 -->
+	<button style="display: none;" type="button" class="btn btn-primary"
+		data-bs-toggle="modal" data-bs-target="#exampleModal3"
+		id="insertSche_">일정작성</button>
 
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">업무 작성</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="workTitle">
-      <span id="work_titleResult"></span>
-      <div id="work_Ing_container">
-      	<span><i class="fas fa-history"></i></span>
-      	<input type="radio" value="요청" id="call" name="work_ing"><label for="call">요청</label>
-      	<input type="radio" value="진행" id="ing" name="work_ing"><label for="ing">진행</label>
-        <input type="radio" value="피드백" id="feedback" name="work_ing"><label for="feedback">피드백</label>
-      	<input type="radio" value="보류" id="hold" name="work_ing"><label for="hold">보류</label>
-      	<input type="radio"value="완료" id="complete" name="work_ing"><label for="complete">완료</label>
-      </div>
-      <div id="work_addMember_container">
-      	<span><i class="fas fa-user"></i></span>
-      	<div><select class="form-select" id="work_addMember"></select></div>
-      	<div id="work_addMember_area"></div>
-      </div>
-      <div id="workStart_container">
-      	<span><i class="fas fa-calendar-plus"></i></span>
-      	<input type="date" id="workStart">
-      </div>
-      <div id="workEnd_container">
-      	<span><i class="fas fa-calendar-check"></i></span>
-      	<input type="date" id="workEnd">
-      </div>
-      <div id="workRank_container">
-     	 <span><i class="fas fa-flag"></i></span>
-      	 <input type="radio" value="보통" id="normal" name="work_rank"><label for="normal">보통</label>
-      	 <input type="radio" value="낮음" id="row" name="work_rank"><label for="row">낮음</label>
-      	 <input type="radio" value="긴급" id="emergency" name="work_rank"><label for="emergency">긴급</label>
-      	 <input type="radio" value="높음" id="high" name="work_rank"><label for="high">높음</label>
-      </div>
-      
-        <textarea class="form-control" placeholder="내용을 입력하세요" id="workContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
-		  <div class="mb-3">
- 		<label for="formFile" class="form-label"></label>
-  		<input class="form-control" type="file" id="uploadWorkfile_" name="uploadWorkfile" multiple>
+	<div class="modal fade" id="exampleModal3" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">일정 등록</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input class="form-control" type="text" placeholder="제목"
+						aria-label="default input example" id="scheTitle"> <span
+						id="sche_titleResult"></span>
+					<div id="sche_addMember_container">
+						<span><i class="fas fa-user"></i></span>
+						<div>
+							<select class="form-select" id="sche_addMember">
+							</select>
+						</div>
+						<div id="sche_addMember_area"></div>
+					</div>
+					<div id="scheStart_container">
+						<span><i class="fas fa-calendar-plus"></i></span> <input
+							type="date" id="scheStartDate">
+					</div>
+					<div id="scheEnd_container">
+						<span><i class="fas fa-calendar-check"></i></span> <input
+							type="date" id="scheEndDate">
+					</div>
+
+					<div>
+						<button type="button" class="btn" id="sche_place_btn">
+							<i class="fas fa-map-marker-alt"></i>장소검색
+						</button>
+						<div id="test" style="display: none;">
+							<input type="text" id="searchKeyword">
+							<button id="searchBtn">검색</button>
+						</div>
+					</div>
+					<div id="searchContainer"
+						style="display: none; width: 100%; height: 500px;">
+						<div class="map_wrap">
+							<div id="map"
+								style="width: 100%; height: 100%; position: relative; overflow: hidden; background: url(https://t1.daumcdn.net/mapjsapi/images/bg_tile.png);"></div>
+							<div id="menu_wrap" class="bg_white">
+								<ul id="placeList"></ul>
+								<div id="pagination"></div>
+							</div>
+						</div>
+					</div>
+					<div id="searchResultContainer"></div>
+
+					<textarea class="form-control" placeholder="내용을 입력하세요"
+						id="scheContent"
+						style="height: 200px; margin-top: 20px; margin-bottom: 10px; resize: none"></textarea>
+					<input type="hidden" id="memberId"
+						value="<%=loginMember.getMemberId() %>"> <input
+						type="hidden" id="projectNo" value="3">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal" id="close_sche_content">닫기</button>
+					<button type="button" class="btn btn-primary" id="sche_submit_Btn">등록</button>
+				</div>
+			</div>
 		</div>
-		<div id="workFileNameContainer"></div>
-		<input type="hidden" id="memberId" value="admin">
-		<input type="hidden" id="projectNo" value="3">
-		
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_work_content">닫기</button>
-        <button type="button" class="btn btn-primary" id="work_submit_Btn">등록</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 일정게시글 작성 모달 -->
-<button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3" id="insertSche_">일정작성</button>
-
-<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">일정 등록</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="scheTitle">
-      <span id="sche_titleResult"></span>
-      <div id="sche_addMember_container">
-      	<span><i class="fas fa-user"></i></span>
-      	<div><select class="form-select" id="sche_addMember">
-      	</select></div>
-      	<div id="sche_addMember_area"></div>
-      </div>
-      <div id="scheStart_container">
-      	<span><i class="fas fa-calendar-plus"></i></span>
-      	<input type="date" id="scheStartDate">
-      </div>
-      <div id="scheEnd_container">
-      	<span><i class="fas fa-calendar-check"></i></span>
-      	<input type="date" id="scheEndDate">
-      </div>
-
-		<div>
-	  		<button type="button" class="btn" id="sche_place_btn"><i class="fas fa-map-marker-alt"></i>장소검색</button>
-	  			<div id="test" style="display:none;">
-	  				<input type="text" id="searchKeyword">
-	  				<button id="searchBtn">검색</button>
-	  			</div>
-	 	</div>
-	 	<div id="searchContainer" style="display:none; width: 100%; height: 500px;">
-			 <div class="map_wrap">
-				 <div id="map" style="width: 100%;height: 100%;position: relative;overflow: hidden; background: url(https://t1.daumcdn.net/mapjsapi/images/bg_tile.png);"></div>
-				 <div id="menu_wrap" class="bg_white">
-				 <ul id="placeList"></ul>
-				 <div id="pagination"></div>
-	 			</div>
-    		</div>
-		</div>
-		<div id="searchResultContainer">
-		</div>
-
-    <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
-		<input type="hidden" id="memberId" value="<%=loginMember.getMemberId() %>">
-		<input type="hidden" id="projectNo" value="3">
-		
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_sche_content">닫기</button>
-        <button type="button" class="btn btn-primary" id="sche_submit_Btn">등록</button>
-      </div>
-    </div>
-  </div>
-</div>
+	</div>
 
 
 
-	 
-<script>
+
+	<script>
 	//지도 API 사용
 	
 	//검색한 주소 가져오는 함수
@@ -639,51 +704,62 @@ $("#sche_place_btn").click(e=>{
 </script>
 
 
-<div id="title-container">
-	<div id="pro-bookmark-star"><i class="fas fa-star"></i></div>
-	<div id="project-title"><span><%=p.getProName() %></span></div>
-	<div style="float:right;">
-	<%if(loginMember.getMemberId().equals(p.getMemberId())){ %> <!-- 현재 로그인된 멤버와, 프로젝트 생성자 아이디가 같으면 초대 버튼 활성화 -->
-	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProjectMemberModal" id="add_btn">사원 추가</button>
-	<%} %>
-	</div>
-</div>
-<div id="menu-container">
-	<ul class="nav">
-		<li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
-		<li class="nav-item"><a class="nav-link" href="#">업무</a></li>
-		<li class="nav-item"><a class="nav-link" href="#">파일</a></li>
-	</ul>
-</div>
-	<hr style="margin-top: 5px;">
-<div id="pro_container">
-	<div id="inner_pro_container">
-	<div id="inputContent_container">
-		<div id="input-group">
-			<div id="insertNormal"><a href="#"><span><i class="fas fa-edit"></i></span>&nbsp;글</a></div>
-			<div id="insertWork"><a href="#"><span><i class="fas fa-list"></i></span>&nbsp;업무</a></div>
-			<div id="insertSche"><a href="#"><span><i class="far fa-calendar"></i></span>&nbsp;일정</a></div>
+	<div id="title-container">
+		<div id="pro-bookmark-star">
+			<i class="fas fa-star"></i>
+		</div>
+		<div id="project-title">
+			<span><%=p.getProName() %></span>
+		</div>
+		<div style="float: right;">
+			<%if(loginMember.getMemberId().equals(p.getMemberId())){ %>
+			<!-- 현재 로그인된 멤버와, 프로젝트 생성자 아이디가 같으면 초대 버튼 활성화 -->
+			<button type="button" class="btn btn-outline-secondary"
+				data-bs-toggle="modal" data-bs-target="#addProjectMemberModal"
+				id="add_btn">사원 추가</button>
+			<%} %>
 		</div>
 	</div>
-	
-	<div id="contentContainer">
-		<div id ="contentArea">
-		
+	<div id="menu-container">
+		<ul class="nav">
+			<li class="nav-item"><a class="nav-link active"
+				aria-current="page" href="#">홈</a></li>
+			<li class="nav-item"><a class="nav-link" href="#">업무</a></li>
+			<li class="nav-item"><a class="nav-link" href="#">파일</a></li>
+		</ul>
+	</div>
+	<hr style="margin-top: 5px;">
+	<div id="pro_container">
+		<div id="inner_pro_container">
+			<div id="inputContent_container">
+				<div id="input-group">
+					<div id="insertNormal">
+						<a href="#"><span><i class="fas fa-edit"></i></span>&nbsp;글</a>
+					</div>
+					<div id="insertWork">
+						<a href="#"><span><i class="fas fa-list"></i></span>&nbsp;업무</a>
+					</div>
+					<div id="insertSche">
+						<a href="#"><span><i class="far fa-calendar"></i></span>&nbsp;일정</a>
+					</div>
+				</div>
+			</div>
+
+			<div id="contentContainer">
+				<div id="contentArea"></div>
+			</div>
 
 		</div>
-	</div>
-	
-	</div>
-	<div id="proMemberViewContainer">
-		<div id="innder_proMemberViewContainer">
-			<h4>프로젝트 생성자</h4>
+		<div id="proMemberViewContainer">
+			<div id="innder_proMemberViewContainer">
+				<h4>프로젝트 생성자</h4>
 				<div id="proCreator"></div>
-			<hr>
-			<h4>참여자</h4>
-			<div id="proAttend"></div>
+				<hr>
+				<h4>참여자</h4>
+				<div id="proAttend"></div>
+			</div>
 		</div>
 	</div>
-</div>
 
 </main>
 
@@ -1154,7 +1230,7 @@ $("#search_Member_btn").click(e=>{
 		}
 	});
 </script>
-     
+
 
 
 

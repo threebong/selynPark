@@ -129,9 +129,16 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 
 	</div>
 	
-	
-<button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
-<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
+<!-- 전체 업무 조회 -->
+<style>
+#AllWorkContentView{
+	cursor: pointer;
+}
+</style>
+
+
+<button class="btn btn-primary" type="button" id="AllWorkViewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="#AllWorkContentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
@@ -140,17 +147,18 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
    		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
    		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
    </div>
-  <div class="offcanvas-title" id="contentWriterView"></div>
+  <div class="offcanvas-title" id="contentWriterView">
+  
+  </div>
    
-  <div class="offcanvas-body" id="contentBody"></div>
+  <div class="offcanvas-body" id="contentBody">
+  
+  </div>
 </div>
 
 
 	<script>
-			//본인 업무 전체 조회 
-//	$(document).on('click','#mywork',function(){
-			//$("#deleteTable").remove();//비워줘
-			
+	//All Work -->내 업무 (전체 조회)
 	function myWorkPaging(cPage){
 			const logId="<%=loginMember.getMemberId()%>";
 			$("#deleteTable").hide();
@@ -213,19 +221,16 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 	//	});
 		
 		
-		//상세내용 조회 	
-/* function contentView(e){
+		////All Work -->내 업무 (전체 조회)-->글제목 누르면 상세화면 (오프캔버스)
+ function contentView(e){
 		let val = $(e).children();//이벤트발생한곳의 자식들
 		let vals = v
 			
 			
-		}		 */	
+		}		 
 			
-			
+		//All Work --> 나의 업무 --> 검색1/2 
 		//본인 업무 조회 (조건 선택 )  --- 페이징 
-		//$("#filterWork").click(e=>{
-			
-			
 		function workMinePaging(cPage){//==>본인업무 조건 선택 : 페이징 완료 
 			let ing=$("#working").val();//진행상황
 			let prior=$("#priority").val();//우선순위
@@ -297,20 +302,9 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				}
 			});
 			}
-			//}
-		//});
 		
-//-----------------------------------------------------------------------------페이징처리 시작		
-		//전체 업무 조회(모든 업무 list) : 내가 참여한 프로젝트의 모든 업무 
-			
-	 /* 	$(document).on('click','#allwork',function (){//검색버튼을 누르면
-			workAllPaging();
-			
-			$("#deleteTable").toggle();
-			$("#writeTable").toggle();	 */
-			//-----------------------------------
-			//function workAllPaging(cPage,numPerPage)
-			function workAllPaging(cPage){//전체업무조회 리스트 페이징처리까지 완료 
+			//All work ->전체업무 
+			function workAllPaging(cPage){//전체업무조회 (내가 참여한 프로젝트의) 리스트 페이징처리까지 완료 
 			$("#deleteTable").hide();//default테이블 
 			$("#writeTable").show();//새로 보여줄 테이블	
 			$("#filterWorkAll").show();
@@ -369,13 +363,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					}
 				});//id값 보내
 			}
-		//});    
-		
-		//전체 업무 ---검색기능 
-		/* $("#filterWorkAll").click(e=>{
-			workSearchPaging();
-			alert("클릭");
-		});	 */
+			
+		//All Work -> 전체업무 -> 검색조건1/2
 		function workSearchPaging(cPage){
 			let ing=$("#working").val();//진행상황
 			let prior=$("#priority").val();//우선순위

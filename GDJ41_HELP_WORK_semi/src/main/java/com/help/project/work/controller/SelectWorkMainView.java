@@ -41,9 +41,6 @@ public class SelectWorkMainView extends HttpServlet {
 		System.out.println(logId);
 		//로그인한 아이디가 속한 프로젝트 정보들 
 		List<Project> pro=new ProjectService().selectJoin(logId);
-		for(Project p:pro) {
-			System.out.println(p);
-		}
 		request.setAttribute("logProject", pro);//로그인한 아이디가 속한 프로젝트 정보들
 		
 		//최신 게시글  

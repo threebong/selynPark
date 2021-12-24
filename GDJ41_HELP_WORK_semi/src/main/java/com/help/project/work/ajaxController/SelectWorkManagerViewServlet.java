@@ -61,7 +61,6 @@ public class SelectWorkManagerViewServlet extends HttpServlet {
 		
 		
 		List<WorkSelectManagerJoin> result=new WorkService().selectWorkMine(pro,logId,cPage,numPerPage);//페이징처리한 data
-		System.out.print("결과"+result);
 		int totalPage=(int)Math.ceil((double)totalData/numPerPage);
 		int pageBarSize=5;
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;//시작
