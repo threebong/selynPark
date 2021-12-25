@@ -220,8 +220,7 @@ public class WorkDao {
 		return works;
 	}
 
-	public List<WorkSelectManagerJoin> selectWorkMine(Connection conn, List<Project> pro, String logId, int cPage,
-			int numPerPage) {
+	public List<WorkSelectManagerJoin> selectWorkMine(Connection conn, List<Project> pro, String logId, int cPage, int numPerPage) {
 		// 내가 담당자인 업무들만 ----페이징
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -231,9 +230,9 @@ public class WorkDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, logId);// 로그인한 아이디
+			pstmt.setInt(2, (cPage - 1) * numPerPage + 1);
+			pstmt.setInt(3, cPage * numPerPage);
 			for (Project p : pro) {// 해당하는 프로젝트 번호따라 돌려 돌려
-				pstmt.setInt(2, (cPage - 1) * numPerPage + 1);
-				pstmt.setInt(3, cPage * numPerPage);
 				pstmt.setInt(4, p.getProjectNo());
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -362,7 +361,7 @@ public class WorkDao {
 		return result;
 	}
 
-	public List<WorkSelectManagerJoin> selectWorkAll(Connection conn, List<Integer> proNum, int cPage, int numPerPage) {
+	public List<WorkSelectManagerJoin> selectWorkAll(Connection conn, String id, int cPage, int numPerPage) {
 		// 내가 속한 프로젝트의 모든 업무 게시글들---페이징처리
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -370,8 +369,7 @@ public class WorkDao {
 		List<WorkSelectManagerJoin> result = new ArrayList<WorkSelectManagerJoin>();
 		try {
 			pstmt = conn.prepareStatement(sql);
-			for (Integer i : proNum) {
-				pstmt.setInt(1, i);
+				pstmt.setString(1, id);
 				pstmt.setInt(2, (cPage - 1) * numPerPage + 1);
 				pstmt.setInt(3, cPage * numPerPage);
 				rs = pstmt.executeQuery();
@@ -382,10 +380,7 @@ public class WorkDao {
 							.workTitle(rs.getString("WORK_TITLE")).memberId(rs.getString("MEMBER_ID"))
 							.workDate(new SimpleDateFormat("YYYY-MM-dd").format(rs.getDate("WORK_DATE"))).build();
 					result.add(j);
-
 				}
-
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -402,8 +397,6 @@ public class WorkDao {
 		List<WorkSelectManagerJoin> result = new ArrayList<WorkSelectManagerJoin>();
 		String sql = "";
 		try {
-
-
 			if (ing.equals("진행상황") && !prior.equals("우선순위")) {// 우선순위 조건
 				sql = prop.getProperty("searchWorkAllPriorPaging").replace("#COL", "WORK_RANK");
 				pstmt = conn.prepareStatement(sql);

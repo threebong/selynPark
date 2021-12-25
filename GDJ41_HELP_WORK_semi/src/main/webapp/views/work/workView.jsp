@@ -18,11 +18,12 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 %>
 <style>
 .opSearch {
-	width: 500px;
+	width: 600px;
 }
 .table tr{/* 글 목록 누르면 상세페이지 */
 	cursor: pointer;
 }
+
 </style>
 
 
@@ -30,7 +31,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 	<div>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="#">전체 업무</a>
+				<a class="navbar-brand" href="#">업무</a>
 				<button class="navbar-toggler" type="button"
 					data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
 					aria-controls="navbarNavDarkDropdown" aria-expanded="false"
@@ -59,7 +60,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		</nav>
 
 		<div>
-			<div class="input-group mb-3 opSearch">
+			<div class="input-group mb-3 opSearch" id="searchOption">
 				<select class="form-select " id="working" name="working">
 					<option selected>진행 상황</option>
 					<option value="요청">요청</option>
@@ -67,7 +68,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					<option value="피드백">피드백</option>
 					<option value="완료">완료</option>
 					<option value="보류">보류</option>
-				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건1</label>
+				</select> <label class="input-group-text" for="inputGroupSelect02">진행상황</label>
 
 				<select class="form-select " id="priority" name="priority">
 					<option selected>우선순위</option>
@@ -75,9 +76,9 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					<option value="높음">높음</option>
 					<option value="보통">보통</option>
 					<option value="낮음">낮음</option>
-				</select> <label class="input-group-text" for="inputGroupSelect02">검색조건2</label>
-				<button id="filterWork" onclick="workMinePaging();">검색</button>
-				<button id="filterWorkAll" onclick="workSearchPaging();">검색all</button>
+				</select> <label class="input-group-text" for="inputGroupSelect02">우선순위</label>
+				<button id="filterWork" onclick="workMinePaging();" style="display:none;">검색</button>
+				<button id="filterWorkAll" onclick="workSearchPaging();" style="display:none;">검색</button>
 			</div>
 		</div>
 
@@ -134,7 +135,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 
 
 <button class="btn btn-primary" type="button" id="AllWorkViewBtn" style="display:none;" data-bs-toggle="offcanvas" 
-data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의전체업무조회 상세화면</button>
+data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">업무 글 상세화면</button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="AllWorkContentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
  	 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -161,6 +162,11 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 	</div>
 
 	<script>
+	window.onload=function(){
+		$("#searchOption").hide();
+		
+	}
+	
 	//All Work -->내 업무 (전체 조회)
 	function myWorkPaging(cPage){
 			const logId="<%=loginMember.getMemberId()%>";
@@ -168,6 +174,7 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 			$("#writeTable").show();	
 			$("#filterWorkAll").hide();
 			$("#filterWork").show();
+			$("#searchOption").show();
 			$.ajax({
 				url : "<%=request.getContextPath()%>/work/SelectWorkManagerViewServlet.do",
 				type : 'post',
@@ -356,6 +363,7 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 			$("#writeTable").show();//새로 보여줄 테이블	
 			$("#filterWorkAll").show();
 			$("#filterWork").hide();
+			$("#searchOption").show();
 			
 			const logId="<%=loginMember.getMemberId()%>";//로그인한 아이디
 			 	$.ajax({

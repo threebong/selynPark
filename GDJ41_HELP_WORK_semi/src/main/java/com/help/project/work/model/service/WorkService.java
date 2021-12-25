@@ -142,10 +142,10 @@ public class WorkService {
 		close(conn);
 		return result;
 	}
-	public List<WorkSelectManagerJoin> selectWorkAll(List<Integer> proNum,int cPage,int numPerPage){
+	public List<WorkSelectManagerJoin> selectWorkAll(String id,int cPage,int numPerPage){
 		//내가 참여한 프로젝트의 모든 업무들 ---페이징처리 
 		Connection conn=getConnection();
-		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,proNum,cPage,numPerPage);
+		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,id,cPage,numPerPage);
 		close(conn);
 		return result;
 	}
