@@ -226,7 +226,7 @@ public class WorkDao {
 							.workTitle(rs.getString("WORK_TITLE"))
 							.memberId(rs.getString("MEMBER_ID"))
 							.managerId(rs.getString("MANAGER_ID"))
-							.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE")))							.build();
+							.workDate(new SimpleDateFormat("YYYY-MM-dd").format( rs.getDate("WORK_DATE"))).build();
 					System.out.print(wo);
 					works.add(wo);
 				}

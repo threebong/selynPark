@@ -15,16 +15,16 @@ import com.help.project.model.service.ProjectService;
 import com.help.project.model.vo.ProjectContent;
 
 /**
- * Servlet implementation class SelectAllProjectContentServlet
+ * Servlet implementation class SearchAllContentServlet
  */
-@WebServlet("/project/selectAllProjcetContent.do")
-public class SelectAllProjectContentServlet extends HttpServlet {
+@WebServlet("/project/searchAllContent.do")
+public class SearchAllContentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SelectAllProjectContentServlet() {
+    public SearchAllContentServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,7 +34,10 @@ public class SelectAllProjectContentServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		//페이징
+		String dist = request.getParameter("dist");
+		String searchType = request.getParameter("searchType");
+		String keyword = request.getParameter("keyword");
+		int projectNo = Integer.parseInt(request.getParameter("projectNo"));
 		
 		int cPage;
 		try {
@@ -44,13 +47,10 @@ public class SelectAllProjectContentServlet extends HttpServlet {
 		}
 	
 		int numPerPage = 20;
-		int projectNo = Integer.parseInt(request.getParameter("projectNo"));
 		
+		List<ProjectContent> pList = new ProjectService().selectSearchProjectContent(projectNo,cPage,numPerPage,searchType,keyword,dist);	
 		
-		
-		List<ProjectContent> pList = new ProjectService().selectAllProjectContent(projectNo,cPage,numPerPage);	
-		
-		int totalData = new ProjectService().selectAllProjectContentCount(projectNo);
+		int totalData = new ProjectService().selectSearchProjectContentCount(projectNo,searchType,keyword,dist);
 		
 		int totalPage = (int)Math.ceil((double)totalData/numPerPage);
 		
@@ -65,14 +65,14 @@ public class SelectAllProjectContentServlet extends HttpServlet {
 		if(pageNo==1) {//첫번째 페이지면? 이전 버튼이 눌리지 않음
 			pageBar ="<span>[이전]</span>";
 		}else {
-			pageBar = "<a href='javascript:contentListAjax("+(pageNo-1)+");'>[이전]</a>";
+			pageBar = "<a href='javascript:searchListAjax("+(pageNo-1)+");'>[이전]</a>";
 		}
 		
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(cPage==pageNo) {
 				pageBar+="<span>"+pageNo+"</span>"; //내가 현재 보고 있는 페이지기때문에 굳이 누를 필요가 없음
 			}else {
-				pageBar+="<a href='javascript:contentListAjax("+(pageNo)+");'>"+pageNo+"</a>";
+				pageBar+="<a href='javascript:searchListAjax("+(pageNo)+");'>"+pageNo+"</a>";
 			}
 			pageNo++;
 		}
@@ -80,16 +80,10 @@ public class SelectAllProjectContentServlet extends HttpServlet {
 		if(pageNo>totalPage) {
 			pageBar+="<span>[다음]</span>";
 		}else {
-			pageBar+="<a href='javascript:contentListAjax("+(pageNo)+");'>[다음]</a>";
+			pageBar+="<a href='javascript:searchListAjax("+(pageNo)+");'>[다음]</a>";
 		}
 		
 
-		
-		
-		
-		
-		
-		
 		response.setContentType("application/json; charset=utf-8");
 		Map<String, Object> param = Map.of("pageBar",pageBar,"pList",pList);
 		new Gson().toJson(param,response.getWriter());

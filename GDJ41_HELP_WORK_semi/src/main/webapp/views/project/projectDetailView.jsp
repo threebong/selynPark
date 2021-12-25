@@ -11,10 +11,15 @@
 	Project p = (Project)request.getAttribute("projectInfo");
 	List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
 %>
+<style>
+	.form-select{
+		width: 120px;
+	}
+</style>
 <script>
 
 
-function memberListAjax(cPage){
+function contentListAjax(cPage){
 	let projectNo = $("#projectNo").val();
 	//프로젝트 게시글 가져오기
 	$.ajax({
@@ -29,7 +34,7 @@ function memberListAjax(cPage){
 			const memberList = data["pList"];
 			
 			const table = $("<table class='table' style='text-align:center;'>");
-			const thead = "<thead><tr><th scope='col'>구분</th><th scope='col'>제목</th><th scope='col'>작성자</th><th scope='col'>작성일</th><th scope='col'>상태</th></tr></thead>";
+			const thead = "<thead><tr><th scope='col'>구분</th><th scope='col'>제목</th><th scope='col'>작성자</th><th scope='col'>작성일</th><th scope='col'>상태</th><th scope='col'>순위</th></tr></thead>";
 			table.append(thead);
 			
 			for(let i = 0; i< memberList.length;i++){
@@ -40,10 +45,12 @@ function memberListAjax(cPage){
 				const memberName = $("<td>").html(memberList[i]["memberName"]);
 				const writeDate = $("<td>").html(memberList[i]["writeDate"]);
 				const workIng = $("<td>").html(memberList[i]["workIng"]);
+				const workRank = $("<td>").html(memberList[i]["workRank"]);
 				const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
 				const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
 				
-				tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(memberId).append(contentNo);
+				
+				tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(workRank).append(memberId).append(contentNo);
 				table.append(tr);
 			}
 			
@@ -54,6 +61,60 @@ function memberListAjax(cPage){
 		
 	});
 }
+
+
+
+//프로젝트 검색 게시글 가져오기
+function searchListAjax(cPage){
+	let dist = $("input[name=selectContentRadio]:checked").val();
+	let projectNo = $("#projectNo").val();
+	let searchType = $("#searchConSelect").val();
+	let keyword = $("#searchConKeyword").val();
+	
+	$.ajax({
+		url: "<%=request.getContextPath()%>/project/searchAllContent.do",
+		dataType:"json",
+		data:{keyword:keyword
+			,searchType:searchType
+			,projectNo:projectNo,
+			dist:dist,
+			cPage:cPage},
+		success:data=>{
+			
+			$("#contentArea").html("");
+			
+			const memberList = data["pList"];
+			
+			const table = $("<table class='table' style='text-align:center;'>");
+			const thead = "<thead><tr><th scope='col'>구분</th><th scope='col'>제목</th><th scope='col'>작성자</th><th scope='col'>작성일</th><th scope='col'>상태</th><th scope='col'>순위</th></tr></thead>";
+			table.append(thead);
+			
+			for(let i = 0; i< memberList.length;i++){
+				
+				const tr = $("<tr scope='row' onclick='contentView(this);'>");
+				const dist = $("<td>").html(memberList[i]['dist']);
+				const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
+				const memberName = $("<td>").html(memberList[i]["memberName"]);
+				const writeDate = $("<td>").html(memberList[i]["writeDate"]);
+				const workIng = $("<td>").html(memberList[i]["workIng"]);
+				const workRank = $("<td>").html(memberList[i]["workRank"]);
+				const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
+				const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
+				
+				
+				tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(workRank).append(memberId).append(contentNo);
+				table.append(tr);
+			}
+			
+			const div=$("<div>").attr("id","pageBar").html(data["pageBar"]);
+			$("#contentArea").append(table).append(div);
+			
+		}
+		
+	});
+}
+
+
 
 
 
@@ -84,7 +145,7 @@ function proInMemberList(){
 
 
 $(document).ready(()=>{
-	memberListAjax();
+	contentListAjax();
 	proInMemberList();
 	
 });
@@ -94,7 +155,7 @@ function contentView(e){
 	let val = $(e).children();
 	
 	let dist = val.eq(0).text();
-	let contentNo = val.eq(6).text();
+	let contentNo = val.eq(7).text();
 	
 	$.ajax({
 		url:"<%=request.getContextPath()%>/project/selectContentView.do",
@@ -103,18 +164,28 @@ function contentView(e){
 		traditional : true,
 		datatype:"json",
 		success:data=>{
-			const normalpc = data;
+			const mfile = data["mFile"];
 			const pc = data["pc"];
 			const memberNameList = data["memberNameList"];
-			
-
+			console.log(pc);
 			switch(dist){
 				case '게시글' : 
-					$("#writerName").html(normalpc["memberName"]);
-					$("#writeDate").html(normalpc["writeDate"]);
-					$("#contentTitleView").html(normalpc["contentTitle"]);
-					$("#contentBody").html(normalpc["content"]);
-					
+					$("#writerName").html(pc["memberName"]);
+					$("#writeDate").html(pc["writeDate"]);
+					$("#contentTitleView").html(pc["contentTitle"]);
+					$("#contentBody").html(pc["content"]);
+					$("#normalContentNo").html(pc["contentNo"]);
+					$("#normalContentDist").html(pc["dist"]);
+					$("#normalOriFileName").children().remove();
+					$("#normalReFileName").children().remove();
+					for(let i =0;i<mfile.length;i++){
+						const h5 =$("<h5>");
+						const h6 = $("<h6>");
+						h5.html("<a href='javascript:fn_normalFileDownload();'>"+mfile[i]["normalOriFileName"]+"</a>");
+						h6.html(mfile[i]["normalReFileName"]);
+						$("#normalOriFileName").append(h5)
+						$("#normalReFileName").append(h6);
+					}
 					$("#viewBtn").click();
 					
 				break;
@@ -137,6 +208,19 @@ function contentView(e){
 		               $("#workEndDate_view").html(pc["endDate"]);
 		               $("#workRank_view").html(pc["workRank"])
 		               $("#workContent_view").html(pc["content"]);
+		               $("#workContentNo").html(pc["contentNo"]);
+		               $("#workdist").html(pc["dist"]);
+		               
+		               $("#workOriFileName").children().remove();
+						$("#workReFileName").children().remove();
+						for(let i =0;i<mfile.length;i++){
+							const h5 =$("<h5>");
+							const h6 = $("<h6>");
+							h5.html("<a href='javascript:fn_workFileDownload();'>"+mfile[i]["workOriFileName"]+"</a>");
+							h6.html(mfile[i]["workReFileName"]);
+							$("#workOriFileName").append(h5)
+							$("#workReFileName").append(h6);
+						}
 
 					
 					$("#workViewBtn").click();
@@ -145,6 +229,8 @@ function contentView(e){
 					 $("#scheWriterName").html(pc["memberName"]);
 		               $("#scheWriteDate").html(pc["writeDate"]);
 		               $("#scheContentTitleView").html(pc["contentTitle"]);
+		               $("#scheContentNo").html(pc["contentNo"]);
+		               $("#schedist").html(pc["dist"]);
 		               
 		               $("#scheAttendPeople").children().remove();
 		               for(let i=0;i<memberNameList.length;i++){
@@ -163,9 +249,28 @@ function contentView(e){
 			}
 		}
 	});
-	
-
 }
+
+const fn_workFileDownload=()=>{
+	let workOriFileName = $("#workOriFileName").text(); 
+	let workReFileName = $("#workReFileName").text();
+	
+	 const url = "<%=request.getContextPath()%>/project/workfileDownload.do";
+	 const encode = encodeURIComponent(workOriFileName);
+	 location.assign(url+"?workOriFileName="+encode+"&&workReFileName="+workReFileName);
+}
+
+const fn_normalFileDownload=()=>{
+	
+	let normalOriFileName = $("#normalOriFileName").text(); 
+	let normalReFileName = $("#normalReFileName").text();
+	
+	 const url = "<%=request.getContextPath()%>/project/normalfileDownload.do";
+	 const encode = encodeURIComponent(normalOriFileName);
+	 location.assign(url+"?normalOriFileName="+encode+"&&normalReFileName="+normalReFileName);
+}
+
+
 </script>
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <style>
@@ -179,14 +284,25 @@ function contentView(e){
 <button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
-  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="normal_close_btn"></button>
   </div>
    <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="normalContentNo" style="display:none;"></span>
+   		<span id="normalContentDist" style="display:none;"></span>
    		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
    		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
    		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
    </div>   
   <div class="offcanvas-body" id="contentBody"></div>
+  <hr>
+  <div class="offcanvas-body" id="contentfooter">
+  	<div id="normalFileContainer">
+  		<div id="normalOriFileName"></div>
+  		<div id="normalReFileName" style="display: none;"></div>
+  	</div>
+  	<button type="button" class="btn btn-outline-secondary" id="normal_update">수정</button>
+  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
+  </div>
 </div>
 
 <!-- 업무 게시글 상세화면 -->
@@ -194,7 +310,7 @@ function contentView(e){
 <button class="btn btn-primary"  id="workViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
-  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="work_close_btn"></button>
   </div>
    <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
    		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
@@ -206,7 +322,18 @@ function contentView(e){
   		<div id="workManager"></div>
   		<div id="workStartDate_view"></div>
   		<div id="workEndDate_view"></div>
+  		<div id="workRank_view"></div>
   		<div id="workContent_view"></div>
+  		<div id="workContentNo" style="display:none;"></div>
+  		<div id="workdist" style="display:none;"></div>
+  </div>
+  <div class="offcanvas-body" id="contentfooter">
+  	<div id="workFileContainer">
+  		<div id="workOriFileName"></div>
+  		<div id="workReFileName" style="display: none;"></div>
+  	</div>
+  	<button type="button" class="btn btn-outline-secondary" id="work_update">수정</button>
+  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete">삭제</button>
   </div>
 </div>
 
@@ -215,7 +342,7 @@ function contentView(e){
 <button class="btn btn-primary"  id="scheViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#scheContentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="scheContentView" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header"> 
-  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="sche_close_btn"></button>
   </div>
    <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
    		<span id="scheWriterName" style="font-size: 18px; font-weight: bold;"></span>
@@ -229,6 +356,12 @@ function contentView(e){
   		<div id="schePlaceName"></div>
   		<div id="schePlaceAddr"></div>
   		<div id="scheContent_view"></div>
+  		<div id="scheContentNo"style="display:none;"></div>
+  		<div id="schedist"style="display:none;"></div>
+  </div>
+  <div class="offcanvas-body" id="contentfooter">
+  	<button type="button" class="btn btn-outline-secondary" id="sche_update">수정</button>
+  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sche-delete">삭제</button>
   </div>
 </div>
 
@@ -701,19 +834,47 @@ $("#sche_place_btn").click(e=>{
 	
 	
 	<div id="contentContainer">
-	<div class="input-group mb-3"  style="width: 400px;">
-		<div>
-		<select class="form-select" aria-label="Default select example" style="width: 100px;">
-			  <option selected>검색</option>
-			  <option value="1">One</option>
-			  <option value="2">Two</option>
-			  <option value="3">Three</option>
-			</select>
+	<div style="display: inline-block;">
+		<div class="input-group mb-3"  style="width: 400px;">
+				<div>
+					<select class="form-select" aria-label="Default select example" style="width: 100px;" id="searchConSelect">
+						<option value="MEMBER_NAME">작성자명</option>
+						<option value="CONTENT_TITLE">게시글명</option>
+					</select>
+				</div>		  
+				<input type="text" class="form-control" placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchConKeyword">
+				<button class="btn btn-outline-secondary" type="button" id="searchConBtn">검색</button>
 		</div>
-		  
-		<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
-		<button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
 	</div>
+		<div id="filterDist" style="display: inline-block; margin-left: 5px;">
+			<div class="dropdown" style="margin-left: 5px;">
+  				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-filter"></i></button>
+				  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+					    <li>
+					    	<div class="form-check" style="margin-left: 8px;">
+							 	<input class="form-check-input" type="radio" name="selectContentRadio" checked value="게시글" id="normal_radio">
+							  	<label class="form-check-label" for="normal_radio">게시글</label>
+							</div>
+						</li>
+						<li>
+							<div class="form-check" style="margin-left: 8px;">
+						  		<input class="form-check-input" type="radio" name="selectContentRadio"  value="업무" id="work_radio">
+						  		<label class="form-check-label" for="work_radio">업무</label>
+							</div>
+						</li>
+						<li>
+							<div class="form-check" style="margin-left: 8px;">
+						  		<input class="form-check-input" type="radio" name="selectContentRadio" value="일정" id="sche_radio">
+						  		<label class="form-check-label" for="sche_radio">일정</label>
+							</div>
+						</li>
+				  </ul>
+			</div>
+		</div>
+		<div style="display: inline-block; margin-left: 5px;">
+			<button type="button" class="btn" onclick="contentListAjax();">전체보기</button>
+		</div>
+		
 		<div id ="contentArea">
 		</div>
 	</div>
@@ -730,15 +891,119 @@ $("#sche_place_btn").click(e=>{
 	</div>
 </div>
 
+<!-- 게시글 삭제 모달 -->
+<div class="modal fade" id="normal-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+       <div style="text-align: center;"> 정말 삭제 하시겠습니까?</div>
+      </div>
+      <div class="modal-footer" style="height: 50px; padding-top: 5px;padding-right: 10px; ">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" id="normal_ck_close_btn">닫기</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="normal_delComplete();">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 업무 삭제 모달 -->
+<div class="modal fade" id="work-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+       <div style="text-align: center;"> 정말 삭제 하시겠습니까?</div>
+      </div>
+      <div class="modal-footer" style="height: 50px; padding-top: 5px;padding-right: 10px; ">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" id="work_close_ck_btn">닫기</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="work_delComplete();">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 일정 삭제 모달 -->
+<div class="modal fade" id="sche-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+       <div style="text-align: center;"> 정말 삭제 하시겠습니까?</div>
+      </div>
+      <div class="modal-footer" style="height: 50px; padding-top: 5px;padding-right: 10px; ">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" id="sche_close_ck_btn">닫기</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="sche_delComplete();">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
-<style>
-	.form-select{
-		width: 120px;
-	}
-	</style>
+
 <script>
+//일정 삭제
+function sche_delComplete(){
+	let scheContentNo = $("#scheContentNo").text();
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/deleteScheContent.do",
+		type:"post",
+		data:{scheContentNo:scheContentNo},
+		success:data=>{
+			$("#sche_close_ck_btn").click();
+			contentListAjax();
+			$("#sche_close_btn").click();
+		}
+	});
+}
+
+//업무 삭제
+function work_delComplete(){
+	let workContentNo = $("#workContentNo").text();
+	let fileArr = [];
+	$("#workReFileName").find("h6").each(function(i,v){
+		fileArr.push($(this).text());
+	});
 	
-	//프로젝트에 참여중인 사원 목록
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/deleteWorkContent.do",
+		traditional : true,
+		type:"post",
+		data:{workContentNo:workContentNo,fileArr:fileArr},
+		success:data=>{
+			$("#work_close_ck_btn").click();
+			contentListAjax();
+			$("#work_close_btn").click();
+		}
+	});
+}
+
+//게시글 삭제
+function normal_delComplete(){
+	let normalContentNo = $("#normalContentNo").text();
+	let fileArr = [];
+	$("#normalReFileName").find("h6").each(function(i,v){
+		fileArr.push($(this).text());
+	});
+	
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/deleteNormalContent.do",
+		type:"post",
+		traditional : true,
+		data:{normalContentNo:normalContentNo
+			,fileArr:fileArr},
+		success:data=>{
+			$("#normal_ck_close_btn").click();
+			contentListAjax();
+			$("#normal_close_btn").click();
+		}
+	});
+}
+
+
+
+//게시글 검색 기능
+$("#searchConBtn").click(e=>{
+	searchListAjax();
+});
+
 
 //사원 프로젝트 초대
 $("#add_btn").click(e=>{
@@ -881,7 +1146,7 @@ $("#search_Member_btn").click(e=>{
 				$("#uploadNormal").val("");
 				$("#fileNameList").find("p").remove();			
 				$("#close_content").click();
-				memberListAjax();	
+				contentListAjax();	
 			},
 			error:(a)=>{
 				alert("실팽");
@@ -900,8 +1165,8 @@ $("#search_Member_btn").click(e=>{
 	let memberName;//현재 프로젝트에 참여중인 멤버 이름
 	let managerId;// 현재 프로젝트에 참여중인 멤버 아이디
 	let creatorPro = "<%=p.getMemberId()%>"; //프로젝트 생성자
-	
-	
+	let select;
+	let ophead;
 	function selectAddWorkMember(){
 		let projectNo = $("#projectNo").val();
 		$.ajax({
@@ -913,26 +1178,26 @@ $("#search_Member_btn").click(e=>{
 			success:data=>{
 				memberName = new Array();//현재 프로젝트에 참여중인 멤버 이름
 				managerId = new Array();// 현재 프로젝트에 참여중인 멤버 아이디
-				const select = $("#work_addMember");
-				const ophead = $("<option>").text("담당자 추가");
+				select = $("#work_addMember");
+				
+				ophead = $("<option>").text("담당자 추가");
 				select.children().remove();
 				select.append(ophead);
+				
 				for(let i=0;i<data.length;i++){
-					if(data[i]["memberId"] != creatorPro){
-						memberName.push(data[i]["memberName"]);
-						managerId.push(data[i]["memberId"]);
-						const option = $("<option>");
-						option.text(memberName[i]);
-						option.val(managerId[i]);
-						select.append(option);
-					}
+					memberName.push(data[i]["memberName"]);
+					managerId.push(data[i]["memberId"]);
+					const option = $("<option>");
+					option.text(memberName[i]);
+					option.val(managerId[i]);
+					select.append(option);
 				}
 			}
 		});
 	}
 	 //일정 참석자 리스트
-	 
-	
+	 let selectSche;
+	 let opheadSche;
 	function selectAddscheMember(){
 		let projectNo = $("#projectNo").val();
 		$.ajax({
@@ -942,23 +1207,23 @@ $("#search_Member_btn").click(e=>{
 			dataType:"json",
 			data:{projectNo:projectNo},
 			success:data=>{
+				
 				memberName = new Array();//현재 프로젝트에 참여중인 멤버 이름
 				managerId = new Array();// 현재 프로젝트에 참여중인 멤버 아이디
 				
-				const selectSche = $("#sche_addMember");
-				const opheadSche = $("<option>").text("참석자 추가");
+			 	selectSche = $("#sche_addMember");
+				opheadSche = $("<option>").text("참석자 추가");
 				
 				selectSche.children().remove();
 				selectSche.append(opheadSche);
+				
 				for(let i=0;i<data.length;i++){
-					if(data[i]["memberId"] != creatorPro){
-						memberName.push(data[i]["memberName"]);
-						managerId.push(data[i]["memberId"]);
-						const option = $("<option>");
-						option.text(memberName[i]);
-						option.val(managerId[i]);
-						selectSche.append(option);
-					}
+					memberName.push(data[i]["memberName"]);
+					managerId.push(data[i]["memberId"]);
+					const option = $("<option>");
+					option.text(memberName[i]);
+					option.val(managerId[i]);
+					selectSche.append(option);
 				}
 			}
 		});
@@ -991,8 +1256,9 @@ $("#search_Member_btn").click(e=>{
 			}
 	});
 
-		$(select).change(e=>{
+		$("#work_addMember").change(e=>{
 			//선택된 유저 아이디 span으로 보여줌
+			console.log(select.val());
 			let span = $("<span>");
 			let selectMemberName = $("#work_addMember option:selected").text();		
 			let selectManaId = select.val();
@@ -1111,7 +1377,7 @@ $("#search_Member_btn").click(e=>{
 					workStart = document.getElementById('workStart').value= new Date().toISOString().substring(0, 10);
 					workEnd = document.getElementById('workEnd').value= new Date().toISOString().substring(0, 10);
 					$("#close_work_content").click();
-					memberListAjax();	
+					contentListAjax();	
 				},
 				error:(a)=>{
 					alert("실팽");
@@ -1130,7 +1396,7 @@ $("#search_Member_btn").click(e=>{
 		selectAddscheMember();
 	});
 	
-	$(selectSche).change(e=>{
+	$("#sche_addMember").change(e=>{
 		
 		let span = $("<span>");
 		let selectMemberName = $("#sche_addMember option:selected").text();		
@@ -1229,7 +1495,7 @@ $("#search_Member_btn").click(e=>{
 					
 					scheStartDate = document.getElementById('scheStartDate').value= new Date().toISOString().substring(0, 10);
 					scheEndDate = document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
-					memberListAjax();	
+					contentListAjax();	
 				},
 				error:(a)=>{
 					alert("실팽");
