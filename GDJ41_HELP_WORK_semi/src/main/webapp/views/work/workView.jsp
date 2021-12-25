@@ -226,12 +226,12 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 	//	});
 		
 		
-		////All Work -->내 업무 (전체 조회)-->글제목 누르면 상세화면 (오프캔버스)
+		////All Work -->내 업무 (전체 조회)-->글제목 누르면 상세화면 ** (오프캔버스)
  function contentView(e){
 		let val = $(e).children();//이벤트발생한곳의 자식들
 		let proNo = val.eq(0).text();//project No 가져와
 		let workNo= val.eq(2).text();//workNo 가져와
-		
+		console.log("버튼을 누르면:" + proNo+workNo)
 		$.ajax({
 			url:"<%=request.getContextPath()%>/project/SelectDetailWorkViewServlet.do",
 			type: "post",
@@ -275,18 +275,7 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 			
 			
 		}		 
-		</script>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		<script>	
+	
 		//All Work --> 나의 업무 --> 검색1/2 
 		//본인 업무 조회 (조건 선택 )  --- 페이징 
 		function workMinePaging(cPage){//==>본인업무 조건 선택 : 페이징 완료 
@@ -305,9 +294,8 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 					const workList=data["list"];
 					const pageBar=data["pageBar"];
 					console.log(workList);
-					let table=$("<table>");
 					let h4=$("<h4>").html("나의 업무");//'나의업무'문구 변경 금지 (다중조회와 관련)
-					let thead=$("<thead>");
+					let table=$("<table>");
 					let tr=$("<tr>");
 					let td=$("<th>").html("No");
 					let td8=$("<th>").html("프로젝트");
@@ -318,22 +306,23 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 					let td4=$("<th>").html("작성자");
 					let td5=$("<th>").html("담당자");
 					let td6=$("<th>").html("등록일");
-					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
-					
-					let tbody=$("<tbody>");
+					tr.append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
+					table.append(h4);
+					table.append(tr);
 					
 					if(data.workList==0){//조회결과 X 
 						let nottr=$("<tr>");
 						let notth=$("<td>").html("조회결과가 없습니다.");
-						notth.attr("colspan","9");
-						nottr.css("text-align","center");
 						nottr.append(notth);
 						table.append(nottr);
+						
+						notth.attr("colspan","9");
+						nottr.css("text-align","center");
 					}else{//조회 결과 O 
 						alert("결과가있단다");
 						for(let i=0;i<workList.length;i++){
-						let tr2=$("<tr>");
-						let proNo=$("<th>").html(workList[i]["projectNo"]);
+						let tr2=$("<tr scope='row' onclick='contentView(this);'>");
+						let proNo=$("<td>").html(workList[i]["projectNo"]);
 						let proName=$("<td>").html(workList[i]["proName"]);
 						let workNo=$("<td>").html(workList[i]["workNo"]);
 						let working=$("<td>").html(workList[i]["workIng"]);
@@ -343,8 +332,9 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						let manaId=$("<td>").html(workList[i]["managerId"]);
 						let date=$("<td>").html(workList[i]["workDate"]);
 						let td7=$("<td>");
-					    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
-					    table.append(tbody);
+					    tr2.append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
+					    
+					    table.append(tr2);
 						}
 					}
 					const div=$("<div>").attr("id","pageBar").html(pageBar);
@@ -355,8 +345,7 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						
 					/*속성추가*/
 					$("table").addClass('table');
-					$("table thead th").attr('scope','col');
-					$("table tbody th").attr('scope','col');
+					$("table th").attr('scope','col');
 				}
 			});
 			}
@@ -380,7 +369,6 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						
 						let table=$("<table>");
 						let h4=$("<h4>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 //이름바꾸면안됨
-						let thead=$("<thead>");
 						let tr=$("<tr>");
 						let td=$("<th>").html("No");
 						let td8=$("<th>").html("프로젝트");
@@ -390,12 +378,13 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						let td3=$("<th>").html("제목");
 						let td4=$("<th>").html("작성자");
 						let td6=$("<th>").html("등록일");
-						table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
+						tr.append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
+						table.append(h4);
+						table.append(tr);
 						
-						let tbody=$("<tbody>");
 						for(let i=0;i<workList.length;i++){
-						let tr2=$("<tr>");
-						let proNo=$("<th>").html(workList[i]["projectNo"]);
+						let tr2=$("<tr scope='row' onclick='contentView(this);'>");
+						let proNo=$("<td>").html(workList[i]["projectNo"]);
 						let proName=$("<td>").html(workList[i]["proName"]);
 						let workNo=$("<td>").html(workList[i]["workNo"]);
 						let working=$("<td>").html(workList[i]["workIng"]);
@@ -403,9 +392,8 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						let title=$("<td>").html(workList[i]["workTitle"]);
 						let memId=$("<td>").html(workList[i]["memberId"]);
 						let date=$("<td>").html(workList[i]["workDate"]);
-						let td7=$("<td>");
-					    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
-					    table.append(tbody);
+					    tr2.append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date);
+					    table.append(tr2);
 						}
 						
 						//페이징처리---
@@ -438,7 +426,6 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						const workList=data["list"];
 						const pageBar=data["pageBar"];
 						
-						console.log(data);
 						let table=$("<table>");
 						let h14=$("<h4>").html("전체 업무");//문구 변경 금지 (다중조회와 관련)
 						let thead=$("<thead>");
@@ -451,21 +438,21 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						let td3=$("<th>").html("제목");
 						let td4=$("<th>").html("작성자");
 						let td6=$("<th>").html("등록일");
-						table.append(h14).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
-						
-						let tbody=$("<tbody>");
+						tr.append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
+						table.append(h4);
+						table.append(tr);
 						
 						if(data.workList==0){//조회결과 X 
-							let nottr=$("<tr>");
+							let nottr=$("<tr scope='row'>");
 							let notth=$("<td>").html("조회결과가 없습니다.");
-							notth.attr("colspan","9");
-							nottr.css("text-align","center");
 							nottr.append(notth);
 							table.append(nottr);
+							notth.attr("colspan","9");
+							nottr.css("text-align","center");
 						}else{//조회 결과 O 
 							for(let i=0;i<workList.length;i++){
-							let tr2=$("<tr>");
-							let proNo=$("<th>").html(workList[i]["projectNo"]);
+							let tr2=$("<tr scope='row' onclick='contentView(this);'>");
+							let proNo=$("<td>").html(workList[i]["projectNo"]);
 							let proName=$("<td>").html(workList[i]["proName"]);
 							let workNo=$("<td>").html(workList[i]["workNo"]);
 							let working=$("<td>").html(workList[i]["workIng"]);
@@ -474,8 +461,8 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 							let memId=$("<td>").html(workList[i]["memberId"]);
 							let date=$("<td>").html(workList[i]["workDate"]);
 							let td7=$("<td>");
-						    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
-						    table.append(tbody);
+						    tr2.append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(date).append(td7);
+						    table.append(tr2);
 							}
 						}
 						
@@ -485,8 +472,7 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						
 						/*속성추가*/
 						$("table").addClass('table');
-						$("table thead th").attr('scope','col');
-						$("table tbody th").attr('scope','col');
+						$("table th").attr('scope','col');
 					}
 				});//id값 보내
 			}
