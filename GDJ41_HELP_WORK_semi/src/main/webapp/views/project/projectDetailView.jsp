@@ -17,7 +17,11 @@
 	}
 </style>
 <script>
-
+$(document).ready(()=>{
+	contentListAjax();
+	proInMemberList();
+	
+});
 
 function contentListAjax(cPage){
 	let projectNo = $("#projectNo").val();
@@ -93,7 +97,7 @@ function searchListAjax(cPage){
 				
 				const tr = $("<tr scope='row' onclick='contentView(this);'>");
 				const dist = $("<td>").html(memberList[i]['dist']);
-				const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
+				const contentTitle = $("<td style='cursor: pointer;' >").html(memberList[i]["contentTitle"]);
 				const memberName = $("<td>").html(memberList[i]["memberName"]);
 				const writeDate = $("<td>").html(memberList[i]["writeDate"]);
 				const workIng = $("<td>").html(memberList[i]["workIng"]);
@@ -115,10 +119,7 @@ function searchListAjax(cPage){
 }
 
 
-
-
-
-
+//프로젝트 참여자 리스트 가져오기
 function proInMemberList(){
 	let projectNo = $("#projectNo").val();
 	$.ajax({
@@ -144,18 +145,25 @@ function proInMemberList(){
 }
 
 
-$(document).ready(()=>{
-	contentListAjax();
-	proInMemberList();
-	
-});
 
 function contentView(e){
 	
-	let val = $(e).children();
-	
+	let val = $(e).children();	
 	let dist = val.eq(0).text();
 	let contentNo = val.eq(7).text();
+
+	//프로젝트 생성자, 글 쓴 사람, 로그인 한사람
+	let loginMember ="<%=loginMember.getMemberId()%>";
+	let contentWriterId = val.eq(6).text();
+	let projectCreator = "<%=p.getMemberId()%>";
+
+	$(".updateBtnContainer").css("display","none");
+	//글 쓴 사람이랑 로그인 한 사람 아이디가 같으면? 보임
+	//로그인 한 사람이 프로젝트 만든 사람이면? 보임
+	if(loginMember == contentWriterId || loginMember == projectCreator){
+		$(".updateBtnContainer").css("display","block");
+	}
+	
 	
 	$.ajax({
 		url:"<%=request.getContextPath()%>/project/selectContentView.do",
@@ -170,6 +178,7 @@ function contentView(e){
 			console.log(pc);
 			switch(dist){
 				case '게시글' : 
+					
 					$("#writerName").html(pc["memberName"]);
 					$("#writeDate").html(pc["writeDate"]);
 					$("#contentTitleView").html(pc["contentTitle"]);
@@ -190,7 +199,7 @@ function contentView(e){
 					
 				break;
 				case '업무' :
-						
+					  
 					   $("#workWriterName").html(pc["memberName"]);
 		               $("#workWriteDate").html(pc["writeDate"]);
 		               $("#workContentTitleView").html(pc["contentTitle"]);
@@ -226,6 +235,7 @@ function contentView(e){
 					$("#workViewBtn").click();
 				break;
 				case '일정' : 
+					
 					 $("#scheWriterName").html(pc["memberName"]);
 		               $("#scheWriteDate").html(pc["writeDate"]);
 		               $("#scheContentTitleView").html(pc["contentTitle"]);
@@ -300,8 +310,10 @@ const fn_normalFileDownload=()=>{
   		<div id="normalOriFileName"></div>
   		<div id="normalReFileName" style="display: none;"></div>
   	</div>
-  	<button type="button" class="btn btn-outline-secondary" id="normal_update">수정</button>
-  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
+  	<div class="updateBtnContainer" style="display:none;">
+  		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#normal_update" id="normal_update_btn">수정</button>
+  		<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
+  	</div>
   </div>
 </div>
 
@@ -313,6 +325,7 @@ const fn_normalFileDownload=()=>{
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="work_close_btn"></button>
   </div>
    <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		
    		<span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
    		<span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
    		<h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
@@ -330,14 +343,16 @@ const fn_normalFileDownload=()=>{
   <div class="offcanvas-body" id="contentfooter">
   	<div id="workFileContainer">
   		<div id="workOriFileName"></div>
-  		<div id="workReFileName" style="display: none;"></div>
+  		<div id="workReFileName" style="display:none;"></div>
   	</div>
-  	<button type="button" class="btn btn-outline-secondary" id="work_update">수정</button>
-  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete">삭제</button>
+  	<div class="updateBtnContainer" style="display: none;">
+  		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateWorkModal" id="updateWork_">수정</button>
+  		<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete" id="del_btn2">삭제</button>
+  	</div>
   </div>
 </div>
 
-<!-- 업무 게시글 상세화면 -->
+<!-- 일정 게시글 상세화면 -->
 
 <button class="btn btn-primary"  id="scheViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#scheContentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="scheContentView" aria-labelledby="offcanvasScrollingLabel">
@@ -345,6 +360,7 @@ const fn_normalFileDownload=()=>{
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="sche_close_btn"></button>
   </div>
    <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		
    		<span id="scheWriterName" style="font-size: 18px; font-weight: bold;"></span>
    		<span id="scheWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
    		<h4 id="scheContentTitleView" style="margin-top: 20px;"></h4>
@@ -359,10 +375,12 @@ const fn_normalFileDownload=()=>{
   		<div id="scheContentNo"style="display:none;"></div>
   		<div id="schedist"style="display:none;"></div>
   </div>
-  <div class="offcanvas-body" id="contentfooter">
-  	<button type="button" class="btn btn-outline-secondary" id="sche_update">수정</button>
-  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sche-delete">삭제</button>
-  </div>
+   <div class="offcanvas-body" id="contentfooter">
+		  <div class="updateBtnContainer" style="display:none;">
+		  	<button type="button" class="btn btn-outline-secondary" id="sche_update">수정</button>
+		  	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sche-delete" id="del_btn3">삭제</button>
+		  </div>
+		</div>
 </div>
 
 
@@ -442,8 +460,95 @@ const fn_normalFileDownload=()=>{
   </div>
 </div>
 
+<!-- 일반게시글 수정 모달 -->
+
+<div class="modal fade" id="normal_update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">게시물 수정</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="normal_update_title_" name="normal_update_title">
+      <span id="titleResult_"></span>
+        <textarea class="form-control" placeholder="내용을 입력하세요" id="normal_update_Content" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
+		<!--  <div class="mb-3">
+ 		<label for="formFile" class="form-label"></label>
+  		<input class="form-control" type="file" id="upload_update_Normal" name="normal_upfile" multiple>
+		</div>
+		-->
+		<div id="fileNameList_update"></div>
+		<div id="fileReNameList_update" style="display:none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="normal_update_close">닫기</button>
+        <button type="button" class="btn btn-primary" id="normal_updateSubmit_Btn">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+//일반 게시글 수정.. 파일은..못해..
+	$("#normal_update_btn").click(e=>{
+		let contentNo = $("#normalContentNo").text();
+		let dist = $("#normalContentDist").text();
+		$.ajax({
+			url:"<%=request.getContextPath()%>/project/selectContentView.do",
+			type:"post",
+			data : {"dist":dist,"contentNo":contentNo},
+			traditional : true,
+			datatype:"json",
+			success:data=>{
+				const mfile = data["mFile"];
+				const pc = data["pc"];
+				const memberNameList = data["memberNameList"];
+				console.log(pc);
+				switch(dist){
+					case '게시글' : 
+						$("#normal_update_title_").val(pc["contentTitle"]);
+						$("#normal_update_Content").val(pc["content"]);
+						$("#fileNameList_update").children().remove();
+						$("#fileReNameList_update").children().remove();
+						for(let i =0;i<mfile.length;i++){
+							const h5 =$("<h5>");
+							const h6 = $("<h6>");
+							h5.html(mfile[i]["normalOriFileName"]);
+							h6.html(mfile[i]["normalReFileName"]);
+							$("#fileNameList_update").append(h5)
+							$("#fileReNameList_update").append(h6);
+						}
+				}
+			}
+		});
+
+		
+	});
+	
+	$("#normal_updateSubmit_Btn").click(e=>{
+		let normalTitle = $("#normal_update_title_").val();
+		let normalContent = $("#normal_update_Content").val();
+		let contentNo = $("#normalContentNo").text();
+		console.log()
+			
+		$.ajax({
+			url : "<%=request.getContextPath()%>/project/normal/updateNormalContent.do",
+			type:"post",
+			data:{normalTitle:normalTitle,normalContent:normalContent,contentNo:contentNo},
+			success:data=>{	
+				$("#normal_update_close").click();
+				contentListAjax();	
+				$("#normal_close_btn").click();
+			},
+			error:(a)=>{
+				alert("실팽");
+			}
+		});
+	});
+</script>
+
 <!-- 업무게시글 작성 모달 -->
-<button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="insertWork_">글작성</button>
+
 
 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -490,8 +595,8 @@ const fn_normalFileDownload=()=>{
   		<input class="form-control" type="file" id="uploadWorkfile_" name="uploadWorkfile" multiple>
 		</div>
 		<div id="workFileNameContainer"></div>
-		<input type="hidden" id="memberId" value="admin">
-		<input type="hidden" id="projectNo" value="3">
+		<input type="hidden" id="memberId" value="<%=loginMember.getMemberId()%>">
+		<input type="hidden" id="projectNo" value="<%=p.getProjectNo() %>">
 		
       </div>
       <div class="modal-footer">
@@ -501,6 +606,99 @@ const fn_normalFileDownload=()=>{
     </div>
   </div>
 </div>
+<!-- 업무 게시글 수정 모달 -->
+<div class="modal fade" id="updateWorkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">업무 수정</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="workTitle_update">
+      <span id="work_titleResult"></span>
+      <div id="work_Ing_container">
+      	<span><i class="fas fa-history"></i></span>
+      	<input type="radio" value="요청" id="call" name="work_ing_update"><label for="call">요청</label>
+      	<input type="radio" value="진행" id="ing" name="work_ing_update"><label for="ing">진행</label>
+        <input type="radio" value="피드백" id="feedback" name="work_ing_update"><label for="feedback">피드백</label>
+      	<input type="radio" value="보류" id="hold" name="work_ing_update"><label for="hold">보류</label>
+      	<input type="radio"value="완료" id="complete" name="work_ing_update"><label for="complete">완료</label>
+      </div>
+      <div id="work_addMember_container">
+      	<span><i class="fas fa-user"></i></span>
+      	<div><select class="form-select" id="work_addMember_update"></select></div>
+      	<div id="work_addMember_area_update"></div>
+      </div>
+      <div id="workStart_container">
+      	<span><i class="fas fa-calendar-plus"></i></span>
+      	<input type="date" id="workStart_update">
+      </div>
+      <div id="workEnd_container">
+      	<span><i class="fas fa-calendar-check"></i></span>
+      	<input type="date" id="workEnd_update">
+      </div>
+      <div id="workRank_container_update">
+     	 <span><i class="fas fa-flag"></i></span>
+      	 <input type="radio" value="보통" id="normal" name="work_rank_update"><label for="normal">보통</label>
+      	 <input type="radio" value="낮음" id="row" name="work_rank_update"><label for="row">낮음</label>
+      	 <input type="radio" value="긴급" id="emergency" name="work_rank_update"><label for="emergency">긴급</label>
+      	 <input type="radio" value="높음" id="high" name="work_rank_update"><label for="high">높음</label>
+      </div>
+      
+        <textarea class="form-control" placeholder="내용을 입력하세요" id="workContent_update" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
+		<!-- <div class="mb-3">
+ 			<label for="formFile" class="form-label"></label>
+  			<input class="form-control" type="file" id="uploadWorkfile_" name="uploadWorkfile" multiple>
+		</div>
+		 -->
+		<div id="workFileNameContainer"></div>
+		<input type="hidden" id="memberId" value="<%=loginMember.getMemberId()%>">
+		<input type="hidden" id="projectNo" value="<%=p.getProjectNo() %>">
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_work_content_update">닫기</button>
+        <button type="button" class="btn btn-primary" id="work_update_Btn">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+//업무 게시글 업데이트
+//기존 값 받아오기 -> 화면에 출력해주기 -> 업무 담당자 추가 삭제
+$("#updateWork_").click(e=>{
+	let contentNo = $("#workContentNo").text();
+	let dist = $("#workdist").text(); 
+
+	$.ajax({
+		url:"<%=request.getContextPath()%>/project/selectContentView.do",
+		type:"post",
+		data : {"dist":dist,"contentNo":contentNo},
+		traditional : true,
+		datatype:"json",
+		success:data=>{
+			const mfile = data["mFile"];
+			const pc = data["pc"];
+			const memberNameList = data["memberNameList"];
+			console.log(pc);
+			switch(dist){
+				case '업무' : 
+					$("#workTitle_update").val(pc["contentTitle"]);
+					$("#workContent_update").val(pc["content"]);
+					
+			}
+		}
+	});
+
+	
+	
+});
+
+
+</script>
+
 
 <!-- 일정게시글 작성 모달 -->
 <button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3" id="insertSche_">일정작성</button>
@@ -551,7 +749,7 @@ const fn_normalFileDownload=()=>{
 
     <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
 		<input type="hidden" id="memberId" value="<%=loginMember.getMemberId() %>">
-		<input type="hidden" id="projectNo" value="3">
+		<input type="hidden" id="projectNo" value="<%=p.getProjectNo()%>">
 		
       </div>
       <div class="modal-footer">
@@ -561,6 +759,10 @@ const fn_normalFileDownload=()=>{
     </div>
   </div>
 </div>
+
+<!-- 일정 게시글 수정 모달 -->
+
+
 
 
 
@@ -938,6 +1140,9 @@ $("#sche_place_btn").click(e=>{
 </main>
 
 <script>
+
+
+
 //일정 삭제
 function sche_delComplete(){
 	let scheContentNo = $("#scheContentNo").text();
