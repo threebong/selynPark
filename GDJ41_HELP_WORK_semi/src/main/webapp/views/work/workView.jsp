@@ -439,7 +439,7 @@ data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의�
 						let td4=$("<th>").html("작성자");
 						let td6=$("<th>").html("등록일");
 						tr.append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td6);
-						table.append(h4);
+						table.append(h14);
 						table.append(tr);
 						
 						if(data.workList==0){//조회결과 X 

@@ -461,6 +461,9 @@ public class WorkDao {
 					pstmt=conn.prepareStatement(sql);
 					pstmt.setInt(1, i);//project_no
 					pstmt.setString(2, ing);
+				System.out.println((cPage-1)*numPerPage+1);
+				System.out.println(cPage*numPerPage);
+				
 					pstmt.setInt(3, (cPage-1)*numPerPage+1);
 					pstmt.setInt(4, cPage*numPerPage);
 					System.out.println("진행상황");
