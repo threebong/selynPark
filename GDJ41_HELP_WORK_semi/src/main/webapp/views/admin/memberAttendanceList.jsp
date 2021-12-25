@@ -101,10 +101,13 @@ var today = moment(checkDay).format('yyyy년 MM월 DD일');
 var checkDay = $("#checkDate").val();
 $("#selectDate").text(today);
 
+//최초 change 함수 자동실행 위한 날짜포맷
+var today2 = moment(new Date()).format('yyyy-MM-DD');
+	
 //함수 먼저 실행
 $(document).ready(()=>{
 	adminAttendanceList();
-	
+	$("#checkDate").val(today2).trigger('change');
 });
 
 //페이징 처리 ajax
@@ -122,7 +125,6 @@ function adminAttendanceList(cPage){
 			dataType : 'json',
 			success:data=>{
 				const memberList = data["list"];
-				console.log(memberList);
 				const table=$('<table>');
 				let thead=$("<thead>");
 				let tbody=$('<tbody>');
@@ -152,7 +154,7 @@ function adminAttendanceList(cPage){
 						let pName = $("<td>").html(memberList[i]["positionName"]);
 						let attTime = $("<td>").html(memberList[i]["attTime"]);
 						let leaveTime = $("<td>").html(memberList[i]["leaveTime"]);
-						let note = $("<td>").html("<button>수정");
+						let note = $("<td>").html("<button>수정").attr("class","updateAttendance"+i);
 						tbody.append(tr2).append(name).append(id).append(dName).append(pName).append(attTime).append(leaveTime).append(note);
 						table.append(tbody);
 					}
