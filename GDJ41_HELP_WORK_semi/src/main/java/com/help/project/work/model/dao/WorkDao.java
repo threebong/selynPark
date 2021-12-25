@@ -445,7 +445,7 @@ public class WorkDao {
 		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
 		String sql="";
 		try {
-			for(Integer i : proNum) {
+			for(Integer i : proNum) {///포문이문제
 		
 				if(ing.equals("진행상황")&&!prior.equals("우선순위")) {//우선순위 조건
 					sql = prop.getProperty("searchWorkAllPriorPaging").replace("#COL", "WORK_RANK");
