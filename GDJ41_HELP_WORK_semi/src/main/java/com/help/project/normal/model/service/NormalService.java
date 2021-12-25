@@ -55,5 +55,20 @@ public class NormalService {
 		return normalNo;
 	}
 
+	public int updateNormalContnet(int contentNo, NormalContent nc) {
+		Connection conn = getConnection();
+
+		int result = dao.updateNormalContnet(conn,contentNo,nc);
+
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+
+		return result;
+	}
+
 	
 }

@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.help.project.model.service.ProjectService;
+import com.help.project.model.vo.NormalFile;
 import com.help.project.model.vo.ProjectContent;
 import com.help.project.model.vo.ScheAttendName;
+import com.help.project.model.vo.WorkFile;
 import com.help.project.model.vo.WorkManagerName;
 
 /**
@@ -50,18 +52,19 @@ public class SelectContentViewServlet extends HttpServlet {
 		//업무 담당자 가져오기
 		if(dist.equals("업무")) {
 			List<WorkManagerName> wmList = new ProjectService().selectWorkManager(contentNo);
-			param = Map.of("memberNameList",wmList,"pc",pc);
+			//파일 가져오기
+			List<WorkFile> wFile = new ProjectService().selectWorklFile(contentNo,dist);		
+			param = Map.of("memberNameList",wmList,"pc",pc,"mFile",wFile);
 			new Gson().toJson(param,response.getWriter());
 		}else if(dist.equals("일정")) {
 			List<ScheAttendName> saList = new ProjectService().selectScheAttendName(contentNo);
 			param = Map.of("memberNameList",saList,"pc",pc);
 			new Gson().toJson(param,response.getWriter());
-		}else {
-			System.out.println(pc);
-			new Gson().toJson(pc,response.getWriter());
+		}else if(dist.equals("게시글")){
+			List<NormalFile> mFile = new ProjectService().selectNormalFile(contentNo,dist);		
+			param = Map.of("mFile",mFile,"pc",pc);
+			new Gson().toJson(param,response.getWriter());
 		}
-		
-		
 		
 	}
 

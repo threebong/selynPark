@@ -123,4 +123,25 @@ private Properties prop = new Properties();
 		return normalNo;
 	}
 
+	public int updateNormalContnet(Connection conn, int contentNo, NormalContent nc) {
+
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateNormalContnet");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, nc.getNormalContentTitle());
+			pstmt.setString(2, nc.getNormalContentContent());
+			pstmt.setInt(3, contentNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
 }
