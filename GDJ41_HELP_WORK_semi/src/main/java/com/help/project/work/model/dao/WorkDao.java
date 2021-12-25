@@ -18,6 +18,7 @@ import java.util.Properties;
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkDetailJoin;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 
@@ -563,5 +564,111 @@ public class WorkDao {
 		}return result;
 		
 	}
-	
+	//<Work All 각 글 상세화면 > 
+	public WorkDetailJoin workDetailProject(Connection conn, int ProNo,WorkDetailJoin temp) {
+		//1) 프로젝트 제목 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("workDetailProject");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, ProNo);//프로젝트 번호 
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				temp=WorkDetailJoin.builder().proName(rs.getString("PRO_NAME"))
+						.proDate(new SimpleDateFormat("YYYY-MM-dd").format(rs.getDate("PRO_DATE")))
+								.build();
+				//프로젝트 이름, 프로젝트 생성 시간 
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return temp;
+	}
+	public WorkDetailJoin workDetailWork(Connection conn,int workNo,WorkDetailJoin temp) {
+		//2) 업무 번호 --> 업무 정보 : 업무 제목/내용/시작일/마감일/진행상태/우선순위 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("workDetailWork");
+		WorkDetailJoin temp1=null;
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, workNo);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				temp1=WorkDetailJoin.builder()
+						.workNo(rs.getInt("WORK_NO"))
+						.workTitle(rs.getString("WORK_TITLE"))
+						.workContent(rs.getString("WORK_CONTENT"))
+						.startDate(new SimpleDateFormat("YYYY-MM-dd").format(rs.getDate("WORK_START_DATE")))
+						.endDate(new SimpleDateFormat("YYYY-MM-dd").format(rs.getDate("WORK_END_DATE")))
+						.workIng(rs.getString("WORK_ING"))
+						.workRank(rs.getString("WORK_RANK"))
+						.proName(temp.getProName())
+						.proDate(temp.getProDate())
+						.build();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return temp1;
+	}
+	public WorkDetailJoin workDetailWriter(Connection conn,int WorkNo,WorkDetailJoin temp) {
+		//3)  업무 작성자 : 업무 작성자 id를 이름으로 가져오기 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("workDetailWriter");
+		WorkDetailJoin temp1=null;
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, WorkNo);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				temp1=WorkDetailJoin.builder()
+						.workNo(temp.getWorkNo())
+						.workName(rs.getString("MEMBER_NAME"))
+						.workTitle(temp.getWorkTitle())
+						.workContent(temp.getWorkContent())
+						.startDate(temp.getStartDate())
+						.endDate(temp.getEndDate())
+						.workIng(temp.getWorkIng())
+						.workRank(temp.getWorkRank())
+						.proName(temp.getProName())
+						.proDate(temp.getProDate())
+						.build();
+				//아이디 이름으로 변환
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return temp1;
+	}
+	public WorkDetailJoin workDetailManager(Connection conn,int workNo,WorkDetailJoin temp) {
+		//4) 업무 담당자 : 여러명임 
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql=prop.getProperty("workDetailManager");
+		List<String> manager=new ArrayList<String>();
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, workNo);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				String ma=rs.getString("MEMBER_NAME");
+				manager.add(ma);
+			}
+			temp.setWorkManager(manager);//담당자들 리스트형식으로 추가
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return temp;
+	}
 }

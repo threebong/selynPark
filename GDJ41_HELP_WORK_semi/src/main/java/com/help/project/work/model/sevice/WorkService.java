@@ -10,6 +10,7 @@ import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
 import com.help.project.work.model.dao.WorkDao;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkDetailJoin;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 ////이새기 범인
 public class WorkService {
@@ -72,6 +73,12 @@ public class WorkService {
 		close(conn);
 
 		return result;
+	}
+
+
+	public WorkDetailJoin workDetailProject(int proNo, WorkDetailJoin temp) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*

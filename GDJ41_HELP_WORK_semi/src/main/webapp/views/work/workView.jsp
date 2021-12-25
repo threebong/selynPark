@@ -6,6 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
+
 <%
 //로그인한 아이디가 속한 프로젝트들 	
 List<Project> project = (List<Project>) request.getAttribute("logProject");
@@ -19,7 +20,12 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 .opSearch {
 	width: 500px;
 }
+.table tr{/* 글 목록 누르면 상세페이지 */
+	cursor: pointer;
+}
 </style>
+
+
 <main>
 	<div>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -123,39 +129,36 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 
 		<!--ajax로 테이블 변경할 구역-->
 		<div id="writeTable"></div>
+<!-- 나의 전체 업무 조회 -->
 
+
+
+<button class="btn btn-primary" type="button" id="AllWorkViewBtn" style="display:none;" data-bs-toggle="offcanvas" 
+data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">나의전체업무조회 상세화면</button>
+<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="AllWorkContentView" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header"> 
+ 	 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   		<span id="ProjectName_All_View" style="font-size: 18px; font-weight: bold;"></span>
+   		<span id="WorkNo_All_View"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+   		<h4 id="WorkTitle_All_View" style="margin-top: 20px;"></h4>
+   </div>
+   
+  <div class="offcanvas-body" id="contentBody">
+  		<div id="WorkWriter_All_View"></div>
+  		<div id="WorkManager_All_View"></div>
+  		<div><span id="StartDay_All_View"></span>
+  		<span id="EndDay_All_View"></span></div>
+  		<div><span id="Working_All_View"></span>
+  		<span id="WorkRank_All_View"></span></div>
+  		<div id="WorkContent_All_View"></div>
+  </div>
+</div>
 
 
 
 	</div>
-	
-<!-- 전체 업무 조회 -->
-<style>
-#AllWorkContentView{
-	cursor: pointer;
-}
-</style>
-
-
-<button class="btn btn-primary" type="button" id="AllWorkViewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#AllWorkContentView" aria-controls="offcanvasScrolling">Enable body scrolling</button>
-<div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="#AllWorkContentView" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header"> 
-  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
-   		<span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
-   		<span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-   		<h4 id="contentTitleView" style="margin-top: 20px;"></h4>
-   </div>
-  <div class="offcanvas-title" id="contentWriterView">
-  
-  </div>
-   
-  <div class="offcanvas-body" id="contentBody">
-  
-  </div>
-</div>
-
 
 	<script>
 	//All Work -->내 업무 (전체 조회)
@@ -176,7 +179,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					
 					let table=$("<table>");
 					let h4=$("<h4>").html("나의 업무");
-					let thead=$("<thead>");
 					let tr=$("<tr>");
 					let td=$("<th>").html("No");
 					let td8=$("<th>").html("프로젝트");
@@ -187,12 +189,14 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					let td4=$("<th>").html("작성자");
 					let td5=$("<th>").html("담당자");
 					let td6=$("<th>").html("등록일");
-					table.append(h4).append(thead).append(tr).append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
+					tr.append(td).append(td8).append(td9).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6);
 					
-					let tbody=$("<tbody>");
+					table.append(h4);
+					table.append(tr);
+					//let tbody=$("<tbody>");
 					for(let i=0;i<workList.length;i++){
 						let tr2=$("<tr scope='row' onclick='contentView(this);'>");//상세페이지하는중 
-						let proNo=$("<th>").html(workList[i]["projectNo"]);
+						let proNo=$("<td>").html(workList[i]["projectNo"]);
 						let proName=$("<td>").html(workList[i]["proName"]);
 						let workNo=$("<td>").html(workList[i]["workNo"]);
 						let working=$("<td>").html(workList[i]["workIng"]);
@@ -201,9 +205,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 						let memId=$("<td>").html(workList[i]["memberId"]);
 						let manaId=$("<td>").html(workList[i]["managerId"]);
 						let date=$("<td>").html(workList[i]["workDate"]);
-						let td7=$("<td>");
-					    tbody.append(tr2).append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date).append(td7);
-					    table.append(tbody);
+					    tr2.append(proNo).append(proName).append(workNo).append(working).append(rank).append(title).append(memId).append(manaId).append(date);
+					    table.append(tr2);
 					}
 					
 					const div=$("<div>").attr("id","pageBar").html(pageBar);
@@ -213,8 +216,10 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					
 					/*속성추가*/
 					$("table").addClass('table');
-					$("table thead th").attr('scope','col');
-					$("table tbody th").attr('scope','col');
+					$("th").attr("scope","col");
+					
+				//	$("table thead th").attr('scope','col');
+				//	$("table tbody th").attr('scope','col');
 				}
 			});//id값 보내
 	 		}
@@ -224,11 +229,64 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		////All Work -->내 업무 (전체 조회)-->글제목 누르면 상세화면 (오프캔버스)
  function contentView(e){
 		let val = $(e).children();//이벤트발생한곳의 자식들
-		let vals = v
+		let proNo = val.eq(0).text();//project No 가져와
+		let workNo= val.eq(2).text();//workNo 가져와
+		
+		$.ajax({
+			url:"<%=request.getContextPath()%>/project/SelectDetailWorkViewServlet.do",
+			type: "post",
+			data : {"proNo":proNo,"workNo":workNo },
+			dataType: "json",
+			success: data => {
+				let proName=data["proName"];
+				let proDate=data["proDate"];
+				let workTitle=data["workTitle"];
+				let workContent=data["workContent"];
+				let startDate=data["startDate"];
+				let endDate=data["endDate"];
+				let workIng=data["workIng"];
+				let workRank=data["workRank"];
+				let workName=data["workName"];
+				let workManager=data["workManager"];//배열임 
+				console.log(proName+proDate+workTitle+workContent+startDate+workIng+workRank+workName+workManager);
+				console.log(data["workManager"][0]);
+				
+		   		
+		   		
+				$("#ProjectName_All_View").html("["+data["proName"]+"]");//프로젝트 이름
+				$("#WorkNo_All_View").html("No."+data["workNo"]);//업무 번호
+				$("#WorkTitle_All_View").html(data["workTitle"]);//업무제목
+				$("#WorkWriter_All_View").html("[글쓴이]   "+data["workName"]);//업무작성자
+				$("#WorkManager_All_View").html("[담당자]    ");
+				for(let i=0;i<data["workManager"].length;i++){//업무담당자
+					let span=$("<span>");
+					span.html(data["workManager"][i]+" ");
+					$("#WorkManager_All_View").append(span);
+				}
+				$("#StartDay_All_View").html(data["startDate"]+" ~ ");//기간 시작
+				$("#EndDay_All_View").html(data["endDate"]);//기간마감
+				$("#Working_All_View").html(data["workIng"]);//업무 상태
+				$("#WorkRank_All_View").html(data["workRank"]);//업무우선순위
+				$("#WorkContent_All_View").html("<h5>"+data["workContent"]+"<h5>");//업무내용
+				
+				$("#AllWorkViewBtn").click();
+			}
+		});
 			
 			
 		}		 
-			
+		</script>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<script>	
 		//All Work --> 나의 업무 --> 검색1/2 
 		//본인 업무 조회 (조건 선택 )  --- 페이징 
 		function workMinePaging(cPage){//==>본인업무 조건 선택 : 페이징 완료 

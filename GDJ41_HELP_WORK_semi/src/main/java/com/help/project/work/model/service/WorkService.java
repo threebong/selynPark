@@ -10,6 +10,7 @@ import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
 import com.help.project.work.model.dao.WorkDao;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkDetailJoin;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 public class WorkService {
@@ -149,4 +150,39 @@ public class WorkService {
 		close(conn);
 		return result;
 	}
+	
+	//Work All < 상세화면 >=======================================
+	public WorkDetailJoin workDetailProject(int proNo,WorkDetailJoin temp) {
+		//1) 프로젝트 번호 : 해당 플젝 제목 
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailProject(conn,proNo,temp);
+		close(conn);
+		return result;
+	}
+	public WorkDetailJoin workDetailWork( int workNo, WorkDetailJoin temp) {
+		//2) 업무번호 : 업무 제목/내용/시작일/마감일/진행상태/우선순위
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailWork(conn,workNo,temp);
+		close(conn);
+		return result;
+	}
+	public WorkDetailJoin workDetailWriter(int workNo, WorkDetailJoin temp) {
+		//3) 업무 작성자: id -->이름 변경
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailWriter(conn,workNo,temp);
+		close(conn);
+		return result;
+	}
+	public WorkDetailJoin workDetailManager(int workNo, WorkDetailJoin temp) {
+		//4) 업무 담당자 : 여러명 O 
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailManager(conn,workNo,temp);
+		close(conn);
+		return result;
+	}
+	//======================================================================
+	
+	
+	
+	
 }
