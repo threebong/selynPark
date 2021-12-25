@@ -549,8 +549,8 @@ const fn_normalFileDownload=()=>{
 
 <!-- 업무게시글 작성 모달 -->
 
-
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertWork_modal" id="insertWork_">업무작성</button>
+<div class="modal fade" id="insertWork_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
