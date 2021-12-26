@@ -26,8 +26,8 @@ public class Member {
 	private String memberName;
 //	private String userName;
 	private String memberUseYn;
-	private String emailHash;
-	private boolean emailChecked;
+//	private String emailHash;
+//	private boolean emailChecked;
 	
 
 }

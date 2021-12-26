@@ -19,7 +19,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 /**
  * Servlet implementation class EnrollMemberEndServlet
  */
-@WebServlet(name="enrollMember", urlPatterns="/member/enrollMemberEnd.do")
+@WebServlet("/member/enrollMemberEnd.do")
 public class EnrollMemberEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -36,34 +36,34 @@ public class EnrollMemberEndServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-//		if(!ServletFileUpload.isMultipartContent(request)) {
-//			request.setAttribute("msg", "잘못된 요청입니다 관리자에게 문의하세요 HELP");
-//			request.setAttribute("loc", "/member/enrollMember.do");
-//			request.getRequestDispatcher("views/common/msg.jsp").forward(request, response);
-//			return;
-//		}
-//		
-//		String path=request.getServletContext().getRealPath("/upfile/member");
-//		int maxSize=1024*1024*20;
-//		String encode="UTF-8";
-//		
-//		MultipartRequest mr=new MultipartRequest(request,path,maxSize,encode,new DefaultFileRenamePolicy());
-//		
-//		Member m=Member.builder()
-//				.memberId(mr.getParameter("userId"))
-//				.memberPwd(mr.getParameter("password"))
-//				.memberName(mr.getParameter("userName"))
-//				.memberPhone(mr.getParameter("phone"))
-//				.memberProfile(mr.getFilesystemName("upProfile"))
-//				.build();
-//		
-//		int result=new MemberService().insertMember(m);
-//		if(result>0) {
-//			response.sendRedirect(request.getContextPath());
-//		}else {			
-//			request.getRequestDispatcher("/member/enrollMember.do").forward(request, response);
-//		}
-//	
+		if(!ServletFileUpload.isMultipartContent(request)) {
+			request.setAttribute("msg", "잘못된 요청입니다 관리자에게 문의하세요 HELP");
+			request.setAttribute("loc", "/member/enrollMember.do");
+			request.getRequestDispatcher("views/common/msg.jsp").forward(request, response);
+			return;
+		}
+		
+		String path=request.getServletContext().getRealPath("/upfile/member");
+		int maxSize=1024*1024*20;
+		String encode="UTF-8";
+		
+		MultipartRequest mr=new MultipartRequest(request,path,maxSize,encode,new DefaultFileRenamePolicy());
+		
+		Member m=Member.builder()
+				.memberId(mr.getParameter("userId"))
+				.memberPwd(mr.getParameter("password"))
+				.memberName(mr.getParameter("userName"))
+				.memberPhone(mr.getParameter("phone"))
+				.memberProfile(mr.getFilesystemName("upProfile"))
+				.build();
+		
+		int result=new MemberService().insertMember(m);
+		if(result>0) {
+			response.sendRedirect(request.getContextPath());
+		}else {			
+			request.getRequestDispatcher("/member/enrollMember.do").forward(request, response);
+		}
+	
 	}
 
 	/**

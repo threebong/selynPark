@@ -15,7 +15,7 @@ import com.help.member.model.vo.Member;
 /**
  * Servlet implementation class UpdatePasswordEndServlet
  */
-@WebServlet(name="updatePassword", urlPatterns="/member/updatePasswordEnd.do")
+@WebServlet("/member/updatePasswordEnd.do")
 public class UpdatePasswordEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

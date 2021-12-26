@@ -13,12 +13,12 @@ public class MemberService {
 	private MemberDao dao=new MemberDao();
 	
 	//로그인
-//	public Member login(String userId,String password) {
-//		Connection conn=getConnection();
-//		Member m=dao.login(conn,userId,password);
-//		close(conn);
-//		return m;
-//	}
+	public Member login(String userId,String password) {
+		Connection conn=getConnection();
+		Member m=dao.login(conn,userId,password);
+		close(conn);
+		return m;
+	}
 //	public int login(String userId,String password) {
 //		Connection conn=getConnection();
 //		int result=dao.login(conn,userId,password);
@@ -35,14 +35,14 @@ public class MemberService {
 	}
 	
 	//회원가입
-//	public int insertMember(Member m) {
-//		Connection conn=getConnection();
-//		int result=dao.insertMember(conn,m);
-//		if(result>0) commit(conn);
-//		else commit(conn);
-//		close(conn);
-//		return result;
-//	}
+	public int insertMember(Member m) {
+		Connection conn=getConnection();
+		int result=dao.insertMember(conn,m);
+		if(result>0) commit(conn);
+		else commit(conn);
+		close(conn);
+		return result;
+	}
 //	public int insertMember(Member m) {
 //		Connection conn=getConnection();
 //		int result=dao.insertMember(conn,m);

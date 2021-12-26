@@ -15,8 +15,8 @@
 <body>
 	<section id=enroll-container>
 		<h2>회원 가입 정보 입력</h2>
-<%--     	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
- --%>    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/views/member/memberEnrollAction.jsp" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
+     	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
+    	<%-- <form name="enrollMemberFrm" action="<%=request.getContextPath() %>/views/member/memberEnrollAction.jsp" method="post" enctype="multipart/form-data" onsubmit="return checks()" > --%>
     		<table class="table" style="margin-left: auto; margin-right: auto;">
 				<tr>
 					<th>아이디</th>

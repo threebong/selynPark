@@ -17,7 +17,7 @@ import com.help.member.model.vo.Member;
 /**
  * Servlet implementation class LoginMemberServlet
  */
-@WebServlet(name="login", urlPatterns="/member/memberLogin.do")
+@WebServlet("/member/memberLogin.do")
 public class LoginMemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -33,36 +33,35 @@ public class LoginMemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		//로그인		
-//		String userId=request.getParameter("userId");
-//		String password=request.getParameter("password");
-//		
-//		Member m=new MemberService().login(userId,password);
-//
-//		//아이디값 저장하기
-//		String saveId=request.getParameter("saveId");
-//		
-//		if(saveId!=null) {
-//			Cookie c=new Cookie("saveId",userId);
-//			c.setMaxAge(24*60*60*7);
-//			response.addCookie(c);
-//		}else {
-//			Cookie c=new Cookie("saveId",userId);
-//			c.setMaxAge(0);
-//			response.addCookie(c);			
-//		}
-//		System.out.println(userId);
-//		System.out.println(password);
-//		
-//		if(m!=null) {
-//			HttpSession session=request.getSession();
-//			session.setAttribute("loginMember", m);
-//			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
-//		}else {			
-//			JOptionPane.showMessageDialog(null, "로그인에 실패했습니다.");
-//			response.sendRedirect(request.getContextPath());
-//		}
-//		
+		//로그인		
+		String userId=request.getParameter("userId");
+		String password=request.getParameter("password");
+		
+		Member m=new MemberService().login(userId,password);
+
+		//아이디값 저장하기
+		String saveId=request.getParameter("saveId");
+		
+		if(saveId!=null) {
+			Cookie c=new Cookie("saveId",userId);
+			c.setMaxAge(24*60*60*7);
+			response.addCookie(c);
+		}else {
+			Cookie c=new Cookie("saveId",userId);
+			c.setMaxAge(0);
+			response.addCookie(c);			
+		}
+		System.out.println(userId);
+		System.out.println(password);
+		
+		if(m!=null) {
+			HttpSession session=request.getSession();
+			session.setAttribute("loginMember", m);
+			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
+		}else {			
+			response.sendRedirect(request.getContextPath());
+		}
+		
 			
 	
 	
