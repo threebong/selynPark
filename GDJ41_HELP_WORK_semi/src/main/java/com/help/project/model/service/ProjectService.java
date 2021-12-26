@@ -6,9 +6,11 @@ import com.help.project.model.vo.Project;
 import com.help.project.model.vo.ProjectAddMember;
 import com.help.project.model.vo.ProjectContent;
 import com.help.project.model.vo.ScheAttendName;
+import com.help.project.model.vo.WorkFile;
 import com.help.project.model.vo.WorkManagerName;
 import com.help.project.schedule.model.vo.ScheduleAttend;
 import com.help.project.work.model.vo.WorkManager;
+import com.help.project.model.vo.NormalFile;
 import com.help.project.model.vo.ProMemberJoinMember;
 
 import static com.help.common.JDBCTemplate.getConnection;
@@ -190,4 +192,79 @@ public class ProjectService {
 		return saList;
 	}
 
+	public List<ProjectContent> selectSearchProjectContent(int projectNo, int cPage, int numPerPage, String searchType,String keyword,String dist) {
+		
+		Connection conn = getConnection();
+		List <ProjectContent> pList = dao.selectSearchProjectContent(conn,projectNo,cPage,numPerPage,searchType,keyword,dist);
+		close(conn);
+		
+		return pList;
+	}
+
+	public int selectSearchProjectContentCount(int projectNo,String searchType,String keyword,String dist) {
+		Connection conn = getConnection();
+		int result = dao.selectSearchProjectContentCount(conn,projectNo,searchType,keyword,dist);
+		close(conn);
+		return result;
+	}
+
+	public List<NormalFile> selectNormalFile(int contentNo, String dist) {
+		//일반 게시글 파일명 가져오기
+		Connection conn = getConnection();
+		List<NormalFile> mFile = dao.selectNormalFile(conn,contentNo,dist);
+		close(conn);
+		return mFile;
+	}
+
+	public List<WorkFile> selectWorklFile(int contentNo, String dist) {
+		//업무 게시글 파일명 가져오기
+			Connection conn = getConnection();
+			List<WorkFile> wFile = dao.selectWorklFile(conn,contentNo,dist);
+			close(conn);
+			return wFile;
+	}
+
+	public int deleteNormalContent(int normalContentNo) {
+		// 일반 게시글 삭제
+		Connection conn = getConnection();
+		int result = dao.deleteNormalContent(conn,normalContentNo);
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
+		return result;
+	}
+
+	public int deleteWorkContent(int workContentNo) {
+		// 업무 게시글 삭제
+				Connection conn = getConnection();
+				int result = dao.deleteWorkContent(conn,workContentNo);
+				if (result > 0) {
+					commit(conn);
+				} else {
+					rollback(conn);
+				}
+				close(conn);
+				
+				return result;
+	}
+
+	public int deleteScheContent(int scheContentNo) {
+		// 일정 게시글 삭제
+		Connection conn = getConnection();
+		int result = dao.deleteScheContent(conn,scheContentNo);
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
+		return result;
+	}
+
+	
 }

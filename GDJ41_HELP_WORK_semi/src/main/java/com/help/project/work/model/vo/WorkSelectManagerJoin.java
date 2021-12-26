@@ -22,5 +22,7 @@ public class WorkSelectManagerJoin {
 	private String memberId;//작성자
 	private String managerId;//담당자
 	private String workDate;//작성일
+	
+	
 }
 	//근데이렇게 조인테이블마다 vo다 만들면 vo를 분리해서 만드는 이유가 있나...

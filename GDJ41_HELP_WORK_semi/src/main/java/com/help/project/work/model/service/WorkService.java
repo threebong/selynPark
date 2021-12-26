@@ -10,6 +10,7 @@ import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
 import com.help.project.work.model.dao.WorkDao;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkDetailJoin;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
 public class WorkService {
@@ -30,6 +31,14 @@ public class WorkService {
 		return works;
 		
 	}
+	public List<WorkSelectManagerJoin> selectWorkMine(List<Project> pro,String logId,int cPage,int numPerPage){
+		//내가 담당자인 업무들 조회----페이징 
+		Connection conn=getConnection();
+		List<WorkSelectManagerJoin> works=dao.selectWorkMine(conn,pro,logId,cPage,numPerPage);
+		close(conn);
+		return works;
+		
+	}
 	
 	public List<WorkSelectManagerJoin> searchMine(String ing,String prior,String h4,String logId,int cPage,int numPerPage){
 		//다중 검색--내가 담당자인 업무들//페이징
@@ -41,8 +50,7 @@ public class WorkService {
 			 System.out.println("서비스"+result);
 		}else if(h4.equals("전체업무")) {
 			//해야함
-			List<Integer> proNum=dao.selectProjectNo(conn, logId);
-			 result=dao.searchAll(conn,ing,prior,proNum,cPage,numPerPage);
+			 result=dao.searchAll(conn,ing,prior,logId,cPage,numPerPage);
 			 System.out.println("서비스"+result);
 			
 		}
@@ -134,11 +142,46 @@ public class WorkService {
 		close(conn);
 		return result;
 	}
-	public List<WorkSelectManagerJoin> selectWorkAll(List<Integer> proNum,int cPage,int numPerPage){
+	public List<WorkSelectManagerJoin> selectWorkAll(String id,int cPage,int numPerPage){
 		//내가 참여한 프로젝트의 모든 업무들 ---페이징처리 
 		Connection conn=getConnection();
-		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,proNum,cPage,numPerPage);
+		List<WorkSelectManagerJoin> result=dao.selectWorkAll(conn,id,cPage,numPerPage);
 		close(conn);
 		return result;
 	}
+	
+	//Work All < 상세화면 >=======================================
+	public WorkDetailJoin workDetailProject(int proNo,WorkDetailJoin temp) {
+		//1) 프로젝트 번호 : 해당 플젝 제목 
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailProject(conn,proNo,temp);
+		close(conn);
+		return result;
+	}
+	public WorkDetailJoin workDetailWork( int workNo, WorkDetailJoin temp) {
+		//2) 업무번호 : 업무 제목/내용/시작일/마감일/진행상태/우선순위
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailWork(conn,workNo,temp);
+		close(conn);
+		return result;
+	}
+	public WorkDetailJoin workDetailWriter(int workNo, WorkDetailJoin temp) {
+		//3) 업무 작성자: id -->이름 변경
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailWriter(conn,workNo,temp);
+		close(conn);
+		return result;
+	}
+	public WorkDetailJoin workDetailManager(int workNo, WorkDetailJoin temp) {
+		//4) 업무 담당자 : 여러명 O 
+		Connection conn=getConnection();
+		WorkDetailJoin result=dao.workDetailManager(conn,workNo,temp);
+		close(conn);
+		return result;
+	}
+	//======================================================================
+	
+	
+	
+	
 }

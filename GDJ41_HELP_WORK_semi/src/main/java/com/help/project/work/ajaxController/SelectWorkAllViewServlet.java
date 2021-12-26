@@ -41,7 +41,6 @@ public class SelectWorkAllViewServlet extends HttpServlet {
 		
 		List<WorkSelectManagerJoin> result=new WorkService().selectWorkAll(proNum);//해당프로젝트의 모든 업무(담당자제외)
 		int totalData=result.size();//전체 data개수 
-		System.out.println(totalData);
 		//페이징 처리
 		int cPage;
 		try {
@@ -54,7 +53,7 @@ public class SelectWorkAllViewServlet extends HttpServlet {
 		 * try { numPerPage=Integer.parseInt(request.getParameter("numPerPage"));
 		 * }catch(NumberFormatException e) { numPerPage=10; }
 		 */
-		List<WorkSelectManagerJoin> resultPg=new WorkService().selectWorkAll(proNum,cPage,numPerPage);//페이징결과
+		List<WorkSelectManagerJoin> resultPg=new WorkService().selectWorkAll(id,cPage,numPerPage);//페이징결과
 		
 		int totalPage=(int)Math.ceil((double)totalData/numPerPage);
 		int pageBarSize=5;

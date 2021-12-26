@@ -55,7 +55,6 @@ public class LoginMemberServlet extends HttpServlet {
 		if(m!=null) {
 			HttpSession session=request.getSession();
 			session.setAttribute("loginMember", m);
-			JOptionPane.showMessageDialog(null, "접속을 환영합니다.");
 			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
 		}else {			
 			JOptionPane.showMessageDialog(null, "로그인에 실패했습니다.");
