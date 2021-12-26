@@ -132,7 +132,7 @@ public class ProjectDao {
 		return result;
 	}
 
-	public Project selectProjectNewinsert(Connection conn) {
+	public Project selectProjectNewinsert(Connection conn,String memberId) {
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -141,6 +141,7 @@ public class ProjectDao {
 
 		try {
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);	
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				p = Project.builder().projectNo(rs.getInt("PROJECT_NO")).memberId(rs.getString("MEMBER_ID"))

@@ -16,16 +16,14 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 %>
 <style>
 #wrapper-Project {
-	width: 90%;
-	margin: 30px 30px;
-	border: 1px solid red;
+	width: 100%;
+	padding : 30px;
 	display: grid;
 }
 
 #project_favor, .project_ing {
-	width: 90%;
+	width: 100%;
 	margin: 30px 30px;
-	border: 1px solid blue;
 }
 
 .input-group {
@@ -37,19 +35,26 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 	height: 20%;
 	background-color: yellow;
 	float: left;
-	border: 1px solid black;
 	margin: 10px 10px;
 }
 
 .project_content_ing {
 	width: 200px;
 	height: 200px;
-	background-color: #87CEEB;
+	background-color: rgba(255, 204, 0, 0.404);
 	float: left;
-	border: 1px solid black;
 	margin: 10px 10px;
+	border-radius: 30px;
+	padding: 15px;
+	overflow: hidden;
+	
 }
+.search_Project{
+	margin-left: 30px;
+}
+
 </style>
+
 
 
 <main>
@@ -84,8 +89,8 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 				<div class="project_content_ing" style="cursor:pointer;"
 				onclick="location.assign('<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=<%=p.getProjectNo() %>')">
 					<h4><%=p.getProjectNo() %></h4>
-					<h4><%=p.getProName() %></h4>
-					<h6><%=p.getProExplain() %></h6>
+					<h5><%=p.getProName() %></h5>
+					<div><%=p.getProExplain() %></div>
 					<p>작성자: <%=p.getMemberId() %></p>
 					
 					

@@ -60,11 +60,11 @@ public class ProjectService {
 
 	
 
-	public Project selectProjectNewinsert() {
+	public Project selectProjectNewinsert(String memberId) {
 
 		Connection conn = getConnection();
 
-		Project pinfo = dao.selectProjectNewinsert(conn);
+		Project pinfo = dao.selectProjectNewinsert(conn,memberId);
 
 		close(conn);
 

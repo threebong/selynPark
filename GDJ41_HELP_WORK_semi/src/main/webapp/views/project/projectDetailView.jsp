@@ -774,9 +774,6 @@ function deleteScheComment(e){
                      $("#fileNameList_update").append(h5)
                      $("#fileReNameList_update").append(h6);
                   }
-                  
-                  
-                  
             }
          }
       });
@@ -1396,7 +1393,6 @@ $("#sche_place_btn").click(e=>{
 <div id="menu-container">
    <ul class="nav">
       <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">업무</a></li>
       <li class="nav-item"><a class="nav-link" href="#">파일</a></li>
    </ul>
 </div>
