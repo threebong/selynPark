@@ -1,4 +1,4 @@
-package com.help.project.file.controller;
+package com.help.project.file.ajaxController;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,21 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.help.project.model.service.ProjectService;
-import com.help.project.model.vo.ProMemberJoinMember;
-import com.help.project.model.vo.Project;
+import com.google.gson.Gson;
+import com.help.project.file.model.service.FileInProjectService;
+import com.help.project.file.model.vo.FileInProject;
 
 /**
- * Servlet implementation class FileInProjectServlet
+ * Servlet implementation class SelectNormalFileInProjectServlet
  */
-@WebServlet("/project/FileInProjectServlet.do")
-public class FileInProjectServlet extends HttpServlet {
+@WebServlet("/project/SelectWorkFileInProjectServlet.do")
+public class SelectWorkFileInProjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FileInProjectServlet() {
+    public SelectWorkFileInProjectServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,20 +31,19 @@ public class FileInProjectServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+ //업무 파일 키워드로 찾기 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//Project Detail View .jsp-> 파일을 누를때의 화면 전환 
-		int projectNo=Integer.parseInt(request.getParameter("projectNo"));//해당 프로젝트 번
+		// TODO Auto-generated method stub
+		int proNo=Integer.parseInt(request.getParameter("proNo"));
+		String text=request.getParameter("text").trim().replace(" ", "");
 		
-		Project pinfo = new ProjectService().selectProjectOne(projectNo);
+		//업무 파일 키워드로 검색해오기 
+		List<FileInProject> result=new FileInProjectService().SelectWorkKeyFile(proNo,text);
 		
-		//해당 프로젝트에 참여중인 사원 리스트
-		List<ProMemberJoinMember> mList = new ProjectService().selectProjectJoinMemberList(projectNo);
+		
+		response.setContentType("application/json; charset=utf-8");
+		new Gson().toJson(result,response.getWriter());
 	
-		
-		request.setAttribute("ProMemberJoinMember", mList);
-		
-		request.setAttribute("projectInfo", pinfo);
-		request.getRequestDispatcher("/views/project/FileView.jsp").forward(request, response);
 	}
 
 	/**

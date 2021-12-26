@@ -23,4 +23,16 @@ public class FileInProjectService {
 		close(conn);
 		return result;
 	}
+	public List<FileInProject> SelectWorkKeyFile(int proNo,String text){//업무파일명 키워드 검색
+		Connection conn=getConnection();
+		List<FileInProject> result=dao.SelectWorkKeyFile(conn,proNo,text);
+		close(conn);
+		return result;
+	}
+	public List<FileInProject> SelectNormalKeyFile(int proNo,String text){//일반 파일명 키워드 검색
+		Connection conn=getConnection();
+		List<FileInProject> result=dao.SelectNormalKeyFile(conn,proNo,text);
+		close(conn);
+		return result;
+	}
 }

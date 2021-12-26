@@ -56,21 +56,22 @@
 <!-- 	   파일 검색  -->
 	   <div class="input-group mb-3"  style="width: 400px;">
             <div>
-               <select class="form-select" aria-label="Default select example" style="width: 140px;" id="searchConSelect">
-               	  <option selected>찾아보기</option>
-                  <option value="MEMBER_NAME">파일 이름</option>
-                  <option value="CONTENT_TITLE">확장자</option>
+               <select class="form-select" aria-label="Default select example" style="width: 140px;" id="searchFileForWhat">
+                  <option value="fileName" selected>파일 이름</option>
+                  <option value="fileExt">확장자</option>
                </select>
             </div>        
-            <input type="text" class="form-control" placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchConKeyword">
-            <button class="btn btn-outline-success" type="button" id="searchConBtn">검색</button>
+            <input type="text" class="form-control" id="FileSearchText"placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchConKeyword">
+            <button class="btn btn-outline-success" type="button" id="searchFile">검색</button>
       </div>
       
 	   <!-- 파일출력공간 -->
 	   <div id="fileList">
-	   		<div id="workFileList"></div>
-	   		<div id="normalFileList"></div>
+	   		<div id="AllFileList"></div>
+	   		<!-- 검색결과출력 -->
+	   		<div id="SearchResult"></div>
 	   </div>
+	   
    </div>
 
 
@@ -78,96 +79,151 @@
    
    
 <script>
-$(()=>{//로드되자마자 실행 
-	alert("실행되니?");
-	let proNo=<%=p.getProjectNo()%>;//프로젝트번호 
-	console.log("누르신 프로젝트 번호는:"+proNo);
-	//업무 파일
-			let table=$("<table>");
-			let tr=$("<tr>");
-			let th=$("<th>").html("제목");
-			let th1=$("<th>").html("파일 이름");
-			tr.append(th).append(th1);
-			table.append(tr);
-	$.ajax({
-		url: "<%=request.getContextPath()%>/project/WorkFileInProjectEndServlet.do",
-		type: "post",
-		data : {"proNo":proNo},
-		success : data =>{
-			alert("석세스 안이야");
-			console.log(data);
-			
-			
-			for(let i=0;i<data.length;i++){
-				let tr2=$("<tr >");
-				let title=$("<td>").html(data[i]["contentTitle"]);
-				let oriFileName=$("<td onclick='WorkfileDownload(this);'>").html(data[i]["workOriFileName"])
-				//let reFileName=$("<input type='hidden' id='rename' name='rename' value=''>").attr('value',data[i]["workReFileName"]);
-				let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
-				tr2.append(title).append(oriFileName).append(reFileName);
-				table.append(tr2);
-			}
-			//$("#workFileList").html(table);
-		}
-	});
-	//일반 파일
-	$.ajax({
-		url: "<%=request.getContextPath()%>/project/NormalFileInProjectEndServlet.do",
-		type: "post",
-		data : {"proNo":proNo},
-		success : data =>{
-			alert("석세스 안이야");
-			console.log(data);
-			
-		/* 	let table=$("<table>");
-			let tr=$("<tr>");
-			let th=$("<th>").html("제목");
-			let th1=$("<th>").html("파일 이름");
-			tr.append(th).append(th1);
-			table.append(tr); */
-			
-			for(let i=0;i<data.length;i++){
-				let tr2=$("<tr >");
-				let title=$("<td>").html(data[i]["contentTitle"]);
-				let oriFileName=$("<td onclick='NormalfileDownload(this);'>").html(data[i]["workOriFileName"])
-				//let reFileName=$("<input type='hidden' id='rename' name='rename' value=''>").attr('value',data[i]["workReFileName"]);
-				let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
-				tr2.append(title).append(oriFileName).append(reFileName);
-				table.append(tr2);
-			}
-			$("#workFileList").html(table);
-		}
-	});
+	$(()=>{//로드되자마자 실행 
+		$("#SearchResult").hide();//검색결과출력하는거 기본으로 숨김처리
 	
-});
-
-function WorkfileDownload(e){//업무파일다운
-	alert("업무파일다운실행이야")
-	let oriFileName=$(e).text();
-	let reFileName=$(e).next().text();
-	
-	console.log(oriFileName);
-	console.log(reFileName);
+		let proNo=<%=p.getProjectNo()%>;//프로젝트번호 
+		//테이블만들자 
+		let table=$("<table class='table'>");
+		let tr=$("<tr>");
+		let th=$("<th>").html("게시글 제목");
+		let th1=$("<th>").html("첨부된 파일");
+		tr.append(th).append(th1);
+		table.append(tr);
+		//업무 파일 불러오기
+		$.ajax({
+			url: "<%=request.getContextPath()%>/project/WorkFileInProjectEndServlet.do",
+			type: "post",
+			data : {"proNo":proNo},
+			success : data =>{
+				//위의 테이블에 이어붙일거란다 
+				for(let i=0;i<data.length;i++){
+					let tr2=$("<tr >");
+					let title=$("<td>").html(data[i]["contentTitle"]);
+					let oriFileName=$("<td onclick='WorkfileDownload(this);' style='cursor:pointer;'>").html(data[i]["workOriFileName"])
+					let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
+					tr2.append(title).append(oriFileName).append(reFileName);
+					table.append(tr2);
+				}
+			}
+		});
+		//일반 파일 불러오기
+		$.ajax({
+			url: "<%=request.getContextPath()%>/project/NormalFileInProjectEndServlet.do",
+			type: "post",
+			data : {"proNo":proNo},
+			success : data =>{
+				//위의 업무파일에 이어붙일거란다 
+				for(let i=0;i<data.length;i++){
+					let tr2=$("<tr >");
+					let title=$("<td>").html(data[i]["contentTitle"]);
+					let oriFileName=$("<td onclick='NormalfileDownload(this);' style='cursor:pointer;'>").html(data[i]["workOriFileName"])
+					let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
+					tr2.append(title).append(oriFileName).append(reFileName);
+					table.append(tr2);
+				}
+				$("#AllFileList").html(table);//이걸써줘야 써지겠지
+			}
+		});
 		
+	});
+	
+	//검색하기 기능
+	$("#searchFile").click(e=>{
+		alert("검색눌렀다~준비중입니다")
+		searchFile();
+	});
+	
+	//검색하기 기능
+	function searchFile(){
+		//기존테이블 지워줘 
+		$("#AllFileList").hide();
+		$("#SearchResult").show();
+		let proNo=<%=p.getProjectNo()%>;//프로젝트번호 
+		//테이블
+		let table=$("<table class='table'>");
+		let tr=$("<tr>");
+		let th=$("<th>").html("게시글 제목");
+		let th1=$("<th>").html("첨부된 파일");
+		tr.append(th).append(th1);
+		table.append(tr);
+		
+		alert("함수실행된다");
+
+		let searchWhat= $("#searchFileForWhat option:selected").val();//파일이름인지,확장자인지
+		let text=$("#FileSearchText").val();//입력한 글자
+		let choName1="fileName";
+		//let choName2="fileExt";
+		console.log(searchWhat);
+		console.log(text);
+		if(searchWhat==choName1){
+			alert("파일이름으로 찾으세용")
+			$.ajax({//업무파일검색
+				url: "<%=request.getContextPath()%>/project/SelectWorkFileInProjectServlet.do",
+				type: "post",
+				data : {"proNo":proNo, "text":text},
+				success : data =>{
+					//위의 테이블에 이어붙임
+					for(let i=0;i<data.length;i++){
+						let tr2=$("<tr >");
+						let title=$("<td>").html(data[i]["contentTitle"]);
+						let oriFileName=$("<td onclick='WorkfileDownload(this);' style='cursor:pointer;'>").html(data[i]["workOriFileName"])
+						let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
+						tr2.append(title).append(oriFileName).append(reFileName);
+						table.append(tr2);
+					}
+					$("#SearchResult").html(table);//이걸써줘야 써지겠지
+				}
+			});
+			
+			$.ajax({//일반 파일 검색 
+				url: "<%=request.getContextPath()%>/project/SelectNormalFileInProjectServlet.do",
+				type: "post",
+				data : {"proNo":proNo,"text":text},
+				success : data =>{
+					//위의 업무파일에 이어붙일거란다 
+					for(let i=0;i<data.length;i++){
+						let tr2=$("<tr >");
+						let title=$("<td>").html(data[i]["contentTitle"]);
+						let oriFileName=$("<td onclick='NormalfileDownload(this);' style='cursor:pointer;'>").html(data[i]["workOriFileName"])
+						let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
+						tr2.append(title).append(oriFileName).append(reFileName);
+						table.append(tr2);
+					}
+					$("#SearchResult").html(table);//이걸써줘야 써지겠지
+				}
+			});
+			
+		}else{
+			alert("확장자ㅗㄹ 찾으세용")
+		}
+	}
+	
+
+	function WorkfileDownload(e){//업무파일다운
+		alert("업무파일다운실행이야")
+		let oriFileName=$(e).text();
+		let reFileName=$(e).next().text();
+		
+		//workFIleDownServlet으로보내
 		const url = "<%=request.getContextPath()%>/project/workfileDownload.do";
 	    const encode = encodeURIComponent(oriFileName);
 	    location.assign(url+"?workOriFileName="+encode+"&&workReFileName="+reFileName);
-	    
-		
-}
-function NormalfileDownload(e){//일반파일다운
-	alert("일반파일다운실행이야")
-	let oriFileName=$(e).text();
-	let reFileName=$(e).next().text();
+	}
 	
-	console.log(oriFileName);
-	console.log(reFileName);
+	function NormalfileDownload(e){//일반파일다운
+		alert("일반파일다운실행이야")
+		let oriFileName=$(e).text();
+		let reFileName=$(e).next().text();
 		
-	    
-	const url = "<%=request.getContextPath()%>/project/normalfileDownload.do";
-    const encode = encodeURIComponent(oriFileName);
-    location.assign(url+"?normalOriFileName="+encode+"&&normalReFileName="+reFileName); 
-}
+		const url = "<%=request.getContextPath()%>/project/normalfileDownload.do";
+	    const encode = encodeURIComponent(oriFileName);
+	    location.assign(url+"?normalOriFileName="+encode+"&&normalReFileName="+reFileName); 
+	}
+	
+			
+			
+			
 </script>
 
 
