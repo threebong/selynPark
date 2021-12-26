@@ -54,7 +54,6 @@ public class InsertWorkContentServlet extends HttpServlet {
 		String workStart = mr.getParameter("workStart");
 		String workEnd = mr.getParameter("workEnd");
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Date workStartDate = Date.valueOf(workStart);
 		Date workEndDate =Date.valueOf(workEnd);

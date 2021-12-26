@@ -8,8 +8,10 @@ import java.util.Map;
 
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
+import com.help.project.normal.model.vo.NormalComment;
 import com.help.project.work.model.dao.WorkDao;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkComment;
 import com.help.project.work.model.vo.WorkDetailJoin;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
@@ -180,6 +182,50 @@ public class WorkService {
 		return result;
 	}
 	//======================================================================
+	public int updateWorkContent(Work w,int contentNo) {
+		// 업무게시글 수정
+		Connection conn=getConnection();
+		int result = dao.updateWorkContent(conn,w,contentNo);
+		close(conn);
+
+		return result ;
+	}
+	
+	public void insertWorkComment(WorkComment wc) {
+		
+		//업무 댓글 추가
+		Connection conn = getConnection();
+
+		int result = dao.insertWorkComment(conn,wc);
+
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+	}
+	public List<WorkComment> selectWorkComment(int contentNo) {
+		Connection conn = getConnection();
+		
+		List<WorkComment> wcList = dao.selectWorkComment(conn,contentNo);
+		
+		close(conn);
+		
+		return wcList;
+	}
+	public void deleteWorkComment(int contentNo) {
+		Connection conn = getConnection();
+		int result = dao.deleteWorkComment(conn,contentNo);
+		
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
+	}
 	
 	
 	

@@ -1,12 +1,12 @@
 package com.help.project.ajaxController;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +18,7 @@ import com.help.project.model.vo.ProjectContent;
 import com.help.project.model.vo.ScheAttendName;
 import com.help.project.model.vo.WorkFile;
 import com.help.project.model.vo.WorkManagerName;
+import com.help.project.normal.model.service.NormalService;
 
 /**
  * Servlet implementation class SelectContentViewServlet
@@ -42,8 +43,32 @@ public class SelectContentViewServlet extends HttpServlet {
 		String dist = request.getParameter("dist");
 		int contentNo =Integer.parseInt(request.getParameter("contentNo"));
 		
-		ProjectContent pc = new ProjectService().selectContentOne(dist,contentNo);
+		Cookie[] cookies = request.getCookies();
+		boolean isRead = false;
+		String readContentNo ="";
 		
+		if (cookies != null) {
+			for (Cookie c : cookies) {
+				String name = c.getName();
+				String value = c.getValue(); // 게시글번호 저장
+				if (name.equals("readContentNo")) {// 조회한 게시물이 있다.
+					readContentNo = value; //조회했던 게시물 저장하기
+					if (value.contains("|"+ contentNo+"|")) {
+						isRead = true;
+						break;
+					}
+				}
+			}
+		} 
+
+		if(!isRead) {
+			//이 게시글을 읽지 않았다면
+			Cookie c = new Cookie("readContentNo",readContentNo+"|"+contentNo+"|");
+			c.setMaxAge(24*60*60); //1일동안 유지
+			response.addCookie(c);
+		}
+		
+		ProjectContent pc = new ProjectService().selectContentOne(dist,contentNo,isRead);
 		
 		response.setContentType("application/json; charset=utf-8");
 		

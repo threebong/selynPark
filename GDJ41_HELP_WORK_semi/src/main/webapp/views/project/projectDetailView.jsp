@@ -175,12 +175,13 @@ function contentView(e){
          const mfile = data["mFile"];
          const pc = data["pc"];
          const memberNameList = data["memberNameList"];
-         console.log(pc);
+        
          switch(dist){
             case '게시글' : 
                
                $("#writerName").html(pc["memberName"]);
                $("#writeDate").html(pc["writeDate"]);
+               $("#normalReadCount").html(pc["readCount"]);
                $("#contentTitleView").html(pc["contentTitle"]);
                $("#contentBody").html(pc["content"]);
                $("#normalContentNo").html(pc["contentNo"]);
@@ -190,11 +191,12 @@ function contentView(e){
                for(let i =0;i<mfile.length;i++){
                   const h5 =$("<h5>");
                   const h6 = $("<h6>");
-                  h5.html("<a href='javascript:fn_normalFileDownload();'>"+mfile[i]["normalOriFileName"]+"</a>");
+                  h5.html("<a href=\"javascript:fn_normalFileDownload(\'"+mfile[i]['normalOriFileName']+"\',\'"+mfile[i]['normalReFileName']+"\');\">"+mfile[i]['normalOriFileName']+"</a>");
                   h6.html(mfile[i]["normalReFileName"]);
                   $("#normalOriFileName").append(h5)
                   $("#normalReFileName").append(h6);
                }
+               normalCommentView();
                $("#viewBtn").click();
                
             break;
@@ -203,7 +205,7 @@ function contentView(e){
                   $("#workWriterName").html(pc["memberName"]);
                      $("#workWriteDate").html(pc["writeDate"]);
                      $("#workContentTitleView").html(pc["contentTitle"]);
-                     
+                     $("#workReadCount").html(pc["readCount"]);
                      $("#workIngView").html(pc["workIng"]);
                      
                      $("#workManager").children().remove();
@@ -225,13 +227,13 @@ function contentView(e){
                   for(let i =0;i<mfile.length;i++){
                      const h5 =$("<h5>");
                      const h6 = $("<h6>");
-                     h5.html("<a href='javascript:fn_workFileDownload();'>"+mfile[i]["workOriFileName"]+"</a>");
+                     h5.html("<a href=\"javascript:fn_workFileDownload(\'"+mfile[i]['workOriFileName']+"\',\'"+mfile[i]['workReFileName']+"\');\">"+mfile[i]['workOriFileName']+"</a>");
                      h6.html(mfile[i]["workReFileName"]);
                      $("#workOriFileName").append(h5)
                      $("#workReFileName").append(h6);
                   }
 
-               
+               workCommentView();
                $("#workViewBtn").click();
             break;
             case '일정' : 
@@ -239,6 +241,7 @@ function contentView(e){
                 $("#scheWriterName").html(pc["memberName"]);
                      $("#scheWriteDate").html(pc["writeDate"]);
                      $("#scheContentTitleView").html(pc["contentTitle"]);
+                     $("#scheReadCount").html(pc["readCount"]);
                      $("#scheContentNo").html(pc["contentNo"]);
                      $("#schedist").html(pc["dist"]);
                      
@@ -254,6 +257,7 @@ function contentView(e){
                      $("#schePlaceName").html(pc["placeName"]);
                      $("#schePlaceAddr").html(pc["address"]);
                      $("#scheContent_view").html(pc["content"]);
+                     scheCommentView();
                      $("#scheViewBtn").click();
             break;
          }
@@ -261,20 +265,15 @@ function contentView(e){
    });
 }
 
-const fn_workFileDownload=()=>{
-   let workOriFileName = $("#workOriFileName").text(); 
-   let workReFileName = $("#workReFileName").text();
+const fn_workFileDownload=(workOriFileName,workReFileName)=>{
    
     const url = "<%=request.getContextPath()%>/project/workfileDownload.do";
     const encode = encodeURIComponent(workOriFileName);
     location.assign(url+"?workOriFileName="+encode+"&&workReFileName="+workReFileName);
 }
 
-const fn_normalFileDownload=()=>{
-   
-   let normalOriFileName = $("#normalOriFileName").text(); 
-   let normalReFileName = $("#normalReFileName").text();
-   
+const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
+
     const url = "<%=request.getContextPath()%>/project/normalfileDownload.do";
     const encode = encodeURIComponent(normalOriFileName);
     location.assign(url+"?normalOriFileName="+encode+"&&normalReFileName="+normalReFileName);
@@ -301,21 +300,109 @@ const fn_normalFileDownload=()=>{
          <span id="normalContentDist" style="display:none;"></span>
          <span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
          <span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+         <span id="normalReadCount"></span>
          <h4 id="contentTitleView" style="margin-top: 20px;"></h4>
-   </div>   
+          <div class="updateBtnContainer" style="display:none;">
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal_update" id="normal_update_btn">수정</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
+    </div> 
+   </div>
+  
   <div class="offcanvas-body" id="contentBody"></div>
-  <hr>
-  <div class="offcanvas-body" id="contentfooter">
+  <div class="offcanvas-body" id="contentfooter" style="border-top: 1px solid lightgray;">
      <div id="normalFileContainer">
         <div id="normalOriFileName"></div>
         <div id="normalReFileName" style="display: none;"></div>
      </div>
-     <div class="updateBtnContainer" style="display:none;">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#normal_update" id="normal_update_btn">수정</button>
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
+     <!-- 댓글 입력 -->
+     <div id="normalCommentContainer">
+     	<div class="comment_editor">
+     		<textarea rows="1" cols="60" style="resize:none;" id="normal_comment"></textarea>
+     		<button type="button" id="normal_comment_submit" class="btn btn-outline-secondary">등록</button>
+     	</div>
+     </div>
+     <!-- 댓글 출력 -->
+     <div id="normalCommentOutputContainer">
+     	
      </div>
   </div>
 </div>
+
+<script>
+//댓글 입력
+	$("#normal_comment_submit").click(e=>{
+		let commentContent = $("#normal_comment").val();
+		let contentNo = $("#normalContentNo").text();
+		let writerId = "<%=loginMember.getMemberId()%>";
+		
+		$.ajax({
+			
+			url:"<%=request.getContextPath()%>/project/normal/insertNormalComment.do",
+			type:"post",
+			data:{
+				commentContent:commentContent,
+				contentNo:contentNo,
+				writerId:writerId
+			},
+			
+			success:data=>{
+				normalCommentView();
+				 $("#normal_comment").val("");
+			}
+		});
+	});
+//댓글 출력
+	function normalCommentView(){
+	
+		let loginMember ="<%=loginMember.getMemberId()%>";
+		let projectCreator = "<%=p.getMemberId()%>";
+				   
+		let contentNo = $("#normalContentNo").text();
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/project/normal/selectNormalComment.do",
+			type:"post",
+			dataType:"json",
+			data:{contentNo:contentNo},
+			success:data=>{
+				$("#normalCommentOutputContainer").html("");
+				for(let i=0;i<data.length;i++){
+					const normalCommentNo = $("<div class='normalCommentNo' style='display:none;'>").text(data[i]["normalCommentNo"]);
+					const normalCommentContent = $("<div class='normalCommentContent' style='display: inline-block;'>").text(data[i]["normalCommentContent"]);
+					const normalCommentWriterName = $("<div class ='normalCommentWriterName' style='display: inline-block;'>").text(data[i]["writerName"]);
+					const normalCommentDate = $("<div class='normalCommentDate' style='display: inline-block;'>").text(data[i]["commentDate"]);	
+					const normalCommentOutput = $("<div class='normalCommentOutput'>");
+					const normalCommentWriterId = $("<div class='normalCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
+					normalCommentOutput.append(normalCommentContent).append(normalCommentWriterName).append(normalCommentDate).append(normalCommentNo).append(normalCommentWriterId)
+					if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
+						const deletBtn = $("<button class='btn btn-outline-secondary' onclick='deleteNormalComment(this);'>삭제</button>");
+						normalCommentOutput.append(deletBtn);
+					}
+					$("#normalCommentOutputContainer").append(normalCommentOutput);	
+					
+				}
+			}	
+		});
+	}
+	
+	//댓글 삭제
+	function deleteNormalComment(e){
+		
+		let normalCommentNo = $(e).parent().children().eq(3).text();
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/project/normal/deleteNormalComment.do",
+			type:"post",
+			data:{normalCommentNo:normalCommentNo},
+			success:data =>{
+				normalCommentView();
+			}
+			
+		});
+		
+	}
+	
+</script>
 
 <!-- 업무 게시글 상세화면 -->
 
@@ -328,6 +415,7 @@ const fn_normalFileDownload=()=>{
          
          <span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
          <span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+         <span id="workReadCount"></span>
          <h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
    </div>
   <div class="offcanvas-body" id="contentBody">
@@ -346,11 +434,95 @@ const fn_normalFileDownload=()=>{
         <div id="workReFileName" style="display:none;"></div>
      </div>
      <div class="updateBtnContainer" style="display: none;">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateWorkModal" id="updateWork_">수정</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateWorkModal" id="updateWork_">수정</button>
         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete" id="del_btn2">삭제</button>
+     </div>
+     <!-- 댓글 입력 -->
+     <div id="normalCommentContainer">
+     	<div class="comment_editor">
+     		<textarea rows="1" cols="60" style="resize:none;" id="work_comment"></textarea>
+     		<button type="button" id="work_comment_submit" class="btn btn-outline-secondary">등록</button>
+     	</div>
+     </div>
+     <!-- 댓글 출력 -->
+     <div id="workCommentOutputContainer">
+     	
      </div>
   </div>
 </div>
+
+<script>
+//댓글 입력
+$("#work_comment_submit").click(e=>{
+	let commentContent = $("#work_comment").val();
+	let contentNo = $("#workContentNo").text();
+	let writerId = "<%=loginMember.getMemberId()%>";
+	
+	$.ajax({
+		
+		url:"<%=request.getContextPath()%>/project/work/insertWorkComment.do",
+		type:"post",
+		data:{
+			commentContent:commentContent,
+			contentNo:contentNo,
+			writerId:writerId
+		},
+		
+		success:data=>{
+			workCommentView();
+			 $("#work_comment").val("");
+		}
+	});
+});
+//댓글 출력
+function workCommentView(){
+	let contentNo = $("#workContentNo").text();
+
+	let loginMember ="<%=loginMember.getMemberId()%>";
+	let projectCreator = "<%=p.getMemberId()%>";
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/work/selectWorkComment.do",
+		type:"post",
+		dataType:"json",
+		data:{contentNo:contentNo},
+		success:data=>{
+			
+			$("#workCommentOutputContainer").html("");
+			for(let i=0;i<data.length;i++){
+				const workCommentNo = $("<div class='workCommentNo' style='display:none;'>").text(data[i]["workCommentNo"]);
+				const workCommentContent = $("<div class='workCommentContent' style='display: inline-block;'>").text(data[i]["workCommentContent"]);
+				const workCommentWriterId = $("<div class='workCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
+				const workCommentWriter = $("<div class ='workCommentWriter' style='display: inline-block;'>").text(data[i]["writerName"]);
+				const workCommentDate = $("<div class='workCommentDate' style='display: inline-block;'>").text(data[i]["commentDate"]);	
+				const workCommentOutput = $("<div class='workCommentOutput'>");
+				
+				workCommentOutput.append(workCommentContent).append(workCommentWriter).append(workCommentDate).append(workCommentNo).append(workCommentWriterId);
+				if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
+					const deletBtn = $("<button class='btn btn-outline-secondary' onclick='deleteWorkComment(this);'>삭제</button>");
+					workCommentOutput.append(deletBtn);
+				}
+				$("#workCommentOutputContainer").append(workCommentOutput);
+			}
+		}	
+	});
+}
+//댓글 삭제
+function deleteWorkComment(e){
+	
+	let workCommentNo = $(e).parent().children().eq(3).text();
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/work/deleteWorkComment.do",
+		type:"post",
+		data:{workCommentNo:workCommentNo},
+		success:data =>{
+			workCommentView();
+		}
+	});
+	
+}
+</script>
 
 <!-- 일정 게시글 상세화면 -->
 
@@ -363,6 +535,7 @@ const fn_normalFileDownload=()=>{
          
          <span id="scheWriterName" style="font-size: 18px; font-weight: bold;"></span>
          <span id="scheWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
+         <span id="scheReadCount"></span>
          <h4 id="scheContentTitleView" style="margin-top: 20px;"></h4>
    </div>
   <div class="offcanvas-body" id="contentBody">
@@ -377,13 +550,96 @@ const fn_normalFileDownload=()=>{
   </div>
    <div class="offcanvas-body" id="contentfooter">
         <div class="updateBtnContainer" style="display:none;">
-           <button type="button" class="btn btn-outline-secondary" id="sche_update">수정</button>
+           <button  type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateScheModal" id="updateSche_">수정</button>
            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sche-delete" id="del_btn3">삭제</button>
         </div>
-      </div>
+      <!-- 댓글 입력 -->
+     <div id="scheCommentContainer">
+     	<div class="comment_editor">
+     		<textarea rows="1" cols="60" style="resize:none;" id="sche_comment"></textarea>
+     		<button type="button" id="sche_comment_submit" class="btn btn-outline-secondary">등록</button>
+     	</div>
+     </div>
+     <!-- 댓글 출력 -->
+     <div id="scheCommentOutputContainer">
+     </div>
+     </div>
 </div>
 
+<script>
+//댓글 입력
+$("#sche_comment_submit").click(e=>{
+	let commentContent = $("#sche_comment").val();
+	let contentNo = $("#scheContentNo").text();
+	let writerId = "<%=loginMember.getMemberId()%>";
+	
+	$.ajax({
+		
+		url:"<%=request.getContextPath()%>/project/sche/insertScheComment.do",
+		type:"post",
+		data:{
+			commentContent:commentContent,
+			contentNo:contentNo,
+			writerId:writerId
+		},
+		
+		success:data=>{
+			scheCommentView();
+			 $("#sche_comment").val("");
+		}
+	});
+});
+//댓글 출력
+function scheCommentView(){
+	let contentNo = $("#scheContentNo").text();
 
+	let loginMember ="<%=loginMember.getMemberId()%>";
+	let projectCreator = "<%=p.getMemberId()%>";
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/sche/selectScheComment.do",
+		type:"post",
+		dataType:"json",
+		data:{contentNo:contentNo},
+		success:data=>{
+
+
+			$("#scheCommentOutputContainer").html("");
+			for(let i=0;i<data.length;i++){
+				const scheCommentNo = $("<div class='scheCommentNo' style='display:none;'>").text(data[i]["scheCommentNo"]);
+				const scheCommentContent = $("<div class='scheCommentContent' style='display: inline-block;'>").text(data[i]["scheCommentContent"]);
+				const scheCommentWriter = $("<div class ='scheCommentWriter' style='display: inline-block;'>").text(data[i]["writerName"]);
+				const scheCommentWriterId = $("<div class='scheCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
+				const scheCommentDate = $("<div class='scheCommentDate' style='display: inline-block;'>").text(data[i]["commentDate"]);	
+				const scheCommentOutput = $("<div class='scheCommentOutput'>");
+				
+				scheCommentOutput.append(scheCommentContent).append(scheCommentWriter).append(scheCommentDate).append(scheCommentNo).append(scheCommentWriterId);
+				if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
+					const deletBtn = $("<button class='btn btn-outline-secondary' onclick='deleteScheComment(this);'>삭제</button>");
+					scheCommentOutput.append(deletBtn);
+				}
+				
+				$("#scheCommentOutputContainer").append(scheCommentOutput);
+			}
+		}	
+	});
+}
+//댓글 삭제
+function deleteScheComment(e){
+	
+	let scheCommentNo = $(e).parent().children().eq(3).text();
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/sche/deleteScheComment.do",
+		type:"post",
+		data:{scheCommentNo:scheCommentNo},
+		success:data =>{
+			scheCommentView();
+		}
+	});
+	
+}
+
+</script>
 
 
 
@@ -503,7 +759,7 @@ const fn_normalFileDownload=()=>{
             const mfile = data["mFile"];
             const pc = data["pc"];
             const memberNameList = data["memberNameList"];
-            console.log(pc);
+            
             switch(dist){
                case '게시글' : 
                   $("#normal_update_title_").val(pc["contentTitle"]);
@@ -529,7 +785,6 @@ const fn_normalFileDownload=()=>{
       let normalTitle = $("#normal_update_title_").val();
       let normalContent = $("#normal_update_Content").val();
       let contentNo = $("#normalContentNo").text();
-      console.log()
          
       $.ajax({
          url : "<%=request.getContextPath()%>/project/normal/updateNormalContent.do",
@@ -625,11 +880,11 @@ const fn_normalFileDownload=()=>{
          <input type="radio" value="보류" id="hold" name="work_ing_update"><label for="hold">보류</label>
          <input type="radio"value="완료" id="complete" name="work_ing_update"><label for="complete">완료</label>
       </div>
-      <div id="work_addMember_container">
+      <!-- <div id="work_addMember_container">
          <span><i class="fas fa-user"></i></span>
          <div><select class="form-select" id="work_addMember_update"></select></div>
          <div id="work_addMember_area_update"></div>
-      </div>
+      </div> -->
       <div id="workStart_container">
          <span><i class="fas fa-calendar-plus"></i></span>
          <input type="date" id="workStart_update">
@@ -671,7 +926,7 @@ const fn_normalFileDownload=()=>{
 $("#updateWork_").click(e=>{
    let contentNo = $("#workContentNo").text();
    let dist = $("#workdist").text(); 
-
+ 
    $.ajax({
       url:"<%=request.getContextPath()%>/project/selectContentView.do",
       type:"post",
@@ -682,23 +937,61 @@ $("#updateWork_").click(e=>{
          const mfile = data["mFile"];
          const pc = data["pc"];
          const memberNameList = data["memberNameList"];
-         console.log(pc);
          switch(dist){
             case '업무' : 
                $("#workTitle_update").val(pc["contentTitle"]);
                $("#workContent_update").val(pc["content"]);
+               $("input[name=work_ing_update]").each(function(i,v){
+           			if($(this).val() == pc["workIng"]){
+           				$(this).attr('checked',true);
+           				return false;
+           			}
+            	 });
                
+               $("#workStart_update").val(pc["startDate"]);
+               $("#workEnd_update").val(pc["endDate"]);
+               $("input[name=work_rank_update]").each(function(i,v){
+            	  if($(this).val() == $("#workRank_view").text()){
+            		  $(this).attr('checked',true);
+            		  return false;
+            	  } 
+               });
+            }
          }
-      }
    });
+});
 
-   
-   
+$("#work_update_Btn").click(e=>{
+	
+	let workTitle =  $("#workTitle_update").val();
+	let workContent =  $("#workContent_update").val();
+	let workIng =  $("input[name=work_ing_update]:checked").val();
+	let workRank =  $("input[name=work_rank_update]:checked").val();
+	let startDate =  $("#workStart_update").val();
+	let endDate =$("#workEnd_update").val();
+	let contentNo = $("#workContentNo").text();
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/work/updateWorkContent.do",
+		type:"post",
+		data : {workTitle:workTitle,
+			workContent:workContent,
+			workIng:workIng,
+			workRank:workRank,
+			startDate:startDate,
+			endDate:endDate,
+			contentNo:contentNo
+			},
+		success:data=>{
+			$("#close_work_content_update").click();
+			contentListAjax();   
+			$("#work_close_btn").click();
+		}
+	});
 });
 
 
 </script>
-
 
 <!-- 일정게시글 작성 모달 -->
 <button style="display:none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3" id="insertSche_">일정작성</button>
@@ -762,7 +1055,89 @@ $("#updateWork_").click(e=>{
 
 <!-- 일정 게시글 수정 모달 -->
 
+<div class="modal fade" id="updateScheModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">일정 등록</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="scheTitle_update">
+      <span id="sche_titleResult_update"></span>
+      <div id="scheStart_container">
+         <span><i class="fas fa-calendar-plus"></i></span>
+         <input type="date" id="scheStartDate_update">
+      </div>
+      <div id="scheEnd_container">
+         <span><i class="fas fa-calendar-check"></i></span>
+         <input type="date" id="scheEndDate_update">
+      </div>
+    <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent_update" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close_sche_content_update">닫기</button>
+        <button type="button" class="btn btn-primary" id="sche_update_Btn">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script>
+//일정 수정
+$("#updateSche_").click(e=>{
+	let contentNo = $("#scheContentNo").text();
+	   let dist = $("#schedist").text(); 
+	 
+	   $.ajax({
+	      url:"<%=request.getContextPath()%>/project/selectContentView.do",
+	      type:"post",
+	      data : {"dist":dist,"contentNo":contentNo},
+	      traditional : true,
+	      datatype:"json",
+	      success:data=>{
+	         const pc = data["pc"];
+	         const memberNameList = data["memberNameList"];
+	         switch(dist){
+	            case '일정' : 
+	               $("#scheTitle_update").val(pc["contentTitle"]);
+	               $("#scheContent_update").val(pc["content"]);
+	               $("#scheStartDate_update").val(pc["startDate"]);
+	               $("#scheEndDate_update").val(pc["endDate"]);
+	            }
+	         }
+	   });
+	
+});
+
+
+$("#sche_update_Btn").click(e=>{
+	let scheTitle =  $("#scheTitle_update").val();
+	let scheContent =  $("#scheContent_update").val();
+	let scheStartDate =  $("#scheStartDate_update").val();
+	let scheEndDate =$("#scheEndDate_update").val();
+	let contentNo = $("#scheContentNo").text();
+	
+	$.ajax({
+		url : "<%=request.getContextPath()%>/project/schedule/updateScheduleContent.do",
+		type:"post",
+		data : {scheTitle:scheTitle,
+			scheContent:scheContent,
+			scheStartDate:scheStartDate,
+			scheEndDate:scheEndDate,
+			contentNo:contentNo
+			},
+		success:data=>{
+			$("#close_sche_content_update").click();
+			contentListAjax();   
+			$("#sche_close_btn").click();
+		}
+	});
+	
+});
+
+
+</script>
 
 
 
@@ -1019,7 +1394,7 @@ $("#sche_place_btn").click(e=>{
    <ul class="nav">
       <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
       <li class="nav-item"><a class="nav-link" href="#">업무</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">파일</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
    </ul>
 </div>
    <hr style="margin-top: 5px;">
@@ -1463,7 +1838,7 @@ $("#search_Member_btn").click(e=>{
 
       $("#work_addMember").change(e=>{
          //선택된 유저 아이디 span으로 보여줌
-         console.log(select.val());
+         
          let span = $("<span>");
          let selectMemberName = $("#work_addMember option:selected").text();      
          let selectManaId = select.val();

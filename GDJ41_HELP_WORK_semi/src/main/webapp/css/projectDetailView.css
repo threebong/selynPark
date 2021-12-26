@@ -16,7 +16,6 @@
 }
 
 #pro_container {
-	border: 1px solid black;
 	width: 100%;
 	min-height: 1000px;
 	padding: 0px;
@@ -25,24 +24,21 @@
 	justify-content: center;
 }
 #inner_pro_container{
-	width: 1300px;
-	border: 1px solid black;
+	width: 100%;
 }
 
 #proMemberViewContainer{
 	width: 200px;
-	border :1px solid black;
 
 	
 }
 #innder_proMemberViewContainer{
+	border : 1px solid lightgray;
 	position: fixed;
-	border :1px solid black;
 	
 }
 #contentContainer {
-	border: 1px solid black;
-	padding-top: 40px;
+	padding-top: 0px;
 	margin: 0px;
 	width: 500px;
 	left: 300px;
@@ -52,24 +48,27 @@
  #proMemberViewContainer { display: none;}
 }
 #inputContent_container{
-	border: 1px solid black;
 	margin: 0px;
-	width: 50%;
-	margin-left: 300px;
-	margin-top: 50px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 	
 }
 #contentContainer{
-	border: 1px solid black;
 	margin: 0px;
 	width: 100%;
-	margin-top: 150px;
+	margin-top: 50px;
 	
 }
 
 #input-group {
 	position: flex;
 	justify-content: center;
+	border: 1px solid lightgray;
+	padding: 20px;
+	border-radius: 40px;
+	text-align: center;
+	width: 30%;
 }
 
 #input-group div {

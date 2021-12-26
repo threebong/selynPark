@@ -9,11 +9,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import com.help.project.model.dao.ProjectDao;
+import com.help.project.normal.model.vo.NormalComment;
 import com.help.project.normal.model.vo.NormalContent;
 
 public class NormalDao {
@@ -141,6 +144,83 @@ private Properties prop = new Properties();
 		}finally {
 			close(pstmt);
 		}
+		return result;
+	}
+
+	public int insertNormalComment(Connection conn, NormalComment nc) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertNormalComment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, nc.getNormalContentNo());
+			pstmt.setString(2, nc.getWriterId());
+			pstmt.setString(3,nc.getNormalCommentContent() );
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public List<NormalComment> selectNormalComment(Connection conn,int contentNo) {
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectNormalComment");
+		NormalComment nc = null;
+		List<NormalComment> ncList = new ArrayList<NormalComment>();
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				nc = NormalComment.builder()
+						.normalContentNo(rs.getInt("NORMAL_CONTENT_NO"))
+						.normalCommentNo(rs.getInt("CONTENT_COMMENT_NO"))
+						.writerId(rs.getString("MEMBER_ID"))
+						.writerName(rs.getString("MEMBER_NAME"))
+						.normalCommentContent(rs.getString("CONTENT_COMMENT_CONTENT"))
+						.commentDate(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("CONTENT_COMMENT_DATE")))
+						.build();
+				ncList.add(nc);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return ncList;
+	}
+
+	public int deleteNormalComment(Connection conn, int contentNo) {
+
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("deleteNormalComment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
 		return result;
 	}
 

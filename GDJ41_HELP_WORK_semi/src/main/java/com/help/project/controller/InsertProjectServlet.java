@@ -43,11 +43,12 @@ public class InsertProjectServlet extends HttpServlet {
 					build();
 		
 		int result = new ProjectService().insertProject(p);
+		String memberId = request.getParameter("memberId");
 		
 		if(result>0) {
 			
 			//프로젝트 생성이 완료되면 해당 프로젝트 정보를 받아온당
-			Project pinfo = new ProjectService().selectProjectNewinsert();
+			Project pinfo = new ProjectService().selectProjectNewinsert(memberId);
 			
 			//생성 완료시 프로젝트 생성자는 프로젝트 참여자 테이블로 들어가야함
 			new ProjectService().insertProMemberCreator(pinfo);

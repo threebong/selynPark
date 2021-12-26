@@ -52,13 +52,6 @@ public class SelectWorkAllSearchPagingServlet extends HttpServlet {
 		result=new WorkService().searchMine(ing, prior, h4,logId,cPage,numPerpage);
 		
 		
-		
-		
-		
-		
-		
-		
-		
 		response.setContentType("application/json;charset=utf-8");
 		new Gson().toJson(result,response.getWriter());	
 		
