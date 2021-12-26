@@ -12,5 +12,6 @@ public class AdminAttendance {
 	private String positionName;
 	private String attTime;
 	private String leaveTime;
+	private String attStatus;
 
 }

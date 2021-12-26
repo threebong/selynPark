@@ -120,7 +120,8 @@ font-size:30px;
 					let ntd=$("<td>").html("조회결과가 없습니다.");
 					ntd.attr("colspan","4");
 					tr.css("text-align","center");
-					tbody.append(tr).append(ntd);
+					tr.append(ntd);
+					tbody.append(tr);
 				}else{
 					for(let i=0; i<data.length; i++){
 						let tr=$("<tr>");
@@ -128,7 +129,8 @@ font-size:30px;
 						let attTime=$("<td>").html(data[i]["attTime"]);
 						let leaveTime=$("<td>").html(data[i]["leaveTime"]);
 						let attStatus=$("<td>").html(data[i]["attStatus"]);
-						tbody.append(tr).append(attDate).append(attTime).append(leaveTime).append(attStatus);
+						tr.append(attDate).append(attTime).append(leaveTime).append(attStatus);
+						tbody.append(tr);
 					}	
 				}
 				tbody.html(tr);

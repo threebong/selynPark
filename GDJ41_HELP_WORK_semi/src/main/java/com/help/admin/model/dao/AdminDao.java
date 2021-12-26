@@ -144,6 +144,7 @@ public class AdminDao {
 						.positionName(rs.getString("POSITION_NAME")==null?"미등록":rs.getString("POSITION_NAME"))
 						.attTime(rs.getDate("ATT_TIME")==null?"출근 전": new SimpleDateFormat("HH시 mm분").format(rs.getDate("ATT_TIME")))
 						.leaveTime(rs.getDate("LEAVE_TIME")==null?"퇴근 전": new SimpleDateFormat("HH시 mm분").format(rs.getDate("LEAVE_TIME")))
+						.attStatus(rs.getString("ATT_STATUS"))
 						.build();
 				list.add(aa);
 			}
