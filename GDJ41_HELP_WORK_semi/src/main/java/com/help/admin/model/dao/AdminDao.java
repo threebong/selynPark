@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import com.help.admin.model.vo.AdminAttendance;
 import com.help.admin.model.vo.AdminListMember;
+import com.help.admin.model.vo.DeptAndPosition;
 
 
 public class AdminDao {
@@ -183,6 +184,137 @@ public class AdminDao {
 			
 		} return result;
 
+	}
+	
+	
+	//관리자가 출퇴근 수정
+	public int updateAttendance(Connection conn, String attTime, String leaveTime, String attStatus, String memberId, String attDate) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateMemberAttendance");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, attTime);
+			pstmt.setString(2, leaveTime);
+			pstmt.setString(3, attStatus);
+			pstmt.setString(4, memberId);
+			pstmt.setString(5, attDate);
+			result=pstmt.executeUpdate();
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
+	}
+	
+	//부서명 전체 가져오기
+	public List<DeptAndPosition> deptAllList(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<DeptAndPosition> list = new ArrayList();
+		
+		try {
+			pstmt = conn.prepareStatement(prop.getProperty("deptAll"));
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				DeptAndPosition d = DeptAndPosition.builder()
+						.deptCode(rs.getString("DEPT_CODE"))
+						.deptName(rs.getString("DEPT_NAME"))
+						.build();
+				list.add(d);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return list;
+	}
+	
+	
+	//직급명 전체 가져오기
+	public List<DeptAndPosition> positionAllList(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<DeptAndPosition> list = new ArrayList();
+		
+		try {
+			pstmt = conn.prepareStatement(prop.getProperty("positionAll"));
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				DeptAndPosition p = DeptAndPosition.builder()
+						.positionCode(rs.getString("POSITION_CODE"))
+						.positionName(rs.getString("POSITION_NAME"))
+						.build();
+				list.add(p);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return list;
+	}
+	
+	
+	//대기사원 부서,직급 등록
+	public int updateWaitMember(Connection conn, String memberId, String deptCode, String positionCode) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateWaitMember");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, deptCode);
+			pstmt.setString(2, positionCode);
+			pstmt.setString(3, memberId);
+			result=pstmt.executeUpdate();
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
+	}
+	
+	//사원 정보수정 -> 이름,부서,직급,연락처
+	public int updateInfoMember(Connection conn, String memberId, String memberName, String deptCode, String positionCode, String memberPhone) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateInfoMember");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, memberName);
+			pstmt.setString(2, deptCode);
+			pstmt.setString(3, positionCode);
+			pstmt.setString(4, memberPhone);
+			pstmt.setString(5, memberId);
+			result=pstmt.executeUpdate();
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
 	}
 	
 

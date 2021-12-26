@@ -57,7 +57,7 @@ font-size:30px;
 
 
 	<div id="writeTable"></div>
-<form action="#" method="post" onsubmit="return create_pro(this);" id="update_attendance_frm">
+<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm">
 <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
     	<div class="modal-content">
@@ -66,24 +66,25 @@ font-size:30px;
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
       	<div class="modal-body">
-        <input class="form-control form-control-m" type="text" placeholder="이름(버튼 클릭했을때 유저 이름넣고 수정불가해야함)" aria-label=".form-control-lg example" name="memberName" id="proName_" autocomplete="off"><br>
-        <input class="form-control form-control-m" type="text" placeholder="아이디(버튼 클릭했을때 유저 아이디넣고 수정불가해야함)" aria-label=".form-control-lg example" name="memberId" id="proName_" autocomplete="off"><br>
-        <input class="form-control form-control-m" type="time" placeholder="출근시간(ex) 09:00)" aria-label=".form-control-lg example" name="attTime" id="proName_" autocomplete="off"><br>
-        <input class="form-control form-control-m" type="time" placeholder="퇴근시간(ex) 18:00)" aria-label=".form-control-lg example" name="leaveTime" id="proName_" autocomplete="off"><br>
-        <input class="form-control form-control-m" type="text" placeholder="상태(출근/퇴근 상태입력)" aria-label=".form-control-lg example" name="attStatus" id="proName_" autocomplete="off"><br>
+        이름<input class="form-control form-control-m modName" type="text" aria-label=".form-control-lg example" name="memberName" id="modName" readonly><br>
+        아이디<input class="form-control form-control-m modId" type="text" aria-label=".form-control-lg example" name="memberId" id="modId" readonly><br>
+        출근시간<input class="form-control form-control-m" type="time" aria-label=".form-control-lg example" name="attTime" id="modAttTime" autocomplete="off"><br>
+        퇴근시간<input class="form-control form-control-m" type="time" aria-label=".form-control-lg example" name="leaveTime" id="modLeaveTime" autocomplete="off"><br>
+        상태<input class="form-control form-control-m" type="text" placeholder="상태(출근/퇴근 상태입력)" aria-label=".form-control-lg example" name="attStatus" id="modAttStatus" autocomplete="off"><br>
+        <input type="hidden" name="attDate" id="modAttDate">
         <span id="proName-result"></span>
       	</div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">수정</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>
-         </div>
-          </div>
+      	<div class="modal-footer">
+        	<button type="submit" class="btn btn-primary">수정</button>
+        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-project">닫기</button>
+        </div>
+        </div>
   </div>
 </div>
 </form>
 	
 	<button id="update-AttendanceBtn" type="button" class="btn btn-primary"
-         data-bs-toggle="modal" data-bs-target="#attendanceModal" style="display: none;">New Project</button> 
+     data-bs-toggle="modal" data-bs-target="#attendanceModal" style="display: none;">출퇴근정보 수정</button> 
 
 </main>
 <script>
@@ -136,17 +137,17 @@ function adminAttendanceList(cPage){
 					let ntd=$("<td>").html("조회결과가 없습니다.");
 					ntd.attr("colspan","8");
 					tr.css("text-align","center");
-					tr.append(ntd);
-					tbody.append(tr);
+					tr2.append(ntd);
+					tbody.append(tr2);
 					table.append(tbody);
 				} else{
 					for(let i=0; i<memberList.length; i++){
 						let tr2 = $("<tr>");
 						let name = $("<td>").html(memberList[i]["memberName"]);
+						let memberName = $('<input>').attr({type:"hidden",name:"memberName",id:"memberName",value:memberList[i]["memberName"]});
+						name.append(memberName);
 						let id = $("<td>").html(memberList[i]["memberId"]);
-						let memberId = $('<input>').attr("type","hidden");
-						memberId.attr("name","memberId");
-						memberId.attr("value",memberList[i]["memberId"]);
+						let memberId = $('<input>').attr({type:"hidden",name:"memberId",id:"memberId",value:memberList[i]["memberId"]});
 						id.append(memberId);
 						let dName = $("<td>").html(memberList[i]["deptName"]);
 						let pName = $("<td>").html(memberList[i]["positionName"]);
@@ -159,9 +160,7 @@ function adminAttendanceList(cPage){
 						tbody.append(tr2);
 						table.append(tbody);
 						tr2.append(name).append(id).append(dName).append(pName).append(attTime).append(leaveTime).append(attStatus).append(note);
-					 /* 	$(document).on("click", "#updateAttendance"+i, function() {
-						   alert(i);
-						}); */
+
 
 					}
 				}
@@ -175,10 +174,12 @@ function adminAttendanceList(cPage){
 };
 
 const adminUpdateAttendance=(e)=>{
-   var tr = e.parentElement.parentElement;
-   console.log("input");
+   var memberName = e.parentElement.parentElement.children[0].children[0].value;
+   $("#modName").val(memberName);
+   var memberId = e.parentElement.parentElement.children[1].children[0].value;
+   $("#modId").val(memberId);
+   $("#modAttDate").val($("#checkDate").val());
    $("#update-AttendanceBtn").click();
-   console.log(tr);
 };
 
 </script>

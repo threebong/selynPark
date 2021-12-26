@@ -19,10 +19,7 @@ public class AttendanceService {
 //		public int insertAttTime( String attTime, String attDate) {
 		Connection conn = getConnection();
 		int result = dao.insertAttTime(conn, memberId,attTime,attDate,attStatus);
-		if(result>0) {
-			commit(conn); 
-			//출근정보 저장되고 다시 가져오려면 여기서 다시 dao로
-		}
+		if(result>0) commit(conn);
 		else rollback(conn);
 		return result;
 	}

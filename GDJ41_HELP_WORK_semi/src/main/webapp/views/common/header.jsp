@@ -319,7 +319,9 @@ window.addEventListener('DOMContentLoaded', event => {
      		})
      	});
         
+     
         //퇴근등록
+        function insertLeaveTime(){
      	$("#insertLeaveTime").click(e=>{
         	var d = new Date();
           	var leaveTime = moment(d).format('HH:mm');
@@ -334,9 +336,15 @@ window.addEventListener('DOMContentLoaded', event => {
      					$("#leaveTime").html(data["leaveTime"]);
      					alert(data["leaveSuccess"]);
      				}
+     				
      		})
      	});
-        
+        };
+     	
+	 	/* $(document).ready(()=>{
+	 		insertLeaveTime();
+	 		$("#insertLeaveTime").trigger('click');
+     	});  이건 업데이트가 계속 반복하여 돌게됨*/
         
 
         
