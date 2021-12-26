@@ -65,14 +65,14 @@ public class SelectAllProjectContentServlet extends HttpServlet {
 		if(pageNo==1) {//첫번째 페이지면? 이전 버튼이 눌리지 않음
 			pageBar ="<span>[이전]</span>";
 		}else {
-			pageBar = "<a href='javascript:memberListAjax("+(pageNo-1)+");'>[이전]</a>";
+			pageBar = "<a href='javascript:contentListAjax("+(pageNo-1)+");'>[이전]</a>";
 		}
 		
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(cPage==pageNo) {
 				pageBar+="<span>"+pageNo+"</span>"; //내가 현재 보고 있는 페이지기때문에 굳이 누를 필요가 없음
 			}else {
-				pageBar+="<a href='javascript:memberListAjax("+(pageNo)+");'>"+pageNo+"</a>";
+				pageBar+="<a href='javascript:contentListAjax("+(pageNo)+");'>"+pageNo+"</a>";
 			}
 			pageNo++;
 		}
@@ -80,10 +80,16 @@ public class SelectAllProjectContentServlet extends HttpServlet {
 		if(pageNo>totalPage) {
 			pageBar+="<span>[다음]</span>";
 		}else {
-			pageBar+="<a href='javascript:memberListAjax("+(pageNo)+");'>[다음]</a>";
+			pageBar+="<a href='javascript:contentListAjax("+(pageNo)+");'>[다음]</a>";
 		}
 		
 
+		
+		
+		
+		
+		
+		
 		response.setContentType("application/json; charset=utf-8");
 		Map<String, Object> param = Map.of("pageBar",pageBar,"pList",pList);
 		new Gson().toJson(param,response.getWriter());

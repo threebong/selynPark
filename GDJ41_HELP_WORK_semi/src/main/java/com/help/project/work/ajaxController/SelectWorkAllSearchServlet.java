@@ -44,7 +44,6 @@ public class SelectWorkAllSearchServlet extends HttpServlet {
 		//전체 업무 개수 구하기
 		List<WorkSelectManagerJoin> result=new WorkService().searchMine(ing, prior, h4,logId);
 		int totalData=result.size();//전체 데이터 개수 
-		System.out.println("전체데이터"+totalData);
 		//페이징 처리
 		int cPage;
 		try {

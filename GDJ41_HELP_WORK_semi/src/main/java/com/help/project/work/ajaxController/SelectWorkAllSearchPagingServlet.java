@@ -28,7 +28,7 @@ public class SelectWorkAllSearchPagingServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+//이페이지뭐지??..
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -50,13 +50,6 @@ public class SelectWorkAllSearchPagingServlet extends HttpServlet {
 		
 		List<WorkSelectManagerJoin> result=new ArrayList<WorkSelectManagerJoin>();
 		result=new WorkService().searchMine(ing, prior, h4,logId,cPage,numPerpage);
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		response.setContentType("application/json;charset=utf-8");

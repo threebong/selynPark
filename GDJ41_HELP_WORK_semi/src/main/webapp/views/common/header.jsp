@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="com.help.member.model.vo.Member, com.help.attendance.model.vo.Attendance
+<%@ page import="com.help.member.model.vo.Member, com.help.attendance.model.vo.Attendance, java.util.List
 ,java.text.SimpleDateFormat" %>
 <% 
    Member loginMember=(Member)session.getAttribute("loginMember");
@@ -133,6 +133,8 @@ window.addEventListener('DOMContentLoaded', event => {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        
+                        <% if(!(loginMember.getMemberId().equals("admin"))){%>	
                         <div class="sb-sidenav-menu-heading">Attendance/Leave Work</div>
                         
                           <a  class="nav-link" href="#"id="insertAttTime">
@@ -162,6 +164,28 @@ window.addEventListener('DOMContentLoaded', event => {
                             My A/L Information
                             
                         </a>
+                        <%} else{%>
+                     	<div class="sb-sidenav-menu-heading">사원</div>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            </div>
+                            사원관리
+                        </a>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndJobList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            </div>
+                            부서/직급관리
+                        </a>
+                        
+                        <div class="sb-sidenav-menu-heading">근태</div>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberAttendanceList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            </div>
+                            근태관리
+                        </a>
+                        
+                        
+                        <%}%>
                         <div class="sb-sidenav-menu-heading">MY PROJECT</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/project/selectProjectMain.do">
                             <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
@@ -218,6 +242,7 @@ window.addEventListener('DOMContentLoaded', event => {
                             <div class="sb-nav-link-icon"><i class="fas fa-certificate"></i></div>
                             오똔 프로젝트1
                         </a>
+                      
 
                     </div>
                 </div>
@@ -294,7 +319,9 @@ window.addEventListener('DOMContentLoaded', event => {
      		})
      	});
         
+     
         //퇴근등록
+        function insertLeaveTime(){
      	$("#insertLeaveTime").click(e=>{
         	var d = new Date();
           	var leaveTime = moment(d).format('HH:mm');
@@ -309,8 +336,17 @@ window.addEventListener('DOMContentLoaded', event => {
      					$("#leaveTime").html(data["leaveTime"]);
      					alert(data["leaveSuccess"]);
      				}
+     				
      		})
      	});
+        };
+     	
+	 	/* $(document).ready(()=>{
+	 		insertLeaveTime();
+	 		$("#insertLeaveTime").trigger('click');
+     	});  이건 업데이트가 계속 반복하여 돌게됨*/
+        
+
         
       
         </script>

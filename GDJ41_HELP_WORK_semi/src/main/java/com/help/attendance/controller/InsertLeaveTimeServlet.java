@@ -1,7 +1,7 @@
 package com.help.attendance.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -52,7 +52,7 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 				//조회 되나 정상 업데이트 > 퇴근성공
 				jo.put("leaveSuccess", "퇴근 성공");
 			} else { 
-				//조회가 되나 업데이트 불가 > 이미 퇴근상태
+				//조회가 되나 업데이트 불가(출퇴근 상태 글자수 제한으로 업데이트 불가) > 이미 퇴근상태
 				jo.put("leaveSuccess", "이미 퇴근 상태입니다.");
 			}
 			jo.put("leaveTime", a.getLeaveTime());
@@ -60,9 +60,8 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 		} catch(NullPointerException e) {
 			//업데이트, 조회가 되지 않으니 아직 해당일자 출근 데이터 없는 상태
 			jo.put("leaveSuccess", "출근 전 상태입니다. 출근을 먼저 등록해주세요");
-		}
+		} 
 		
-		System.out.println(a);
 		
 		response.setContentType("application/json;charset=utf-8");
 		response.getWriter().print(jo);

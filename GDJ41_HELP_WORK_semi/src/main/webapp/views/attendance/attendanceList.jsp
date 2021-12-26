@@ -1,7 +1,7 @@
 <%@ page  language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp" %>
-<%@ page import = "java.util.List, com.help.attendance.model.vo.Attendance" %>
+<%@ page import = "com.help.attendance.model.vo.Attendance" %>
 <%
 	List<Attendance> list = (List<Attendance>)request.getAttribute("attendanceMonthly");
 
@@ -48,8 +48,8 @@ font-size:30px;
 
 
 <main>
+<h3 id="selectMonth"></h3>
 		<form id="frm" action="">
-		<span><input type="text" id="selectMonth" name="selectMonth" readonly/></input></span><br>
 		<input id="checkMonth" type="month" name="checkMonth">
 		</form>
 
@@ -94,11 +94,17 @@ font-size:30px;
 
 </main>
 <script>
-  //document.getElementById('selectMonth').valueAsDate = new Date();  //기본으로 현재 달 표기
+	var date = moment(check).format('yyyy년 MM월');
+	var check = $("#checkMonth").val();
+	$("#selectMonth").text(date);
+
  	$("#checkMonth").change(e=>{
-    	 const memberId ="<%=loginMember.getMemberId()%>";
+		var check2 = $("#checkMonth").val();
+		var date = moment(check2).format('yyyy년 MM월');
+		$("#selectMonth").text(date);
+    	const memberId ="<%=loginMember.getMemberId()%>";
     	$("#selectMonth").val($("#checkMonth").val());
-		let month = $("#selectMonth").val();
+		let month = $("#checkMonth").val();
    
     	 $.ajax({
     		url : "<%=request.getContextPath()%>/attendance/attendanceListEnd.do",
@@ -114,7 +120,8 @@ font-size:30px;
 					let ntd=$("<td>").html("조회결과가 없습니다.");
 					ntd.attr("colspan","4");
 					tr.css("text-align","center");
-					tbody.append(tr).append(ntd);
+					tr.append(ntd);
+					tbody.append(tr);
 				}else{
 					for(let i=0; i<data.length; i++){
 						let tr=$("<tr>");
@@ -122,11 +129,11 @@ font-size:30px;
 						let attTime=$("<td>").html(data[i]["attTime"]);
 						let leaveTime=$("<td>").html(data[i]["leaveTime"]);
 						let attStatus=$("<td>").html(data[i]["attStatus"]);
-						tbody.append(tr).append(attDate).append(attTime).append(leaveTime).append(attStatus);
+						tr.append(attDate).append(attTime).append(leaveTime).append(attStatus);
+						tbody.append(tr);
 					}	
 				}
 				tbody.html(tr);
-				console.log(data.length);
             }
     	 })
      });
