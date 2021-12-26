@@ -70,10 +70,8 @@ public class UpdateMemberServlet extends HttpServlet {
 		
 		int result=new MemberService().updateMember(m);
 		if(result>0) {
-			JOptionPane.showMessageDialog(null, "회원정보가 수정되었습니다.");
 			response.sendRedirect(request.getContextPath()+"/project/selectProjectMain.do");
 		}else {			
-			JOptionPane.showMessageDialog(null, "회원정보 수정이 실패했습니다.");
 			request.getRequestDispatcher("/member/viewMember.do").forward(request, response);
 		}
 	
