@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.help.gmail.SHA256" %>
+<%@ page import="com.help.member.model.dao.MemberDao" %>
+<%@ page import="com.help.member.model.vo.Member" %>
+<%@ page import="java.io.PrintWriter" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,13 +15,14 @@
 <body>
 	<section id=enroll-container>
 		<h2>회원 가입 정보 입력</h2>
-    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
-    		<table>
+<%--     	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
+ --%>    	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/views/member/memberEnrollAction.jsp" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
+    		<table class="table" style="margin-left: auto; margin-right: auto;">
 				<tr>
 					<th>아이디</th>
 					<td>
 						<input type="text" placeholder="이메일형식으로 입력해주세요" name="userId" id="userId_" >
-						<input type="button" value="중복검사" id="idDuplicateBtn"><br>
+						<input type="button" value="중복검사" id="idDuplicateBtn">
 						<span>이메일 형식으로 입력해주세요 ex)silver@world.com</span>
 					</td>
 				</tr>
@@ -133,8 +139,6 @@
 	   			}
 	   		});
 	   	});
-	   	
-	   	//이미지미리보기
 	   	
 	   	$("#target").click(e=>{
 	   		$("input[name=upProfile]").click();

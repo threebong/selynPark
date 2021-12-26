@@ -50,7 +50,6 @@
 			</table>
 			<input type="submit" value="회원정보수정" >
 			<input type="button" value="비밀번호 변경" id="pwChangeBtn" onclick="updatePassword();">
-			<input type="button" value="탈퇴" >
 		</form>
 	</section>
 	<script>
@@ -86,12 +85,6 @@
 			const url="<%=request.getContextPath()%>/member/updatePassword.do?userId=<%=m.getMemberId()%>";
 			const style="width=400,height=210,top=200,left=500";
 			open(url,"_blank",style);
-		}
-		
-		//회원탈퇴하기
-		const memberDelete=()=>{
-			const url="<%=request.getContextPath()%>/member/memberDelete.do";
-			$("memberFrm").attr("action",url);
 		}
 	</script>
 

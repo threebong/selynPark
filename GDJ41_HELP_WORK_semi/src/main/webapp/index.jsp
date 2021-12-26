@@ -124,7 +124,7 @@
 
 </style>
 <main>
-	<form class="wrap" action="<%=request.getContextPath()%>/member/memberLogin.do" method="post">
+	<form class="wrap" action="<%=request.getContextPath()%>/views/member/memberLoginAction.jsp" method="post">
         <div class="login">
             <h2>Log-in</h2>
             <div class="login_id" id="login-div">
@@ -150,10 +150,14 @@
             	</div>
             </div>
             <div class="submit">
+            	
                 <input type="submit" value="로그인">
+            
             </div>
 	        <div class="enrollMember">
-		        <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/member/enrollMember.do')">
+<%-- 		        <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/member/enrollMember.do')">
+ --%>		        <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/views/member/enrollMember.jsp')">
+		        
 	        </div>
         </div>
     </form>

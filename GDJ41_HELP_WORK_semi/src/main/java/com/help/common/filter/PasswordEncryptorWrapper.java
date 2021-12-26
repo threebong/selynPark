@@ -37,8 +37,8 @@ public class PasswordEncryptorWrapper extends HttpServletRequestWrapper{
 		}catch(NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		byte[] oribyte=oriPw.getBytes(Charset.forName("utf-8"));
-		md.update(oribyte);
+		byte[] bytes=oriPw.getBytes(Charset.forName("UTF-8"));
+		md.update(bytes);
 		encPwd=Base64.getEncoder().encodeToString(md.digest());
 		
 		return encPwd;
