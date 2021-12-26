@@ -1019,7 +1019,7 @@ $("#sche_place_btn").click(e=>{
    <ul class="nav">
       <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
       <li class="nav-item"><a class="nav-link" href="#">업무</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">파일</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
    </ul>
 </div>
    <hr style="margin-top: 5px;">
