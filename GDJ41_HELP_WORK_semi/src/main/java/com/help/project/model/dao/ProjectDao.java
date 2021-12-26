@@ -132,7 +132,7 @@ public class ProjectDao {
 		return result;
 	}
 
-	public Project selectProjectNewinsert(Connection conn) {
+	public Project selectProjectNewinsert(Connection conn,String memberId) {
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -141,6 +141,7 @@ public class ProjectDao {
 
 		try {
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);	
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				p = Project.builder().projectNo(rs.getInt("PROJECT_NO")).memberId(rs.getString("MEMBER_ID"))
@@ -714,6 +715,60 @@ public class ProjectDao {
 		try {
 			pstmt =conn.prepareStatement(sql);
 			pstmt.setInt(1, scheContentNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public int insertNormalReadCount(Connection conn, int contentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertNormalReadCount");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public int insertWorkReadCount(Connection conn, int contentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertWorkReadCount");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public int insertScheReadCount(Connection conn, int contentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertScheReadCount");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
