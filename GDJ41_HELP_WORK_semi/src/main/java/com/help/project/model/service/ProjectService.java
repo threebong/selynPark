@@ -165,14 +165,31 @@ public class ProjectService {
 		return result;
 	}
 
-	public ProjectContent selectContentOne(String dist, int contentNo) {
+	public ProjectContent selectContentOne(String dist, int contentNo,boolean isRead) {
 		
 		Connection conn = getConnection();
 		ProjectContent pc = dao.selectContentOne(conn,dist,contentNo);
+		
+		if(pc != null  && !isRead) {
+			int result =0;
+			if(dist.equals("게시글")){
+				result = dao.insertNormalReadCount(conn,contentNo);	
+			}else if(dist.equals("업무")) {
+				result = dao.insertWorkReadCount(conn,contentNo);
+			}else {
+				result = dao.insertScheReadCount(conn,contentNo);
+			}
+			
+			if (result > 0) {
+				commit(conn);
+				pc = dao.selectContentOne(conn,dist,contentNo);
+			} else {
+				rollback(conn);
+			}
+		}
+		
 		close(conn);
 		return pc;
-		
-		
 	}
 
 	public List<WorkManagerName> selectWorkManager(int contentNo) {
@@ -266,5 +283,14 @@ public class ProjectService {
 		return result;
 	}
 
+	/*
+	 * public void insertNormalReadCount(int contentNo) { //일반 게시글 조회수 Connection
+	 * conn = getConnection(); int result =
+	 * dao.insertNormalReadCount(conn,contentNo);
+	 * 
+	 * if (result > 0) { commit(conn); } else { rollback(conn); } close(conn);
+	 * 
+	 * }
+	 */
 	
 }

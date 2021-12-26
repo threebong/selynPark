@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.help.project.normal.model.dao.NormalDao;
+import com.help.project.normal.model.vo.NormalComment;
 import com.help.project.normal.model.vo.NormalContent;
 
 public class NormalService {
@@ -68,6 +69,47 @@ public class NormalService {
 		close(conn);
 
 		return result;
+	}
+
+	public int insertNormalComment(NormalComment nc) {
+
+		Connection conn = getConnection();
+
+		int result = dao.insertNormalComment(conn,nc);
+
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+
+		return result;
+	}
+
+	public List<NormalComment> selectNormalComment(int contentNo) {
+
+		Connection conn = getConnection();
+		
+		List<NormalComment> ncList = dao.selectNormalComment(conn,contentNo);
+		
+		close(conn);
+		
+		return ncList;
+	}
+
+	public void deleteNormalComment(int contentNo) {
+
+		Connection conn = getConnection();
+		int result = dao.deleteNormalComment(conn,contentNo);
+		
+		if (result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		close(conn);
+		
 	}
 
 	

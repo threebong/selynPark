@@ -42,8 +42,8 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 }
 
 .project_content_ing {
-	width: 20%;
-	height: 20%;
+	width: 200px;
+	height: 200px;
 	background-color: #87CEEB;
 	float: left;
 	border: 1px solid black;
@@ -71,30 +71,6 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 				</button>
 			</div>
 		</div>
-
-
-		<div id="project_favor">
-			<h2>즐겨찾기</h2>
-			<div>
-				<!-- 	출력될공간 -->
-				<%
-				for (int i = 0; i < 10; i++) {
-				%>
-
-				<div class="project_content_favor">
-					<h4>프로젝트명</h4>
-					<h6>프로젝트 설명</h6>
-					<p>프로젝트 생성자</p>
-					<h6>참여인원</h6>
-				</div>
-
-				<%
-				}
-				%>
-			</div>
-		</div>
-
-
 		<div class="project_ing">
 			<h2>참여한 프로젝트</h2>
 			<div>

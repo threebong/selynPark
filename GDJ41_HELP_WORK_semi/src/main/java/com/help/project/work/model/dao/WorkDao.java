@@ -17,7 +17,9 @@ import java.util.Properties;
 
 import static com.help.common.JDBCTemplate.*;
 import com.help.project.model.vo.Project;
+import com.help.project.normal.model.vo.NormalComment;
 import com.help.project.work.model.vo.Work;
+import com.help.project.work.model.vo.WorkComment;
 import com.help.project.work.model.vo.WorkDetailJoin;
 import com.help.project.work.model.vo.WorkSelectManagerJoin;
 
@@ -599,5 +601,108 @@ public class WorkDao {
 			close(pstmt);
 		}
 		return temp;
+	}
+
+	public int updateWorkContent(Connection conn, Work w, int contentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateWorkContent");
+		
+		try {
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setString(1, w.getWorkTitle());
+			pstmt.setString(2, w.getWorkContent());
+			pstmt.setDate(3, w.getWorkStartDate());
+			pstmt.setDate(4, w.getWorkEndDate());
+			pstmt.setString(5, w.getWorkIng());
+			pstmt.setString(6, w.getWorkRank());
+			pstmt.setInt(7, contentNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		
+		return result;
+	}
+
+	public int insertWorkComment(Connection conn, WorkComment wc) {
+
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertWorkComment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, wc.getWorkNo());
+			pstmt.setString(2, wc.getWriterId());
+			pstmt.setString(3,wc.getWorkCommentContent());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+	public List<WorkComment> selectWorkComment(Connection conn, int contentNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("selectWorkComment");
+		WorkComment wc = null;
+		List<WorkComment> wcList = new ArrayList<WorkComment>();
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				wc = WorkComment.builder()
+						.workNo(rs.getInt("WORK_NO"))
+						.workCommentNo(rs.getInt("WORK_COMMENT_NO"))
+						.writerId(rs.getString("MEMBER_ID"))
+						.writerName(rs.getString("MEMBER_NAME"))
+						.workCommentContent(rs.getString("WORK_COMMENT_CONTENT"))
+						.commentDate(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("WORK_COMMENT_DATE")))
+						.build();
+				wcList.add(wc);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return wcList;
+	}
+
+	public int deleteWorkComment(Connection conn, int contentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("deleteWorkComment");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, contentNo);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 }
