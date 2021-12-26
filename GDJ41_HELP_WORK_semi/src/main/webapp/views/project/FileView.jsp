@@ -156,7 +156,7 @@
 		//let choName2="fileExt";
 		console.log(searchWhat);
 		console.log(text);
-		if(searchWhat==choName1){
+		//if(searchWhat==choName1){
 			alert("파일이름으로 찾으세용")
 			$.ajax({//업무파일검색
 				url: "<%=request.getContextPath()%>/project/SelectWorkFileInProjectServlet.do",
@@ -194,9 +194,9 @@
 				}
 			});
 			
-		}else{
-			alert("확장자ㅗㄹ 찾으세용")
-		}
+		/* }else{
+			alert("확장자ㅗㄹ 찾으세용");//근데확장자도,..같이저장이되어있어서....나중에 보충하자...
+		} */
 	}
 	
 
