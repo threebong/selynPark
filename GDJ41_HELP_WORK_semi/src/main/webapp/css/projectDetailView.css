@@ -65,6 +65,78 @@
 .page-link{
 	color:rgba(111, 0, 255, 0.904);
 }
+
+.workIngLa input[type='radio']{
+	  display: none;
+}
+ .workIngLa input[type="radio"] + span {
+ 		font-family:"Do Hyeon";
+		border-radius:15px;
+        display: inline-block;
+        padding: 5px 5px;
+        border: 1px solid #dfdfdf;
+        text-align: center;
+        cursor: pointer;
+        width: 80px;
+ }
+#work_addMember_area{
+	margin-top: 10px;
+	font-family:'Do Hyeon';
+	margin-left: 25px;
+}
+
+
+#sche_addMember_area{
+	margin-top: 10px;
+	font-family:'Do Hyeon';
+	
+}
+#sche_addMember_area span{
+	border-radius:12px;
+	text-align: center;
+    cursor: pointer;
+	border: 1px solid #dfdfdf;
+	padding: 5px 5px;
+	display: inline-block;
+	margin-left: 7px;
+	font-size: 18px;
+	color : rgb(54, 54, 54);
+	min-width: 80px;
+}
+#work_addMember_area span{
+	border-radius:12px;
+	text-align: center;
+    cursor: pointer;
+	border: 1px solid #dfdfdf;
+	padding: 5px 5px;
+	display: inline-block;
+	margin-left: 7px;
+	font-size: 18px;
+	color : rgb(54, 54, 54);
+	min-width: 80px;
+}
+
+.workIngLa input[type="radio"]:checked + span {
+        background-color: #113a6b;
+        color: #ffffff;
+    }
+.workRankLa input[type='radio']{
+	  display: none;
+}
+.workRankLa input[type="radio"] + span {
+ 		font-family:"Do Hyeon";
+		border-radius:15px;
+        display: inline-block;
+        padding: 5px 5px;
+        border: 1px solid #dfdfdf;
+        text-align: center;
+        cursor: pointer;
+        width: 80px;
+ }
+ .workRankLa input[type="radio"]:checked + span {
+        background-color: #113a6b;
+        color: #ffffff;
+    }   
 .mytable{
 	width: 100%;
 	border-collapse: collapse;
@@ -400,3 +472,52 @@
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+.normalCommentOutput{
+	width: 100%;
+	padding: 10px;
+}
+.normalCommentContent{
+	font-family:'Sunflower';
+	font-size: 20px;
+}
+.normalCommentWriterName{
+	font-family:'Sunflower';
+	font-size: 16px;
+}
+.normalCommentDate{
+	font-family:'Sunflower'; 
+	font-size: 14px;
+	margin-left: 10px;
+	color:rgba(118, 0, 253, 0.733);
+}
+.delBtn{
+	float:right;
+	border: none;
+	font-size: 14px;
+}
+
+
+.workCommentOutput{
+	width: 100%;
+	padding: 10px;
+}
+.workCommentContent{
+	font-family:'Sunflower';
+	font-size: 20px;
+}
+.workCommentWriter{
+	font-family:'Sunflower';
+	font-size: 16px;
+}
+.workCommentDate{
+	font-family:'Sunflower'; 
+	font-size: 14px;
+	margin-left: 10px;
+	color:rgba(118, 0, 253, 0.733);
+}
+.delBtn{
+	float:right;
+	border: none;
+	font-size: 14px;
+}

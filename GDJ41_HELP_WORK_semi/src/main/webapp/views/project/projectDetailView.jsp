@@ -8,7 +8,7 @@
 <%@ include file="/views/common/header.jsp"%>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2117f58ed9ba4b4e13a9bca2bc216232&&APIKEY&libraries=services"></script>
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Sunflower:wght@300&display=swap" rel="stylesheet">
 <%
    Project p = (Project)request.getAttribute("projectInfo");
    List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
@@ -48,43 +48,6 @@ function contentListAjax(cPage){
             
             const tr = $("<tr onclick='contentView(this);'>");
             
-            const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
-            const memberName = $("<td>").html(memberList[i]["memberName"]);
-            const writeDate = $("<td>").html(memberList[i]["writeDate"]);
-            // const workIng = $("<td>").html(memberList[i]["workIng"]);
-            //const workRank = $("<td>").html(memberList[i]["workRank"]);
-            const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
-            const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
-            
-            tr.append(contentTitle).append(memberName).append(writeDate);
-            
-            let workIng;
-            if(memberList[i]["workIng"] =='요청'){
-            	workIng = $("<td>").html("<span style='background-color:rgba(0, 204, 255, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
-            }else if(memberList[i]["workIng"] =='진행'){
-            	workIng = $("<td>").html("<span style='background-color:rgba(145, 255, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
-            }else if(memberList[i]["workIng"] =='피드백'){
-            	workIng = $("<td>").html("<span style='background-color:rgba(255, 208, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
-            }else if(memberList[i]["workIng"] =='보류'){
-            	workIng = $("<td>").html("<span style='background-color:rgba(161, 161, 161, 0.548); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
-            }else if(memberList[i]["workIng"] =='완료'){
-            	workIng = $("<td>").html("<span style='background-color:rgb(108, 33, 230); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
-            }
-            tr.append(workIng);
-            
-            let workRank;
-            if(memberList[i]["workRank"] =='긴급'){
-            	workRank = $("<td style='color:red'>").html(memberList[i]["workRank"]);
-            }else if(memberList[i]["workRank"] =='높음'){
-            	workRank = $("<td style='color:orange'>").html(memberList[i]["workRank"]);
-            }else if(memberList[i]["workRank"] =='보통'){
-            	workRank = $("<td style='color:gray'>").html(memberList[i]["workRank"]);
-            }else if(memberList[i]["workRank"]== '낮음'){
-            	workRank = $("<td style='color:rgba(0, 204, 255, 0.753);'>").html(memberList[i]["workRank"]);
-            }
-            tr.append(workRank);
-            
-            
             let dist;
             if(memberList[i]['dist'] == "게시글"){
             	dist = $("<td>").html("<sapn style='margin-right:10px; color:rgb(235, 142, 4)'><i class='fas fa-align-justify'></i></sapn>"+memberList[i]['dist']);	
@@ -96,11 +59,50 @@ function contentListAjax(cPage){
             	dist = $("<td>").html("<sapn style='margin-right:10px; color:rgba(66, 217, 255, 0.719);'><i class='far fa-calendar'></i></sapn>"+memberList[i]['dist']);	
             	tr.prepend(dist);
            }
+            
+            const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
+            const memberName = $("<td>").html(memberList[i]["memberName"]);
+            const writeDate = $("<td>").html(memberList[i]["writeDate"]);
+            const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
+            const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
+            
+            tr.append(dist).append(contentTitle).append(memberName).append(writeDate);
+            
+            
+            
+            let workIng = $("<td>");
+            if(memberList[i]["workIng"] =='요청'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(0, 204, 255, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='진행'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(145, 255, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='피드백'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(255, 208, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='보류'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(161, 161, 161, 0.548); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='완료'){
+            	workIng = $("<td>").html("<span style='background-color:rgb(108, 33, 230); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else{
+            	tr.append(workIng);
+            }
+            tr.append(workIng);
+            
+            let workRank = $("<td>");
+            if(memberList[i]["workRank"] =='긴급'){
+            	workRank = $("<td style='color:red'>").html(memberList[i]["workRank"]);
+            }else if(memberList[i]["workRank"] =='높음'){
+            	workRank = $("<td style='color:orange'>").html(memberList[i]["workRank"]);
+            }else if(memberList[i]["workRank"] =='보통'){
+            	workRank = $("<td style='color:gray'>").html(memberList[i]["workRank"]);
+            }else if(memberList[i]["workRank"]== '낮음'){
+            	workRank = $("<td style='color:rgba(0, 204, 255, 0.753);'>").html(memberList[i]["workRank"]);
+            }else{
+            	tr.append(workRank);
+            }
+            tr.append(workRank);
            
            tr.append(memberId).append(contentNo);
            table.append(tr);
          }
-         console.log(data["pageBar"]);
          const div=$("<div style='text-align:center;'>").attr("id","pageBar").html(data["pageBar"]);
          $("#contentArea").append(table)
          $("#pageNavContainer").append(div);
@@ -128,34 +130,79 @@ function searchListAjax(cPage){
          dist:dist,
          cPage:cPage},
       success:data=>{
-         
+    	 $("#pageNavContainer").html("");
+    	 
          $("#contentArea").html("");
          $("#searchConKeyword").val("");
          const memberList = data["pList"];
          
-         const table = $("<table class='table' style='text-align:center;'>");
+         const table = $("<table class='mytable' style='text-align:center;'>");
          const thead = "<thead><tr><th scope='col'>구분</th><th scope='col'>제목</th><th scope='col'>작성자</th><th scope='col'>작성일</th><th scope='col'>상태</th><th scope='col'>순위</th></tr></thead>";
          table.append(thead);
          
          for(let i = 0; i< memberList.length;i++){
+             
+             const tr = $("<tr onclick='contentView(this);'>");
+             
+             let dist;
+             if(memberList[i]['dist'] == "게시글"){
+             	dist = $("<td>").html("<sapn style='margin-right:10px; color:rgb(235, 142, 4)'><i class='fas fa-align-justify'></i></sapn>"+memberList[i]['dist']);	
+             	tr.prepend(dist);
+             }else if(memberList[i]['dist'] == "업무"){
+             	 dist = $("<td>").html("<sapn style='margin-right:10px;color:rgb(77, 0, 128)'><i class='fas fa-tasks'></i></sapn>"+memberList[i]['dist']);	
+             	tr.prepend(dist);
+             }else{
+             	dist = $("<td>").html("<sapn style='margin-right:10px; color:rgba(66, 217, 255, 0.719);'><i class='far fa-calendar'></i></sapn>"+memberList[i]['dist']);	
+             	tr.prepend(dist);
+            }
+             
+             const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
+             const memberName = $("<td>").html(memberList[i]["memberName"]);
+             const writeDate = $("<td>").html(memberList[i]["writeDate"]);
+             const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
+             const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
+             
+             tr.append(dist).append(contentTitle).append(memberName).append(writeDate);
+             
+             
+             
+             let workIng = $("<td>");
+             if(memberList[i]["workIng"] =='요청'){
+             	workIng = $("<td>").html("<span style='background-color:rgba(0, 204, 255, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+             }else if(memberList[i]["workIng"] =='진행'){
+             	workIng = $("<td>").html("<span style='background-color:rgba(145, 255, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+             }else if(memberList[i]["workIng"] =='피드백'){
+             	workIng = $("<td>").html("<span style='background-color:rgba(255, 208, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+             }else if(memberList[i]["workIng"] =='보류'){
+             	workIng = $("<td>").html("<span style='background-color:rgba(161, 161, 161, 0.548); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+             }else if(memberList[i]["workIng"] =='완료'){
+             	workIng = $("<td>").html("<span style='background-color:rgb(108, 33, 230); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+             }else{
+             	tr.append(workIng);
+             }
+             tr.append(workIng);
+             
+             let workRank = $("<td>");
+             if(memberList[i]["workRank"] =='긴급'){
+             	workRank = $("<td style='color:red'>").html(memberList[i]["workRank"]);
+             }else if(memberList[i]["workRank"] =='높음'){
+             	workRank = $("<td style='color:orange'>").html(memberList[i]["workRank"]);
+             }else if(memberList[i]["workRank"] =='보통'){
+             	workRank = $("<td style='color:gray'>").html(memberList[i]["workRank"]);
+             }else if(memberList[i]["workRank"]== '낮음'){
+             	workRank = $("<td style='color:rgba(0, 204, 255, 0.753);'>").html(memberList[i]["workRank"]);
+             }else{
+             	tr.append(workRank);
+             }
+             tr.append(workRank);
             
-            const tr = $("<tr scope='row' onclick='contentView(this);'>");
-            const dist = $("<td>").html(memberList[i]['dist']);
-            const contentTitle = $("<td style='cursor: pointer;' >").html(memberList[i]["contentTitle"]);
-            const memberName = $("<td>").html(memberList[i]["memberName"]);
-            const writeDate = $("<td>").html(memberList[i]["writeDate"]);
-            const workIng = $("<td>").html(memberList[i]["workIng"]);
-            const workRank = $("<td>").html(memberList[i]["workRank"]);
-            const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
-            const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
-            
-            
-            tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(workRank).append(memberId).append(contentNo);
+            tr.append(memberId).append(contentNo);
             table.append(tr);
-         }
+          }
+         const div=$("<div style='text-align:center;'>").attr("id","pageBar").html(data["pageBar"]);
+         $("#contentArea").append(table);
+         $("#pageNavContainer").append(div);
          
-         const div=$("<div>").attr("id","pageBar").html(data["pageBar"]);
-         $("#contentArea").append(table).append(div);
          
       }
       
@@ -228,16 +275,16 @@ function contentView(e){
                
                $("#writerName").html(pc["memberName"]);
                $("#writeDate").html(pc["writeDate"]);
-               $("#normalReadCount").html(pc["readCount"]);
+               $("#normalReadCount").html("<span>조회수 "+pc["readCount"]+"</span>");
                $("#contentTitleView").html(pc["contentTitle"]);
                $("#contentBody").html(pc["content"]);
-               $("#normalContentNo").html(pc["contentNo"]);
+               $("#normalContentNo").html("<span style='border:1px solid lightgray;border-radius:17px; padding:5px;'>"+pc["contentNo"]+"</span>");
                $("#normalContentDist").html(pc["dist"]);
                $("#normalOriFileName").children().remove();
                $("#normalReFileName").children().remove();
                for(let i =0;i<mfile.length;i++){
-                  const h5 =$("<h5>");
-                  const h6 = $("<h6>");
+                  const h5 =$("<div>");
+                  const h6 = $("<div>");
                   h5.html("<a href=\"javascript:fn_normalFileDownload(\'"+mfile[i]['normalOriFileName']+"\',\'"+mfile[i]['normalReFileName']+"\');\">"+mfile[i]['normalOriFileName']+"</a>");
                   h6.html(mfile[i]["normalReFileName"]);
                   $("#normalOriFileName").append(h5)
@@ -252,28 +299,29 @@ function contentView(e){
                   $("#workWriterName").html(pc["memberName"]);
                      $("#workWriteDate").html(pc["writeDate"]);
                      $("#workContentTitleView").html(pc["contentTitle"]);
-                     $("#workReadCount").html(pc["readCount"]);
-                     $("#workIngView").html(pc["workIng"]);
-                     
+                     $("#workReadCount").html("<span>조회수 "+pc["readCount"]+"</span>");
+                     $("#workIngView").html("<span style='margin-right:8px;'><i class='fas fa-history'></i> 진행상태 : </span>"+pc["workIng"]);
+                    
                      $("#workManager").children().remove();
+                     $("#workManager").html("<span><i class='fas fa-user'></i> 업무담당자 : </span>");
+                     
                      for(let i=0;i<memberNameList.length;i++){
-                           const span = $("<span>");
+                           const span = $("<span style='padding-right:5px;'>");
                            span.html(memberNameList[i]["managerName"]);
                            $("#workManager").append(span);   
                      }
-                     
-                     $("#workStartDate_view").html(pc["startDate"]);
-                     $("#workEndDate_view").html(pc["endDate"]);
-                     $("#workRank_view").html(pc["workRank"])
+                     $("#workStartDate_view").html("<span style='padding-right:5px; color:rgb(1, 161, 36);'><i class='fas fa-calendar-plus'></i></span>"+pc["startDate"]);
+                     $("#workEndDate_view").html("<span style='padding-right:5px;color:rgb(255, 83, 53);'><i class='fas fa-calendar-check'></i></span>"+pc["endDate"]);
+                     $("#workRank_view").html("<span style='padding-right:5px;'><i class='fas fa-flag'></i></span>"+pc["workRank"])
                      $("#workContent_view").html(pc["content"]);
-                     $("#workContentNo").html(pc["contentNo"]);
+                     $("#workContentNo").html("<span style='border:1px solid lightgray;border-radius:17px; padding:5px;'>"+pc["contentNo"]+"</span>");
                      $("#workdist").html(pc["dist"]);
                      
                      $("#workOriFileName").children().remove();
                   $("#workReFileName").children().remove();
                   for(let i =0;i<mfile.length;i++){
-                     const h5 =$("<h5>");
-                     const h6 = $("<h6>");
+                     const h5 =$("<div>");
+                     const h6 = $("<div>");
                      h5.html("<a href=\"javascript:fn_workFileDownload(\'"+mfile[i]['workOriFileName']+"\',\'"+mfile[i]['workReFileName']+"\');\">"+mfile[i]['workOriFileName']+"</a>");
                      h6.html(mfile[i]["workReFileName"]);
                      $("#workOriFileName").append(h5)
@@ -288,8 +336,8 @@ function contentView(e){
                 $("#scheWriterName").html(pc["memberName"]);
                      $("#scheWriteDate").html(pc["writeDate"]);
                      $("#scheContentTitleView").html(pc["contentTitle"]);
-                     $("#scheReadCount").html(pc["readCount"]);
-                     $("#scheContentNo").html(pc["contentNo"]);
+                     $("#scheReadCount").html("<span>조회수 "+pc["readCount"]+"</span>");
+                     $("#scheContentNo").html("<span style='border:1px solid lightgray;border-radius:17px; padding:5px;'>"+pc["contentNo"]+"</span>");
                      $("#schedist").html(pc["dist"]);
                      
                      $("#scheAttendPeople").children().remove();
@@ -339,37 +387,44 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 <!-- 일반 게시글 상세화면 -->
 <button class="btn btn-primary" type="button" id="viewBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#contentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="contentView" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header"> 
+  <div class="offcanvas-header" style="background-color:rgba(217, 170, 255, 0.082);"> 
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="normal_close_btn"></button>
   </div>
-   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
-         <span id="normalContentNo" style="display:none;"></span>
-         <span id="normalContentDist" style="display:none;"></span>
-         <span id="writerName" style="font-size: 18px; font-weight: bold;"></span>
-         <span id="writeDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-         <span id="normalReadCount"></span>
-         <h4 id="contentTitleView" style="margin-top: 20px;"></h4>
-          <div class="updateBtnContainer" style="display:none;">
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal_update" id="normal_update_btn">수정</button>
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
-    </div> 
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray;background-color:rgba(217, 170, 255, 0.082);">
+         <div id="normalContentDist" style="display:none;"></div>
+         <div id="normalContentNo" style="text-align:right;font-family:'Do Hyeon'; margin-right: 15px; "></div>
+         <div id="contentTitleView" style="font-size: 25px; font-family:'Do Hyeon';margin-left: 20px; "></div>
+         <div id="writerName" style="font-size: 18px; font-family:'Do Hyeon'; display:inline-block; margin-left: 20px;"></div>
+         <div id="writeDate"style="font-size: 18px; font-family:'Do Hyeon';  margin-left: 15px; display:inline-block;"></div>
    </div>
-  
-  <div class="offcanvas-body" id="contentBody"></div>
-  <div class="offcanvas-body" id="contentfooter" style="border-top: 1px solid lightgray;">
-     <div id="normalFileContainer">
-        <div id="normalOriFileName"></div>
-        <div id="normalReFileName" style="display: none;"></div>
-     </div>
+  <div class="offcanvas-body" id="contentBody" style="word-break:break-all;"></div>
+  <div>
+   <div class="updateBtnContainer" style="display:none; text-align: right;">
+        <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal_update" id="normal_update_btn">수정</button>
+        <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
+   </div>
+  <div id="normalReadCount" style="font-family:'Do Hyeon';text-align:right; margin-right:20px;"></div>
+   <div id="normalFileContainer" style="margin-right: 20px;">
+	        <div id="normalOriFileName" style="font-family:'Do Hyeon'; font-size: 20px; padding:10px;"></div>
+	        <div id="normalReFileName" style="display: none;"></div>
+	</div>
+  </div>
+  <div class="offcanvas-body" id="contentfooter" style="border-top: 1px solid lightgray; background-color:rgba(217, 170, 255, 0.082);">
+ 	
      <!-- 댓글 입력 -->
-     <div id="normalCommentContainer">
+     <div id="normalCommentContainer"  style="width: 100%; text-align: center; ">
      	<div class="comment_editor">
-     		<textarea rows="1" cols="60" style="resize:none;" id="normal_comment"></textarea>
-     		<button type="button" id="normal_comment_submit" class="btn btn-outline-secondary">등록</button>
+     		<div style="display: inline-block; width: 70%; vertical-align: middle;">
+     			<textarea rows="1" cols="60" style="resize:none;" placeholder="댓글입력" id="normal_comment" class="form-control"></textarea>
+     		</div>
+     		<div style="display: inline-block; vertical-align: middle;">
+     			<button type="button" id="normal_comment_submit" class="btn btn-outline-secondary">등록</button>
+     		</div>
+     		
      	</div>
      </div>
      <!-- 댓글 출력 -->
-     <div id="normalCommentOutputContainer">
+     <div id="normalCommentOutputContainer" style="margin-top: 20px;">
      	
      </div>
   </div>
@@ -415,15 +470,15 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 				$("#normalCommentOutputContainer").html("");
 				for(let i=0;i<data.length;i++){
 					const normalCommentNo = $("<div class='normalCommentNo' style='display:none;'>").text(data[i]["normalCommentNo"]);
-					const normalCommentContent = $("<div class='normalCommentContent' style='display: inline-block;'>").text(data[i]["normalCommentContent"]);
+					const normalCommentContent = $("<div class='normalCommentContent'>").text(data[i]["normalCommentContent"]);
 					const normalCommentWriterName = $("<div class ='normalCommentWriterName' style='display: inline-block;'>").text(data[i]["writerName"]);
 					const normalCommentDate = $("<div class='normalCommentDate' style='display: inline-block;'>").text(data[i]["commentDate"]);	
-					const normalCommentOutput = $("<div class='normalCommentOutput'>");
+					const normalCommentOutput = $("<div class='normalCommentOutput' style='border-bottom:1px solid lightgray;'>");
 					const normalCommentWriterId = $("<div class='normalCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
-					normalCommentOutput.append(normalCommentContent).append(normalCommentWriterName).append(normalCommentDate).append(normalCommentNo).append(normalCommentWriterId)
+					normalCommentOutput.append(normalCommentWriterName).append(normalCommentDate).append(normalCommentContent).append(normalCommentNo).append(normalCommentWriterId)
 					if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
-						const deletBtn = $("<button class='btn btn-outline-secondary' onclick='deleteNormalComment(this);'>삭제</button>");
-						normalCommentOutput.append(deletBtn);
+						const deletBtn = $("<button class='btn btn-outline-secondary delBtn' onclick='deleteNormalComment(this);'>삭제</button>");
+						normalCommentContent.append(deletBtn);
 					}
 					$("#normalCommentOutputContainer").append(normalCommentOutput);	
 					
@@ -435,7 +490,7 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 	//댓글 삭제
 	function deleteNormalComment(e){
 		
-		let normalCommentNo = $(e).parent().children().eq(3).text();
+		let normalCommentNo = $(e).parent().next().text();
 		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/project/normal/deleteNormalComment.do",
@@ -455,44 +510,49 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 
 <button class="btn btn-primary"  id="workViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#workContentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="workContentView" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header"> 
+  <div class="offcanvas-header" style="background-color:rgba(217, 170, 255, 0.082);"> 
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="work_close_btn"></button>
   </div>
-   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
-         
-         <span id="workWriterName" style="font-size: 18px; font-weight: bold;"></span>
-         <span id="workWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-         <span id="workReadCount"></span>
-         <h4 id="workContentTitleView" style="margin-top: 20px;"></h4>
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray;background-color:rgba(217, 170, 255, 0.082);">
+         <div id="workContentNo" style="text-align:right;font-family:'Do Hyeon'; margin-right: 15px; "></div>
+         <div id="workContentTitleView" style="font-size: 25px; font-family:'Do Hyeon';margin-left: 20px; "></div>
+         <div id="workWriterName" style="font-size: 18px; font-family:'Do Hyeon'; display:inline-block; margin-left: 20px;"></div>
+         <div id="workWriteDate" style="font-size: 18px; font-family:'Do Hyeon';  margin-left: 15px; display:inline-block;"></div>
    </div>
-  <div class="offcanvas-body" id="contentBody">
-        <div id="workIngView"></div>
-        <div id="workManager"></div>
-        <div id="workStartDate_view"></div>
-        <div id="workEndDate_view"></div>
-        <div id="workRank_view"></div>
+  <div class="offcanvas-body" id="contentBody" style="word-break:break-all;">
+        <div id="workIngView" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="workManager" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="workStartDate_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="workEndDate_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="workRank_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
         <div id="workContent_view"></div>
-        <div id="workContentNo" style="display:none;"></div>
         <div id="workdist" style="display:none;"></div>
   </div>
-  <div class="offcanvas-body" id="contentfooter">
+     <div class="updateBtnContainer" style="display: none;text-align: right;">
+        <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateWorkModal" id="updateWork_">수정</button>
+        <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete" id="del_btn2">삭제</button>
+     </div>
+   <div id="workReadCount" style="font-family:'Do Hyeon'; text-align:right; margin-right:20px;"></div>
+   
+  <div class="offcanvas-body" id="contentfooter" style="background-color:rgba(217, 170, 255, 0.082);">
      <div id="workFileContainer">
         <div id="workOriFileName"></div>
         <div id="workReFileName" style="display:none;"></div>
      </div>
-     <div class="updateBtnContainer" style="display: none;">
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateWorkModal" id="updateWork_">수정</button>
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete" id="del_btn2">삭제</button>
-     </div>
+     
      <!-- 댓글 입력 -->
-     <div id="normalCommentContainer">
+     <div id="normalCommentContainer" style="width: 100%; text-align: center;">
      	<div class="comment_editor">
-     		<textarea rows="1" cols="60" style="resize:none;" id="work_comment"></textarea>
+     		<div style="display: inline-block; width: 70%; vertical-align: middle;">
+     			<textarea rows="1" cols="60" style="resize:none;" id="work_comment" placeholder="댓글입력" class="form-control"></textarea>
+     		</div>
+     		<div style="display: inline-block; vertical-align: middle;">
      		<button type="button" id="work_comment_submit" class="btn btn-outline-secondary">등록</button>
-     	</div>
+     		</div>
+    	 </div>
      </div>
      <!-- 댓글 출력 -->
-     <div id="workCommentOutputContainer">
+     <div id="workCommentOutputContainer" style="margin-top: 20px;">
      	
      </div>
   </div>
@@ -538,16 +598,16 @@ function workCommentView(){
 			$("#workCommentOutputContainer").html("");
 			for(let i=0;i<data.length;i++){
 				const workCommentNo = $("<div class='workCommentNo' style='display:none;'>").text(data[i]["workCommentNo"]);
-				const workCommentContent = $("<div class='workCommentContent' style='display: inline-block;'>").text(data[i]["workCommentContent"]);
+				const workCommentContent = $("<div class='workCommentContent'>").text(data[i]["workCommentContent"]);
 				const workCommentWriterId = $("<div class='workCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
 				const workCommentWriter = $("<div class ='workCommentWriter' style='display: inline-block;'>").text(data[i]["writerName"]);
 				const workCommentDate = $("<div class='workCommentDate' style='display: inline-block;'>").text(data[i]["commentDate"]);	
-				const workCommentOutput = $("<div class='workCommentOutput'>");
+				const workCommentOutput = $("<div class='workCommentOutput' style='border-bottom:1px solid lightgray;'>");
 				
-				workCommentOutput.append(workCommentContent).append(workCommentWriter).append(workCommentDate).append(workCommentNo).append(workCommentWriterId);
+				workCommentOutput.append(workCommentWriter).append(workCommentDate).append(workCommentContent).append(workCommentNo).append(workCommentWriterId);
 				if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
-					const deletBtn = $("<button class='btn btn-outline-secondary' onclick='deleteWorkComment(this);'>삭제</button>");
-					workCommentOutput.append(deletBtn);
+					const deletBtn = $("<button class='btn btn-outline-secondary delBtn' onclick='deleteWorkComment(this);'>삭제</button>");
+					workCommentContent.append(deletBtn);
 				}
 				$("#workCommentOutputContainer").append(workCommentOutput);
 			}
@@ -557,7 +617,7 @@ function workCommentView(){
 //댓글 삭제
 function deleteWorkComment(e){
 	
-	let workCommentNo = $(e).parent().children().eq(3).text();
+	let workCommentNo = $(e).parent().next().text();
 	
 	$.ajax({
 		url : "<%=request.getContextPath()%>/project/work/deleteWorkComment.do",
@@ -862,33 +922,33 @@ function deleteScheComment(e){
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="workTitle">
       <span id="work_titleResult"></span>
-      <div id="work_Ing_container">
-         <span><i class="fas fa-history"></i></span>
-         <input type="radio" value="요청" id="call" name="work_ing"><label for="call">요청</label>
-         <input type="radio" value="진행" id="ing" name="work_ing"><label for="ing">진행</label>
-        <input type="radio" value="피드백" id="feedback" name="work_ing"><label for="feedback">피드백</label>
-         <input type="radio" value="보류" id="hold" name="work_ing"><label for="hold">보류</label>
-         <input type="radio"value="완료" id="complete" name="work_ing"><label for="complete">완료</label>
+      <div id="work_Ing_container" style="padding-left: 20px; padding-top: 20px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-history"></i></span>
+         <label for="call" class="workIngLa"><input type="radio" value="요청" id="call" name="work_ing"><span style="background-color: #00b2ff">요청</span></label>
+         <label for="ing" class="workIngLa"><input type="radio" value="진행" id="ing" name="work_ing"><span style="background-color: #00b01c" >진행</span></label>
+         <label for="feedback" class="workIngLa"><input type="radio" value="피드백" id="feedback" name="work_ing"><span style="background-color:#fd7900;">피드백</span></label>
+         <label for="hold" class="workIngLa"><input type="radio" value="보류" id="hold" name="work_ing"><span style="background-color: #777;">보류</span></label>
+         <label for="complete" class="workIngLa"><input type="radio"value="완료" id="complete" name="work_ing"><span style="background-color:#402a9d;">완료</span></label>
       </div>
-      <div id="work_addMember_container">
-         <span><i class="fas fa-user"></i></span>
-         <div><select class="form-select" id="work_addMember"></select></div>
+      <div id="work_addMember_container" style="padding-left: 20px; padding-top: 10px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-user"></i></span>
+         <div style="display: inline-block;"><select class="form-select" id="work_addMember"></select></div>
          <div id="work_addMember_area"></div>
       </div>
-      <div id="workStart_container">
-         <span><i class="fas fa-calendar-plus"></i></span>
+      <div id="workStart_container" style="padding-left: 20px; padding-top: 5px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-plus"></i></span>
          <input type="date" id="workStart">
       </div>
-      <div id="workEnd_container">
-         <span><i class="fas fa-calendar-check"></i></span>
+      <div id="workEnd_container" style="padding-left: 20px;padding-top: 8px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-check"></i></span>
          <input type="date" id="workEnd">
       </div>
-      <div id="workRank_container">
+      <div id="workRank_container" style="padding-left: 20px;padding-top: 8px;">
          <span><i class="fas fa-flag"></i></span>
-          <input type="radio" value="보통" id="normal" name="work_rank"><label for="normal">보통</label>
-          <input type="radio" value="낮음" id="row" name="work_rank"><label for="row">낮음</label>
-          <input type="radio" value="긴급" id="emergency" name="work_rank"><label for="emergency">긴급</label>
-          <input type="radio" value="높음" id="high" name="work_rank"><label for="high">높음</label>
+          <label for="normal" class="workRankLa"><input type="radio" value="보통" id="normal" name="work_rank"><span>보통</span></label>
+          <label for="row" class="workRankLa"><input type="radio" value="낮음" id="row" name="work_rank"><span>낮음</span></label>
+          <label for="emergency" class="workRankLa"><input type="radio" value="긴급" id="emergency" name="work_rank"><span>긴급</span></label>
+          <label for="high" class="workRankLa"><input type="radio" value="높음" id="high" name="work_rank"><span>높음</span></label>
       </div>
       
         <textarea class="form-control" placeholder="내용을 입력하세요" id="workContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
@@ -1053,27 +1113,34 @@ $("#work_update_Btn").click(e=>{
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="scheTitle">
       <span id="sche_titleResult"></span>
-      <div id="sche_addMember_container">
-         <span><i class="fas fa-user"></i></span>
-         <div><select class="form-select" id="sche_addMember">
+      
+      <div id="sche_addMember_container" style="padding-left: 20px; padding-top: 10px;">
+         <span style="font-size: 20px; margin-right: 15px;" ><i class="fas fa-user"></i></span>
+         <div style="display: inline-block;"><select class="form-select" id="sche_addMember">
          </select></div>
          <div id="sche_addMember_area"></div>
       </div>
-      <div id="scheStart_container">
-         <span><i class="fas fa-calendar-plus"></i></span>
+     
+     
+      <div id="scheStart_container" style="padding-left: 20px; padding-top: 5px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-plus"></i></span>
          <input type="date" id="scheStartDate">
       </div>
-      <div id="scheEnd_container">
-         <span><i class="fas fa-calendar-check"></i></span>
+      <div id="scheEnd_container" style="padding-left: 20px;padding-top: 8px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-check"></i></span>
          <input type="date" id="scheEndDate">
       </div>
 
-      <div>
-           <button type="button" class="btn" id="sche_place_btn"><i class="fas fa-map-marker-alt"></i>장소검색</button>
-              <div id="test" style="display:none;">
-                 <input type="text" id="searchKeyword">
-                 <button id="searchBtn">검색</button>
+      <div  style="padding-left: 20px;padding-top: 8px;">
+      	<span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-map-marker-alt"></i></span>
+           <button type="button" class="btn" id="sche_place_btn" style="font-family: 'Do Hyeon';font-size: 20px;">장소검색</button>
+           <div style="width: 200px;">
+           	  <div id="test" style="display:none;"class="input-group mb-3" >
+                 <input type="text" id="searchKeyword" class="form-control">
+                 <button id="searchBtn" class="btn btn-outline-secondary">검색</button>
               </div>
+           </div>
+              
        </div>
        <div id="searchContainer" style="display:none; width: 100%; height: 500px;">
           <div class="map_wrap">
@@ -1084,7 +1151,7 @@ $("#work_update_Btn").click(e=>{
              </div>
           </div>
       </div>
-      <div id="searchResultContainer">
+      <div id="searchResultContainer" style="padding-left: 20px; padding-top: 5px; font-family: 'Do Hyeon'">
       </div>
 
     <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
@@ -1440,8 +1507,8 @@ $("#sche_place_btn").click(e=>{
 </div>
 <div id="menu-container">
    <ul class="nav">
-      <li class="nav-item" style="font-family:'Jua'"><a class="nav-link " aria-current="page" href="#">홈</a></li>
-      <li class="nav-item" style="font-family:'Jua'"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
+      <li class="nav-item" style="font-family:'Sunflower'"><a class="nav-link " aria-current="page" href="#">홈</a></li>
+      <li class="nav-item" style="font-family:'Sunflower'"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
    </ul>
 </div>
    <hr style="margin-top: 5px;">
@@ -1449,9 +1516,9 @@ $("#sche_place_btn").click(e=>{
    <div id="inner_pro_container">
    <div id="inputContent_container">
       <div id="input-group">
-         <div id="insertNormal"><a href="#"><span><i class="fas fa-edit"></i></span>&nbsp;글</a></div>
-         <div id="insertWork"><a href="#"><span><i class="fas fa-list"></i></span>&nbsp;업무</a></div>
-         <div id="insertSche"><a href="#"><span><i class="far fa-calendar"></i></span>&nbsp;일정</a></div>
+         <div id="insertNormal" style="font-family: 'Do Hyeon'"><a href="#"><span><i class="fas fa-edit"></i></span>&nbsp;글</a></div>
+         <div id="insertWork" style="font-family: 'Do Hyeon'"><a href="#"><span><i class="fas fa-list"></i></span>&nbsp;업무</a></div>
+         <div id="insertSche" style="font-family: 'Do Hyeon'"><a href="#"><span><i class="far fa-calendar"></i></span>&nbsp;일정</a></div>
       <div style="border-top: 1px solid lightgray;
        height: 50%; width: 100%; display: block; margin-top: 13px; font-size: 20px;
        padding:15px; text-align: left;"> 내용을 입력하세요 </div>
@@ -1817,7 +1884,7 @@ $("#search_Member_btn").click(e=>{
             managerId = new Array();// 현재 프로젝트에 참여중인 멤버 아이디
             select = $("#work_addMember");
             
-            ophead = $("<option>").text("담당자 추가");
+            
             select.children().remove();
             select.append(ophead);
             
@@ -1848,9 +1915,7 @@ $("#search_Member_btn").click(e=>{
             memberName = new Array();//현재 프로젝트에 참여중인 멤버 이름
             managerId = new Array();// 현재 프로젝트에 참여중인 멤버 아이디
             
-             selectSche = $("#sche_addMember");
-            opheadSche = $("<option>").text("참석자 추가");
-            
+            selectSche = $("#sche_addMember");
             selectSche.children().remove();
             selectSche.append(opheadSche);
             
@@ -1899,11 +1964,9 @@ $("#search_Member_btn").click(e=>{
          let span = $("<span>");
          let selectMemberName = $("#work_addMember option:selected").text();      
          let selectManaId = select.val();
-         
-   
+   		
          span.text(selectMemberName);
          span.val(selectManaId);
-         
          
          //선택된 유저id 배열에 넣어주기
          for(let i =0; i<memberName.length;i++){
@@ -2064,6 +2127,7 @@ $("#search_Member_btn").click(e=>{
       let selectManaId = selectSche.val();
       span.text(selectMemberName);
       span.val(selectManaId);   
+     
       
       //선택된 유저id 배열에 넣어주기
       for(let i =0; i<memberName.length;i++){

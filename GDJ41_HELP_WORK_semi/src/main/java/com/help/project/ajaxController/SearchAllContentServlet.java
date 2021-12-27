@@ -60,27 +60,42 @@ public class SearchAllContentServlet extends HttpServlet {
 		
 		int pageEnd = pageNo+pageBarSize-1;
 		
-		String pageBar ="";
+		
+		
+		String pageBar ="<nav aria-label=\"Page navigation example\">\r\n"
+				+ "  <ul class=\"pagination\">\r\n"
+				+ "    <li class=\"page-item\">";
 		
 		if(pageNo==1) {//첫번째 페이지면? 이전 버튼이 눌리지 않음
-			pageBar ="<span>[이전]</span>";
+			pageBar +=" <a class=\"page-link\" href=\"#\" aria-label=\"Previous\">\r\n"
+					+ "        <span aria-hidden=\"true\">&laquo;</span>\r\n"
+					+ "      </a></li>";
 		}else {
-			pageBar = "<a href='javascript:searchListAjax("+(pageNo-1)+");'>[이전]</a>";
+			pageBar += "<a class=\"page-link\" aria-label=\"Previous\" href='javascript:searchListAjax("+(pageNo-1)+");'><span aria-hidden=\"true\">[이전]</span></a></li>";
 		}
 		
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(cPage==pageNo) {
-				pageBar+="<span>"+pageNo+"</span>"; //내가 현재 보고 있는 페이지기때문에 굳이 누를 필요가 없음
+				pageBar+=" <li class=\"page-item\"><a class=\"page-link\" href=\"#\">"+pageNo+"</a></li>"; //내가 현재 보고 있는 페이지기때문에 굳이 누를 필요가 없음
 			}else {
-				pageBar+="<a href='javascript:searchListAjax("+(pageNo)+");'>"+pageNo+"</a>";
+				pageBar+="<li class=\"page-item\"><a class=\"page-link\" href='javascript:searchListAjax("+(pageNo)+");'>"+pageNo+"</a></li>";
 			}
 			pageNo++;
 		}
 		
 		if(pageNo>totalPage) {
-			pageBar+="<span>[다음]</span>";
+			pageBar+="<li class=\"page-item\">\r\n"
+					+ "      <a class=\"page-link\" href=\"#\" aria-label=\"Next\">\r\n"
+					+ "        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+					+ "      </a>\r\n"
+					+ "    </li>\r\n"
+					+ "  </ul>\r\n"
+					+ "</nav>";
 		}else {
-			pageBar+="<a href='javascript:searchListAjax("+(pageNo)+");'>[다음]</a>";
+			pageBar+=" <li class=\"page-item\"><a class=\"page-link\" aria-label=\"Next\" href='javascript:searchListAjax("+(pageNo)+");'><span aria-hidden=\"true\">&raquo;</span></a>\r\n"
+					+ "    </li>\r\n"
+					+ "  </ul>\r\n"
+					+ "</nav>";
 		}
 		
 
