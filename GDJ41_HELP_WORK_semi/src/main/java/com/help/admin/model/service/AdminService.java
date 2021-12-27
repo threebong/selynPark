@@ -96,5 +96,40 @@ public class AdminService {
 		else rollback(conn);
 		return result;
 	}
+	
+	
+	public int updateDeptName(String deptCode, String deptName) {
+		Connection conn = getConnection();
+		int result = dao.updateDeptName(conn, deptCode, deptName);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		return result;
+	}
 
+	public int updatePositionName(String positionCode, String positionName) {
+		Connection conn = getConnection();
+		int result = dao.updatePositionName(conn, positionCode, positionName);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+	
+	
+	public int deleteDept(String deptCode) {
+		Connection conn = getConnection();
+		int result = dao.deleteDept(conn, deptCode);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+	
+	
+	
+	public int deletePosition(String positionCode) {
+		Connection conn = getConnection();
+		int result = dao.deletePosition(conn, positionCode);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		return result;
+	}
 }

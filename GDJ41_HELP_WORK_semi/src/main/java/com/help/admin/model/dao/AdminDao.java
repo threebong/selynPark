@@ -317,5 +317,103 @@ public class AdminDao {
 		
 	}
 	
+	
+	//부서명 수정
+	public int updateDeptName(Connection conn, String deptCode, String deptName) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updateDeptName");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, deptName);
+			pstmt.setString(2, deptCode);
+			result=pstmt.executeUpdate();
+			
+			
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
+	}
+	
+	
+	//직급명 수정
+	public int updatePositionName(Connection conn, String positionCode, String positionName) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("updatePositionName");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, positionName);
+			pstmt.setString(2, positionCode);
+			result=pstmt.executeUpdate();
+			
+			
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
+	}
+	
+	
+	
+	//부서 삭제
+	public int deleteDept(Connection conn, String deptCode) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("deleteDept");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, deptCode);
+			result=pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
+	}
+	
+	
+	
+	//직급 삭제
+	public int deletePosition(Connection conn, String positionCode) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("deletePosition");
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, positionCode);
+			result=pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+			
+		} return result;
+		
+		
+	}
+	
 
 }
