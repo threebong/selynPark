@@ -13,8 +13,8 @@ table {
   text-align: center;
   line-height: 1.5;
   width:100%;
-
 }
+
 table thead th {
   padding: 10px;
   font-weight: bold;
@@ -22,6 +22,7 @@ table thead th {
   color: black;
   border-bottom: 3px solid #036;
 }
+
 table tbody th {
   width: 150px;
   padding: 10px;
@@ -30,15 +31,17 @@ table tbody th {
   border-bottom: 1px solid black;
   background: #f3f6f7;
 }
+
 table td {
-  
   padding: 10px;
   vertical-align: top;
   border-bottom: 1px solid #ccc;
 }
+
 input#checkDate{
  float: right;
 }
+
 input#selectDate{
 border:none;
 font-size:30px;

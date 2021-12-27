@@ -133,7 +133,6 @@ font-size:30px;
 						tbody.append(tr);
 					}	
 				}
-				tbody.html(tr);
             }
     	 })
      });
