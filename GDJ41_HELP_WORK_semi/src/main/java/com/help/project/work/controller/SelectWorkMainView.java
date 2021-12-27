@@ -19,7 +19,7 @@ import com.help.project.work.model.vo.Work;
 /**
  * Servlet implementation class SelectWorkMainView
  */
-@WebServlet("/work/SelectWorkMainView.do")
+@WebServlet( name="SelectWorkMainView",urlPatterns = "/work/SelectWorkMainView.do")
 public class SelectWorkMainView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

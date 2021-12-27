@@ -28,20 +28,22 @@
 }
 
 #proMemberViewContainer{
-	width: 200px;
-
+	width: 400px;
+	display: flex;
+	justify-content: center;
 	
 }
 #innder_proMemberViewContainer{
 	border : 1px solid lightgray;
+	width : 250px;
 	position: fixed;
-	
+	border-radius: 30px;
 }
 #contentContainer {
 	padding-top: 0px;
 	margin: 0px;
 	width: 500px;
-	left: 300px;
+	padding: 50px;
 }
 @media screen and (max-width:1400px)
  { 
@@ -60,7 +62,30 @@
 	margin-top: 50px;
 	
 }
+.page-link{
+	color:rgba(111, 0, 255, 0.904);
+}
+.mytable{
+	width: 100%;
+	border-collapse: collapse;
+	font-family: "Do Hyeon";
+	font-size: 20px;
+}
+.mytable>thead{
+	font-size: 24px;
+	border-bottom: 2px solid black;
+	padding-bottom: 10px;
+}
+.mytable>tr{
+	border-bottom: 1px solid rgba(145, 145, 145, 0.178);
+}
+.mytable tr:hover{
+	background-color: rgba(177, 177, 177, 0.042);
+}
 
+.mytable td{
+	padding: 15px;
+}
 #input-group {
 	position: flex;
 	justify-content: center;
@@ -68,7 +93,9 @@
 	padding: 20px;
 	border-radius: 40px;
 	text-align: center;
-	width: 30%;
+	width: 600px;
+	height: 150px;
+	
 }
 
 #input-group div {
@@ -111,6 +138,10 @@
 
 #menu-container {
 	margin-left: 30px;
+}
+
+.list-group-item{
+	border-bottom: none;
 }
 
 .form-select {

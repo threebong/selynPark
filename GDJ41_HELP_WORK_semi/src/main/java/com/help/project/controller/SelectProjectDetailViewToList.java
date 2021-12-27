@@ -18,7 +18,7 @@ import com.help.project.model.vo.ProMemberJoinMember;
 /**
  * Servlet implementation class SelectProjectDetailViewToList
  */
-@WebServlet("/project/selectProjectDetailViewToList.do")
+@WebServlet(name = "projectDetailView",urlPatterns = "/project/selectProjectDetailViewToList.do")
 public class SelectProjectDetailViewToList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

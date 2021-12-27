@@ -321,7 +321,7 @@ window.addEventListener('DOMContentLoaded', event => {
         
      
         //퇴근등록
-        function insertLeaveTime(){
+        
      	$("#insertLeaveTime").click(e=>{
         	var d = new Date();
           	var leaveTime = moment(d).format('HH:mm');
@@ -339,7 +339,7 @@ window.addEventListener('DOMContentLoaded', event => {
      				
      		})
      	});
-        };
+       
      	
 	 	/* $(document).ready(()=>{
 	 		insertLeaveTime();

@@ -7,6 +7,8 @@
    pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2117f58ed9ba4b4e13a9bca2bc216232&&APIKEY&libraries=services"></script>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 <%
    Project p = (Project)request.getAttribute("projectInfo");
    List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
@@ -34,32 +36,74 @@ function contentListAjax(cPage){
       success:data=>{
          
          $("#contentArea").html("");
-         
+         $("#pageNavContainer").html("");
          const memberList = data["pList"];
          
-         const table = $("<table class='table' style='text-align:center;'>");
+         const table = $("<table style='text-align:center;'>");
+         table.addClass("mytable");
          const thead = "<thead><tr><th scope='col'>구분</th><th scope='col'>제목</th><th scope='col'>작성자</th><th scope='col'>작성일</th><th scope='col'>상태</th><th scope='col'>순위</th></tr></thead>";
          table.append(thead);
          
          for(let i = 0; i< memberList.length;i++){
             
-            const tr = $("<tr scope='row' onclick='contentView(this);'>");
-            const dist = $("<td>").html(memberList[i]['dist']);
+            const tr = $("<tr onclick='contentView(this);'>");
+            
             const contentTitle = $("<td style='cursor: pointer;'>").html(memberList[i]["contentTitle"]);
             const memberName = $("<td>").html(memberList[i]["memberName"]);
             const writeDate = $("<td>").html(memberList[i]["writeDate"]);
-            const workIng = $("<td>").html(memberList[i]["workIng"]);
-            const workRank = $("<td>").html(memberList[i]["workRank"]);
+            // const workIng = $("<td>").html(memberList[i]["workIng"]);
+            //const workRank = $("<td>").html(memberList[i]["workRank"]);
             const memberId = $("<td style='display:none;'>").html(memberList[i]["memberId"]);
             const contentNo = $("<td style='display:none;'>").html(memberList[i]["contentNo"]);
             
+            tr.append(contentTitle).append(memberName).append(writeDate);
             
-            tr.append(dist).append(contentTitle).append(memberName).append(writeDate).append(workIng).append(workRank).append(memberId).append(contentNo);
-            table.append(tr);
+            let workIng;
+            if(memberList[i]["workIng"] =='요청'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(0, 204, 255, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='진행'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(145, 255, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='피드백'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(255, 208, 0, 0.753); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='보류'){
+            	workIng = $("<td>").html("<span style='background-color:rgba(161, 161, 161, 0.548); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }else if(memberList[i]["workIng"] =='완료'){
+            	workIng = $("<td>").html("<span style='background-color:rgb(108, 33, 230); padding:10px; border-radius:15px;'>"+memberList[i]["workIng"]+"</span>");
+            }
+            tr.append(workIng);
+            
+            let workRank;
+            if(memberList[i]["workRank"] =='긴급'){
+            	workRank = $("<td style='color:red'>").html(memberList[i]["workRank"]);
+            }else if(memberList[i]["workRank"] =='높음'){
+            	workRank = $("<td style='color:orange'>").html(memberList[i]["workRank"]);
+            }else if(memberList[i]["workRank"] =='보통'){
+            	workRank = $("<td style='color:gray'>").html(memberList[i]["workRank"]);
+            }else if(memberList[i]["workRank"]== '낮음'){
+            	workRank = $("<td style='color:rgba(0, 204, 255, 0.753);'>").html(memberList[i]["workRank"]);
+            }
+            tr.append(workRank);
+            
+            
+            let dist;
+            if(memberList[i]['dist'] == "게시글"){
+            	dist = $("<td>").html("<sapn style='margin-right:10px; color:rgb(235, 142, 4)'><i class='fas fa-align-justify'></i></sapn>"+memberList[i]['dist']);	
+            	tr.prepend(dist);
+            }else if(memberList[i]['dist'] == "업무"){
+            	 dist = $("<td>").html("<sapn style='margin-right:10px;color:rgb(77, 0, 128)'><i class='fas fa-tasks'></i></sapn>"+memberList[i]['dist']);	
+            	tr.prepend(dist);
+            }else{
+            	dist = $("<td>").html("<sapn style='margin-right:10px; color:rgba(66, 217, 255, 0.719);'><i class='far fa-calendar'></i></sapn>"+memberList[i]['dist']);	
+            	tr.prepend(dist);
+           }
+           
+           tr.append(memberId).append(contentNo);
+           table.append(tr);
          }
-         
-         const div=$("<div>").attr("id","pageBar").html(data["pageBar"]);
-         $("#contentArea").append(table).append(div);
+         console.log(data["pageBar"]);
+         const div=$("<div style='text-align:center;'>").attr("id","pageBar").html(data["pageBar"]);
+         $("#contentArea").append(table)
+         $("#pageNavContainer").append(div);
          
       }
       
@@ -86,7 +130,7 @@ function searchListAjax(cPage){
       success:data=>{
          
          $("#contentArea").html("");
-         
+         $("#searchConKeyword").val("");
          const memberList = data["pList"];
          
          const table = $("<table class='table' style='text-align:center;'>");
@@ -130,13 +174,16 @@ function proInMemberList(){
       success:data=>{
          
          const creatorId = data["creatorId"];
-         $("#proCreator").html("<h3>"+creatorId+"</h3>");
+         $("#proCreator").html("<i class='far fa-user-circle'></i>&nbsp;"+creatorId);
          
          $("#proAttend").html("");
+         const ul = $("<ul class='list-group list-group-flush'>");
          for(let i=0;i<data["proMemberList"].length;i++){
             if(creatorId != data['proMemberList'][i]['memberId']){
-            const h3 =$("<h5>").html(data["proMemberList"][i]["memberName"]);
-            $("#proAttend").append(h3);
+            	
+            const li =$("<li class='list-group-item'>").html("<i class='fas fa-user-alt'></i>&nbsp;"+data["proMemberList"][i]["memberName"]);
+            ul.append(li);
+            $("#proAttend").append(ul);
             }      
          }
          
@@ -1383,7 +1430,8 @@ $("#sche_place_btn").click(e=>{
 
 <div id="title-container">
    <div id="pro-bookmark-star"><i class="fas fa-star"></i></div>
-   <div id="project-title"><span><%=p.getProName() %></span></div>
+   <div id="project-title" style="font-family:'Jua'"><span><%=p.getProName() %></span></div>
+   <div id="project-explain" style="font-family:'Do Hyeon'; font-size:22px;"><%=p.getProExplain() %></div>
    <div style="float:right;">
    <%if(loginMember.getMemberId().equals(p.getMemberId())){ %> <!-- 현재 로그인된 멤버와, 프로젝트 생성자 아이디가 같으면 초대 버튼 활성화 -->
    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProjectMemberModal" id="add_btn">사원 추가</button>
@@ -1392,9 +1440,8 @@ $("#sche_place_btn").click(e=>{
 </div>
 <div id="menu-container">
    <ul class="nav">
-      <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">업무</a></li>
-      <li class="nav-item"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
+      <li class="nav-item" style="font-family:'Jua'"><a class="nav-link " aria-current="page" href="#">홈</a></li>
+      <li class="nav-item" style="font-family:'Jua'"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
    </ul>
 </div>
    <hr style="margin-top: 5px;">
@@ -1405,14 +1452,18 @@ $("#sche_place_btn").click(e=>{
          <div id="insertNormal"><a href="#"><span><i class="fas fa-edit"></i></span>&nbsp;글</a></div>
          <div id="insertWork"><a href="#"><span><i class="fas fa-list"></i></span>&nbsp;업무</a></div>
          <div id="insertSche"><a href="#"><span><i class="far fa-calendar"></i></span>&nbsp;일정</a></div>
+      <div style="border-top: 1px solid lightgray;
+       height: 50%; width: 100%; display: block; margin-top: 13px; font-size: 20px;
+       padding:15px; text-align: left;"> 내용을 입력하세요 </div>
       </div>
+      
    </div>
    
    
    
    <div id="contentContainer">
-   <div style="display: inline-block;">
-      <div class="input-group mb-3"  style="width: 400px;">
+   <div style="display: inline-block; display: flex; justify-content: center; height: 40px; margin-bottom: 20px;">
+      <div class="input-group mb-3"  style="width:650px;">
             <div>
                <select class="form-select" aria-label="Default select example" style="width: 100px;" id="searchConSelect">
                   <option value="MEMBER_NAME">작성자명</option>
@@ -1422,10 +1473,9 @@ $("#sche_place_btn").click(e=>{
             <input type="text" class="form-control" placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchConKeyword">
             <button class="btn btn-outline-secondary" type="button" id="searchConBtn">검색</button>
       </div>
-   </div>
-      <div id="filterDist" style="display: inline-block; margin-left: 5px;">
+       <div id="filterDist" style="display: inline-block; margin-left: 5px;">
          <div class="dropdown" style="margin-left: 5px;">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-filter"></i></button>
+              <button class="btn btn-secondary dropdown-toggle" style="border:none;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-filter"></i></button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                    <li>
                       <div class="form-check" style="margin-left: 8px;">
@@ -1449,21 +1499,28 @@ $("#sche_place_btn").click(e=>{
          </div>
       </div>
       <div style="display: inline-block; margin-left: 5px;">
-         <button type="button" class="btn" onclick="contentListAjax();">전체보기</button>
+         <button type="button" class="btn btn-outline-secondary" onclick="contentListAjax();">전체보기</button>
       </div>
+   </div>
+     
       
-      <div id ="contentArea">
+      <div id ="contentArea" style="margin-top: 15px;">
       </div>
+      <div id="pageNavContainer" style="display: flex; justify-content: center; margin-top: 15px; "></div>
    </div>
    
    </div>
    <div id="proMemberViewContainer">
       <div id="innder_proMemberViewContainer">
-         <h4>프로젝트 생성자</h4>
-            <div id="proCreator"></div>
-         <hr>
-         <h4>참여자</h4>
-         <div id="proAttend"></div>
+      	<div style="background-color: rgba(213, 124, 255, 0.26);  border-radius: 30px 30px 0 0; padding: 20px;">
+      		<div style="font-size: 21px; font-weight: bold;">프로젝트 관리자</div>
+         	<div id="proCreator" style="font-size: 20px; font-weight: bold;"></div>
+      	</div>
+         <div style="padding: 20px;">
+         	<div style="font-size: 21px; font-weight: bold;"><i class="fas fa-users"></i>&nbsp;참여자</div>
+         	<div id="proAttend" style="font-size: 18px; font-weight: 400;"></div>
+         </div>
+         
       </div>
    </div>
 </div>
@@ -1881,18 +1938,42 @@ $("#search_Member_btn").click(e=>{
       
       //기본 날짜 설정
       
-   let workStart = document.getElementById('workStart').value= new Date().toISOString().substring(0, 10);
+   
+   
+   let workStart =document.getElementById('workStart').value= new Date().toISOString().substring(0, 10);
    let workEnd = document.getElementById('workEnd').value= new Date().toISOString().substring(0, 10);   
       //시작 날짜 
       $("#workStart").change(e=>{
          workStart = $("#workStart").val();
+         let startDateArr = workStart.split("-");
+         let endDateArr = workEnd.split("-");
+		 
+         let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+         let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+         if(startDateCompare.getTime() > endDateCompare.getTime()) {
+             alert("시작날짜와 종료날짜를 확인해 주세요.");
+             document.getElementById('workStart').value= new Date().toISOString().substring(0, 10);
+             $("#workStart").focus();
+             return false;
+         }
       });      
       
       //마감 날짜
       
       $("#workEnd").change(e=>{
          workEnd = $("#workEnd").val();
-         
+         //날짜 
+         let startDateArr = workStart.split("-");
+         let endDateArr = workEnd.split("-");
+		 
+         let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+         let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+         if(startDateCompare.getTime() > endDateCompare.getTime()) {
+             alert("시작날짜와 종료날짜를 확인해 주세요.");
+             document.getElementById('workEnd').value= new Date().toISOString().substring(0, 10);
+             $("#workEnd").focus();
+             return false;
+         }
       });
       
       //저장 버튼
@@ -2018,9 +2099,48 @@ $("#search_Member_btn").click(e=>{
    
    });
    
-   //일정 기본 날짜
+ 	  
+ 	//일정 기본 날짜
    let scheStartDate = document.getElementById('scheStartDate').value= new Date().toISOString().substring(0, 10);
    let scheEndDate = document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
+   //일정 시작 날짜
+   
+   $("#scheStartDate").change(e=>{
+      scheStartDate = $("#scheStartDate").val();
+    //날짜 
+      let startDateArr = scheStartDate.split("-");
+      let endDateArr = scheEndDate.split("-");
+      
+      let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+      let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+      
+      if(startDateCompare.getTime() > endDateCompare.getTime()) {
+          alert("시작날짜와 종료날짜를 확인해 주세요.");
+          $("#scheEndDate").focus();
+         document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
+          return false;
+      }
+   });
+   
+   //일정 마감 날짜
+   
+   $("#scheEndDate").change(e=>{
+      scheEndDate = $("#scheEndDate").val();
+    //날짜 
+      let startDateArr = scheStartDate.split("-");
+      let endDateArr = scheEndDate.split("-");
+      
+      let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+      let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+      
+      if(startDateCompare.getTime() > endDateCompare.getTime()) {
+          alert("시작날짜와 종료날짜를 확인해 주세요.");
+          $("#scheEndDate").focus();
+         	document.getElementById('scheEndDate').value= new Date().toISOString().substring(0, 10);
+          return false;
+      }
+   });
+   
    
    //일정등록
    $("#sche_submit_Btn").click(e=>{
@@ -2032,18 +2152,7 @@ $("#search_Member_btn").click(e=>{
          $("#sche_titleResult").text("제목을 입력하세요").css("color","red");
       }else{
          
-         //일정 시작 날짜
-         
-         $("#scheStartDate").change(e=>{
-            scheStartDate = $("#scheStartDate").val();
-         });
-         
-         //일정 마감 날짜
-         
-         $("#scheEndDate").change(e=>{
-            scheEndDate = $("#scheEndDate").val();
-         });
-         
+       
          let projectNo = $("#projectNo").val();
          let memberId = $("#memberId").val();
          let scheContent = $("#scheContent").val();

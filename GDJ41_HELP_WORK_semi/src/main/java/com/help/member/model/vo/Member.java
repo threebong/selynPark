@@ -28,6 +28,6 @@ public class Member {
 	private String memberUseYn;
 //	private String emailHash;
 //	private boolean emailChecked;
-	
+	//private int emailChecked;
 
 }

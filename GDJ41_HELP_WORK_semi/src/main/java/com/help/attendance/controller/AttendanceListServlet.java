@@ -16,7 +16,7 @@ import com.help.attendance.model.service.AttendanceService;
 import com.help.attendance.model.vo.Attendance;
 import com.help.member.model.vo.Member;
 
-@WebServlet("/attendance/attendanceList.do")
+@WebServlet(name="attendanceList", urlPatterns = "/attendance/attendanceList.do")
 public class AttendanceListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
