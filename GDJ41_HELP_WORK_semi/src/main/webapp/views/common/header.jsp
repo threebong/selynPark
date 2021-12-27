@@ -167,19 +167,19 @@ window.addEventListener('DOMContentLoaded', event => {
                         <%} else{%>
                      	<div class="sb-sidenav-menu-heading">사원</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            <div class="sb-nav-link-icon"><i class="far fa-address-book"></i>
                             </div>
                             사원관리
                         </a>
-                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndJobList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndPositionList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i>
                             </div>
                             부서/직급관리
                         </a>
                         
                         <div class="sb-sidenav-menu-heading">근태</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberAttendanceList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-edit"></i>
                             </div>
                             근태관리
                         </a>
@@ -321,7 +321,7 @@ window.addEventListener('DOMContentLoaded', event => {
         
      
         //퇴근등록
-        
+
      	$("#insertLeaveTime").click(e=>{
         	var d = new Date();
           	var leaveTime = moment(d).format('HH:mm');
@@ -339,14 +339,37 @@ window.addEventListener('DOMContentLoaded', event => {
      				
      		})
      	});
-       
-     	
-	 	/* $(document).ready(()=>{
-	 		insertLeaveTime();
-	 		$("#insertLeaveTime").trigger('click');
-     	});  이건 업데이트가 계속 반복하여 돌게됨*/
-        
 
+        
+        //출근시간 화면 유지
+	 	$(document).ready(()=>{
+	 		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
+     			type:'post',
+     			dataType:'json',
+     			success:data=>{
+     				const attTime = data["attTime"];
+     				$("#attTime").html(attTime["attTime"]);
+     				$("#leaveTime").html(data["leaveTime"]);
+     				console.log($("#leaveTime").html());
+     				console.log($("#attTime").html());
+     			}
+     		})
+     	});  
+        
+        
+        //퇴근시간 화면 유지
+ <%--  		$(document).ready(()=>{
+	 		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
+     			type:'post',
+     			dataType:'json',
+     			success:data=>{
+     				$("#leaveTime").html(data["leaveTime"]);
+     			}
+     		})
+     	});  
+ --%>
         
       
         </script>

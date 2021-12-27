@@ -1,6 +1,9 @@
 <%@ page  language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp" %>
+
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
 <%@ page import = "com.help.attendance.model.vo.Attendance" %>
 <%
 	List<Attendance> list = (List<Attendance>)request.getAttribute("attendanceMonthly");
@@ -35,12 +38,24 @@ table.attendanceType td {
   vertical-align: top;
   border-bottom: 1px solid #ccc;
 }
+
 input#checkMonth{
  float: right;
 }
+
 input#selectMonth{
 border:none;
 font-size:30px;
+}
+
+
+tr:nth-child(2n) {
+  background-color:rgb(255, 244, 253);
+}
+
+
+div#attTitle, table, input#checkMonth {
+font-family: 'Do Hyeon', sans-serif;
 }
 
 </style>
@@ -48,11 +63,10 @@ font-size:30px;
 
 
 <main>
-<h3 id="selectMonth"></h3>
+<div id="attTitle"><h3 id="selectMonth"></h3></div>
 		<form id="frm" action="">
 		<input id="checkMonth" type="month" name="checkMonth">
 		</form>
-
 
 		<table class="attendanceType">
 		  <thead>
@@ -133,7 +147,6 @@ font-size:30px;
 						tbody.append(tr);
 					}	
 				}
-				tbody.html(tr);
             }
     	 })
      });

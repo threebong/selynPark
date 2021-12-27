@@ -67,7 +67,7 @@ public class SelectWorkAllViewServlet extends HttpServlet {
 			pageBar+="<a href='javascript:workAllPaging("+(pageNo-1)+");'>[이전]</a>";
 		}
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
-			if(pageNo==cPage) {
+			if(cPage==pageNo) {
 				pageBar+="<span>"+pageNo+"</span>";	
 			}else {
 				pageBar+="<a href='javascript:workAllPaging("+(pageNo)+");'>"+pageNo+"</a>";

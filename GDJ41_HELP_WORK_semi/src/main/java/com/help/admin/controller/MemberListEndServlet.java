@@ -56,7 +56,7 @@ public class MemberListEndServlet extends HttpServlet {
 			pageNo++;
 		}
 		
-		if(pageNo==1) {
+		if(pageNo>totalPage) {
 			pageBar+="<span>[다음]</span>";
 		} else {
 			pageBar+="<a href='javascript:adminMemberList("+(pageNo)+");'>[다음]</a>";

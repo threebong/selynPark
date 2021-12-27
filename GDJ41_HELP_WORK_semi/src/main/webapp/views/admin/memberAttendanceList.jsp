@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import = "com.help.admin.model.vo.AdminAttendance" %>
 <%@ include file="/views/common/header.jsp" %>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
 <%
 	List<AdminAttendance> list = (List<AdminAttendance>)request.getAttribute("attendanceDay");
@@ -13,8 +14,8 @@ table {
   text-align: center;
   line-height: 1.5;
   width:100%;
-
 }
+
 table thead th {
   padding: 10px;
   font-weight: bold;
@@ -22,6 +23,7 @@ table thead th {
   color: black;
   border-bottom: 3px solid #036;
 }
+
 table tbody th {
   width: 150px;
   padding: 10px;
@@ -30,34 +32,47 @@ table tbody th {
   border-bottom: 1px solid black;
   background: #f3f6f7;
 }
+
 table td {
-  
   padding: 10px;
   vertical-align: top;
   border-bottom: 1px solid #ccc;
 }
+
 input#checkDate{
  float: right;
 }
+
 input#selectDate{
 border:none;
 font-size:30px;
 }
 
+
+
+tr:nth-child(2n) {
+  background-color:rgb(255, 244, 253);
+}
+
+
+div#attTitle, div.modal, table {
+font-family: 'Do Hyeon', sans-serif;
+}
+
 </style>
 
 <main>
-<h1>근태관리</h1><br>
+<div id="attTitle"><h1>근태관리</h1><br>
 <h3 id="selectDate"></h3>
 	<form id="frm" action="">
 	<input id="checkDate" type="date" name="checkDate" onchange="adminAttendanceList();">
 	<input id="hiddenDate" type="hidden">
 	</form>
-
+</div>
 
 
 	<div id="writeTable"></div>
-<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm">
+<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm" onsubmit="return update_attendance(this);">
 <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
     	<div class="modal-content">
@@ -181,5 +196,16 @@ const adminUpdateAttendance=(e)=>{
    $("#modAttDate").val($("#checkDate").val());
    $("#update-AttendanceBtn").click();
 };
+
+
+
+
+//출퇴근 상태 반드시 입력
+const update_attendance=()=>{
+    if($("#modAttStatus").val().trim().length == 0){
+       $("#modAttStatus").focus();
+       return false;
+    }     
+ };
 
 </script>

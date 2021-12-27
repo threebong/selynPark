@@ -10,32 +10,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.admin.model.service.AdminService;
 
-@WebServlet("/admin/updateMemberAttendance.do")
-public class UpdateMemberAttendanceServlet extends HttpServlet {
+@WebServlet("/admin/updateDeptName.do")
+public class UpdateDeptNameServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public UpdateMemberAttendanceServlet() {
+    public UpdateDeptNameServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//String memberName=request.getParameter("memberName");
-		String memberId=request.getParameter("memberId");
-		String attTime=request.getParameter("attTime");
-		String leaveTime=request.getParameter("leaveTime");
-		String attStatus=request.getParameter("attStatus");
-		String attDate=request.getParameter("attDate");
-		
-		int result = new AdminService().updateAttendance(attTime, leaveTime, attStatus, memberId, attDate);
+		String deptCode = request.getParameter("modDeptCode");
+		String deptName = request.getParameter("updateDeptName");
+		System.out.println(deptCode);
+		System.out.println(deptName);
+		int result = new AdminService().updateDeptName(deptCode,deptName);
 		if(result>0) {
 			System.out.println("업데이트 성공");
 			
 		} else {
 			System.out.println("업데이트 실패");
 		}
-		request.getRequestDispatcher("/views/admin/memberAttendanceList.jsp").forward(request, response);
-	
-	
+		request.getRequestDispatcher("/views/admin/deptAndPositionList.jsp").forward(request, response);
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

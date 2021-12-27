@@ -1,7 +1,6 @@
 package com.help.admin.controller;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,31 +9,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.help.admin.model.service.AdminService;
 
-@WebServlet("/admin/updateMemberAttendance.do")
-public class UpdateMemberAttendanceServlet extends HttpServlet {
+@WebServlet("/admin/updatePositionName.do")
+public class UpdatePositionNameServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public UpdateMemberAttendanceServlet() {
+    public UpdatePositionNameServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//String memberName=request.getParameter("memberName");
-		String memberId=request.getParameter("memberId");
-		String attTime=request.getParameter("attTime");
-		String leaveTime=request.getParameter("leaveTime");
-		String attStatus=request.getParameter("attStatus");
-		String attDate=request.getParameter("attDate");
-		
-		int result = new AdminService().updateAttendance(attTime, leaveTime, attStatus, memberId, attDate);
+		String positionCode = request.getParameter("modPositionCode");
+		String positionName = request.getParameter("updatePositionName");
+		System.out.println(positionCode);
+		System.out.println(positionName);
+		int result = new AdminService().updatePositionName(positionCode,positionName);
 		if(result>0) {
 			System.out.println("업데이트 성공");
 			
 		} else {
 			System.out.println("업데이트 실패");
 		}
-		request.getRequestDispatcher("/views/admin/memberAttendanceList.jsp").forward(request, response);
-	
+		request.getRequestDispatcher("/views/admin/deptAndPositionList.jsp").forward(request, response);
 	
 	}
 
