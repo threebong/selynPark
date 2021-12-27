@@ -60,7 +60,7 @@ font-size:30px;
 
 
 	<div id="writeTable"></div>
-<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm">
+<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm" onsubmit="return update_attendance(this);">
 <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
     	<div class="modal-content">
@@ -184,5 +184,16 @@ const adminUpdateAttendance=(e)=>{
    $("#modAttDate").val($("#checkDate").val());
    $("#update-AttendanceBtn").click();
 };
+
+
+
+
+//출퇴근 상태 반드시 입력
+const update_attendance=()=>{
+    if($("#modAttStatus").val().trim().length == 0){
+       $("#modAttStatus").focus();
+       return false;
+    }     
+ };
 
 </script>

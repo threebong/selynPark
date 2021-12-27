@@ -167,19 +167,19 @@ window.addEventListener('DOMContentLoaded', event => {
                         <%} else{%>
                      	<div class="sb-sidenav-menu-heading">사원</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            <div class="sb-nav-link-icon"><i class="far fa-address-book"></i>
                             </div>
                             사원관리
                         </a>
-                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndJobList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndPositionList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i>
                             </div>
                             부서/직급관리
                         </a>
                         
                         <div class="sb-sidenav-menu-heading">근태</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberAttendanceList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-edit"></i>
                             </div>
                             근태관리
                         </a>
