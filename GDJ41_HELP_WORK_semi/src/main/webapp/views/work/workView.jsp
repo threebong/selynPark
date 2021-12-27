@@ -122,7 +122,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 	}
 	
 	#ProjectName_All_View{
-		background-color:rgba(106, 110, 160, 1);
+		/*background-color:rgba(106, 110, 160, 1);*/
 		border-radius: 5px 5px;
 		padding:3px;
 		color:white;
@@ -130,11 +130,11 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 	
 	}
 	#WorkNo_All_View{
-		background-color:#f2787e;
+		/*background-color:#f2787e;*/
 		border-radius: 7px 7px;
 		padding:3px;
 		margin:0px;
-		color:white;
+		color:rgba(226, 192, 226, 0.94);
 	}
 	#WorkTitle_All_View{
 		background-color:rgba(66, 69, 103, 1);
