@@ -339,12 +339,36 @@ window.addEventListener('DOMContentLoaded', event => {
      		})
      	});
      	
-	 	/* $(document).ready(()=>{
-	 		insertLeaveTime();
-	 		$("#insertLeaveTime").trigger('click');
-     	});  이건 업데이트가 계속 반복하여 돌게됨*/
         
-
+        //출근시간 화면 유지
+	 	$(document).ready(()=>{
+	 		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
+     			type:'post',
+     			dataType:'json',
+     			success:data=>{
+     				const attTime = data["attTime"];
+     				$("#attTime").html(attTime["attTime"]);
+     				$("#leaveTime").html(data["leaveTime"]);
+     				console.log($("#leaveTime").html());
+     				console.log($("#attTime").html());
+     			}
+     		})
+     	});  
+        
+        
+        //퇴근시간 화면 유지
+ <%--  		$(document).ready(()=>{
+	 		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
+     			type:'post',
+     			dataType:'json',
+     			success:data=>{
+     				$("#leaveTime").html(data["leaveTime"]);
+     			}
+     		})
+     	});  
+ --%>
         
       
         </script>

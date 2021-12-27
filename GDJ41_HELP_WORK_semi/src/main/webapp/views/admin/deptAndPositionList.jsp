@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ include file="/views/common/header.jsp"%>
-
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
 <style>
 table {
@@ -46,6 +46,16 @@ table td {
 
 #menu-container {
 	margin-left: 30px;
+}
+
+
+tr:nth-child(2n) {
+  background-color:rgb(255, 244, 253);
+}
+
+
+div#deptTitle, div#menu-container, div.modal, table {
+font-family: 'Do Hyeon', sans-serif;
 }
 
 </style>

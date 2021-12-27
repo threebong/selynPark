@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
-
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
 <style>
 table {
@@ -45,12 +45,21 @@ table td {
 	margin-left: 30px;
 }
 
+tr:nth-child(2n) {
+  background-color:rgb(255, 244, 253);
+}
+
+
+div#memberTitle, div#menu-container, div#MemberInfoModal, div#WaitMemberModal, table{
+font-family: 'Do Hyeon', sans-serif;
+}
+
 
 </style>
 
 <main>
 		
-	<h1>사원관리</h1><br>
+	<div id="memberTitle"><h1>사원관리</h1></div><br>
 	<div id="menu-container">
 		<ul class="nav">
 			<li class="nav-item"><a class="nav-link active" aria-current="page" href="#" onclick="adminMemberList();">직원현황</a></li>
