@@ -340,35 +340,23 @@ window.addEventListener('DOMContentLoaded', event => {
      	});
      	
         
-        //출근시간 화면 유지
+        //출근, 퇴근 시간 화면 유지
+        <% if(!(loginMember.getMemberId().equals("admin"))){%>
 	 	$(document).ready(()=>{
 	 		$.ajax({
      			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
      			type:'post',
      			dataType:'json',
      			success:data=>{
-     				const attTime = data["attTime"];
-     				$("#attTime").html(attTime["attTime"]);
+     				//const attTime = data["attTime"];
+     				$("#attTime").html(data["attTime"]);
      				$("#leaveTime").html(data["leaveTime"]);
      				console.log($("#leaveTime").html());
      				console.log($("#attTime").html());
      			}
      		})
      	});  
-        
-        
-        //퇴근시간 화면 유지
- <%--  		$(document).ready(()=>{
-	 		$.ajax({
-     			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
-     			type:'post',
-     			dataType:'json',
-     			success:data=>{
-     				$("#leaveTime").html(data["leaveTime"]);
-     			}
-     		})
-     	});  
- --%>
+        <% } %>
         
       
         </script>
