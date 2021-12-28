@@ -177,13 +177,15 @@ public class MemberDao {
 //        Connection conn = null; 
 //        PreparedStatement pstmt = null;
 //        ResultSet rs = null; 
-//        try {          
+//			boolean flag = false;
+//			int result = 0;        
+//	try {          
 //            conn = JDBCTemplate.getConnection(); 
 //            pstmt = conn.prepareStatement(sql); 
 //            pstmt.setString(1, userId);
 //            rs = pstmt.executeQuery();
 //            if(rs.next()) {
-//                return rs.getBoolean(1);
+//              result = rs.getInt(1);
 //            }
 //        } catch (Exception e) {
 //             e.printStackTrace();
@@ -192,6 +194,14 @@ public class MemberDao {
 //          try {if(pstmt != null) pstmt.close();} catch (Exception e) {e.printStackTrace();}
 //          try {if(rs != null) rs.close();} catch (Exception e) {e.printStackTrace();}
 //       }
+	
+//			if(result>0) {
+//				flag = true;
+//			}else {
+//				flag = false;
+//			}
+//			return flag;
+	
 //        return false; // 데이터베이스 오류
 //	}
 	

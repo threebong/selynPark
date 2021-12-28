@@ -18,7 +18,7 @@ import com.help.project.model.vo.ProjectAddMember;
 /**
  * Servlet implementation class InsertProjectServlet
  */
-@WebServlet("/project/insertProject.do")
+@WebServlet(name="insertProject" , urlPatterns = "/project/insertProject.do")
 public class InsertProjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

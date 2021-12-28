@@ -321,6 +321,7 @@ window.addEventListener('DOMContentLoaded', event => {
         
      
         //퇴근등록
+
      	$("#insertLeaveTime").click(e=>{
         	var d = new Date();
           	var leaveTime = moment(d).format('HH:mm');
@@ -338,7 +339,7 @@ window.addEventListener('DOMContentLoaded', event => {
      				
      		})
      	});
-     	
+
         
         //출근, 퇴근 시간 화면 유지
         <% if(!(loginMember.getMemberId().equals("admin"))){%>
