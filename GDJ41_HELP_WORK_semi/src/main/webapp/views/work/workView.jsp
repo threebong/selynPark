@@ -205,7 +205,9 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		padding:8px;
 		/*height: expression(this.scrollHeight < 800px? "800px" : "auto");*/
 		height:450px;
-		overflow:scroll;
+		width:330px;
+		overflow-y:scroll;
+		overflow-x:hidden;
 		border-radius:10px 10px;
 	}
 </style>
