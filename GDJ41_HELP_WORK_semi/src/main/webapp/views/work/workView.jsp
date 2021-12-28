@@ -18,7 +18,7 @@ List<Project> project = (List<Project>) request.getAttribute("logProject");
 //최신 게시글 5개만가져옴
 HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getAttribute("workInPro");
 %>
-<style>
+<style type="text/css">
 	.opSearch {
 		width: 600px;
 		font-family: 'Jua';
@@ -34,7 +34,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		font-family: 'Jua';
 		font-size:25px;
 	}
-	#filterWork{
+/*	#filterWork{
 		background-color:rgba(249, 232, 6, 0.82);
 		border-radius: 7px 7px;
 	}
@@ -42,6 +42,15 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		background-color:rgba(119, 140, 233, 0.94);
 		transition:background-color 0.9s;
 		border-radius: 7px 7px;
+	}
+*/
+	.btn-outline-secondary:hover{
+	   background-color: #6710f242;
+	   border: 1px solid #6710f242;
+	}
+	.btn-outline-secondary{
+	   border: 1px solid #6710f242;
+	   color:#6710f242;
 	}
 	
 	#deleteTable{/*전체 내용물 */
@@ -148,6 +157,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		background-color:rgba(223, 224, 241, 1);
 		border-radius: 20px 20px;
 		margin:10px;
+		height:550px;
 	
 	}
 	
@@ -183,12 +193,19 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 	}
 	#WorkContent_All_View{
 		border-top:2px solid rgba(186, 178, 245, 1);
+		word-break:break-word;
+		white-space:pre-line;
+		padding:8px;
+		height:400px;
+		
 	}
 	.WorkConView{
 		background-color:rgba(247, 246, 254, 1);
 		margin:4px;
 		padding:8px;
-		height:500px;
+		/*height: expression(this.scrollHeight < 800px? "800px" : "auto");*/
+		height:450px;
+		overflow:scroll;
 		border-radius:10px 10px;
 	}
 </style>
@@ -247,9 +264,9 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 							<option value="보통">보통</option>
 							<option value="낮음">낮음</option>
 						</select> <label class="input-group-text" for="inputGroupSelect02">우선순위</label>
-						<button id="filterWork" onclick="workMinePaging();"
+						<button class="btn btn-outline-secondary" id="filterWork" onclick="workMinePaging();"
 							style="display: none;">검색</button>
-						<button id="filterWorkAll" onclick="workSearchPaging();"
+						<button class="btn btn-outline-secondary" id="filterWorkAll" onclick="workSearchPaging();"
 							style="display: none;">검색</button>
 					</div>
 				</div>
@@ -515,7 +532,6 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					notth.attr("colspan","9");
 					nottr.css("text-align","center");
 				}else{//조회 결과 O 
-					alert("결과가있단다");
 					for(let i=0;i<workList.length;i++){
 					let tr2=$("<tr scope='row' onclick='contentView(this);'>").addClass('tableSearch');
 					let proNo=$("<td>").html(workList[i]["projectNo"]);
