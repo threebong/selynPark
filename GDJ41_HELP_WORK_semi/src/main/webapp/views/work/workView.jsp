@@ -403,6 +403,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					}
 					
 					const div=$("<div>").attr("id","pageBar").html(pageBar);
+				
 					table.append(div);
 					
 					$("#writeTable").html(table);
