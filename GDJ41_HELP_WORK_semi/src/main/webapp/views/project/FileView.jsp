@@ -36,8 +36,7 @@
 
 <div id="menu-container">
    <ul class="nav">
-      <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">홈</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">업무</a></li>
+      <li class="nav-item"><a class="nav-link active" aria-current="page" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=<%=p.getProjectNo()%>')">홈</a></li>
       <li class="nav-item"><a class="nav-link" href="#">파일</a></li>
    </ul>
 </div>

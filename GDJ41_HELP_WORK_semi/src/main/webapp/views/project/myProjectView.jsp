@@ -68,10 +68,11 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 					<option value="">프로젝트 생성자</option>
 					<option value="">프로젝트 번호</option>
 					<option value="">날짜</option>
-				</select> <input type="text" class="form-control"
+				</select>
+				 <input type="text" class="form-control"
 					aria-label="Recipient's username" aria-describedby="button-addon2">
 				<button class="btn btn-outline-secondary" type="button"
-					id="button-addon2">
+					id="button-addon2" onclick="search();">
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
@@ -105,5 +106,16 @@ HashMap<Integer,Integer> joinNum=(HashMap<Integer,Integer>)request.getAttribute(
 		</div>
 	</div>
 
+
+
+<script>
+	function search(){
+		
+		
+	}
+
+</script>
 </main>
+
+
 <%@ include file="/views/common/footer.jsp"%>

@@ -22,11 +22,24 @@
 	margin: 0px;
 	display: flex;
 	justify-content: center;
+	background-color:rgba(197, 197, 197, 0.036);
+	border-top : 1px solid lightgray;
+	padding-top : 15px;
 }
 #inner_pro_container{
 	width: 100%;
 }
-
+.btn-outline-secondary:hover{
+	background-color: #6710f242;
+	border: 1px solid #6710f242;
+}
+.btn-outline-secondary{
+	border: 1px solid #6710f242;
+	color:#6710f242;
+}
+.form-control:hover{
+	border: 1px solid #6710f242;
+}
 #proMemberViewContainer{
 	width: 400px;
 	display: flex;
@@ -79,6 +92,14 @@
         cursor: pointer;
         width: 80px;
  }
+ 
+ .workIngLa input[type="radio"]:checked + span {
+        background-color: #113a6b;
+        color: #ffffff;
+    }
+    
+    
+    
 #work_addMember_area{
 	margin-top: 10px;
 	font-family:'Do Hyeon';
@@ -116,10 +137,7 @@
 	min-width: 80px;
 }
 
-.workIngLa input[type="radio"]:checked + span {
-        background-color: #113a6b;
-        color: #ffffff;
-    }
+
 .workRankLa input[type='radio']{
 	  display: none;
 }
@@ -158,6 +176,33 @@
 .mytable td{
 	padding: 15px;
 }
+
+
+
+.mytable2{
+	width: 100%;
+	border-collapse: collapse;
+	font-family: "Do Hyeon";
+	font-size: 18px;
+}
+.mytable2>thead{
+	font-size: 20px;
+	border-bottom: 2px solid black;
+	padding-bottom: 10px;
+}
+.mytable2>tr{
+	border-bottom: 1px solid rgba(145, 145, 145, 0.178);
+}
+.mytable2 tr:hover{
+	background-color: rgba(177, 177, 177, 0.042);
+}
+
+.mytable2 td{
+	padding: 5px;
+}
+
+
+
 #input-group {
 	position: flex;
 	justify-content: center;
@@ -511,6 +556,30 @@
 	font-size: 16px;
 }
 .workCommentDate{
+	font-family:'Sunflower'; 
+	font-size: 14px;
+	margin-left: 10px;
+	color:rgba(118, 0, 253, 0.733);
+}
+.delBtn{
+	float:right;
+	border: none;
+	font-size: 14px;
+}
+
+.scheCommentOutput{
+	width: 100%;
+	padding: 10px;
+}
+.scheCommentContent{
+	font-family:'Sunflower';
+	font-size: 20px;
+}
+.scheCommentWriter{
+	font-family:'Sunflower';
+	font-size: 16px;
+}
+.scheCommentDate{
 	font-family:'Sunflower'; 
 	font-size: 14px;
 	margin-left: 10px;
