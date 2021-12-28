@@ -32,15 +32,24 @@ public class LoadAttTimeServlet extends HttpServlet {
 		
 		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
-		Attendance a = new AttendanceService().outputAttTime(memberId,attDate);
-		String result=a.getLeaveTime();
-		if(a.getLeaveTime().equals("퇴근 정보가 없습니다")) {
-			result="";
-		} else {
-			result=a.getLeaveTime();
+		Attendance a = null;
+		String leaveTime=null;
+		String attTime=null;
+		
+		try {
+			a = new AttendanceService().outputAttTime(memberId,attDate);
+			attTime=a.getAttTime();
+			if(a.getLeaveTime().equals("퇴근 정보가 없습니다")) {
+				leaveTime="";
+			} else {
+				leaveTime=a.getLeaveTime();
+			}
+		} catch(NullPointerException e) {
+			leaveTime="";
+			attTime="";
 		}
 		
-		Map<String, Object> param = Map.of("leaveTime",result,"attTime",a);
+		Map<String, String> param = Map.of("leaveTime",leaveTime,"attTime",attTime);
 		response.setContentType("application/json;charset=utf-8");
 		new Gson().toJson(param,response.getWriter());
 	
