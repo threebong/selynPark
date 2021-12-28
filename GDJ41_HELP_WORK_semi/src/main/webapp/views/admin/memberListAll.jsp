@@ -22,14 +22,6 @@ table thead th {
   border-bottom: 3px solid #036;
 }
 
-table tbody th {
-  width: 150px;
-  padding: 10px;
-  font-weight: bold;
-  vertical-align: top;
-  border-bottom: 1px solid black;
-  background: #f3f6f7;
-}
 
 table td {
   
