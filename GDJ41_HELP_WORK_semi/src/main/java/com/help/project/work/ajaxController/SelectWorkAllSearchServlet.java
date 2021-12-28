@@ -65,27 +65,28 @@ public class SelectWorkAllSearchServlet extends HttpServlet {
 		int pageBarSize=5;
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;//시작
 		int pageEnd=pageNo+pageBarSize-1;//끝
+		//javascript:workSearchPaging
 		
-		String pageBar="";
-		if(pageNo==1) {
-			pageBar+="<span>[이전]</span>";
+		String pageBar="<nav aria-label=\"Page navigation example\"><ul class=\"pagination\">";
+		if(pageNo==1) {//이전
+			pageBar+="<li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></li>";//이전
 		}else {
-			pageBar+="<a href='javascript:workSearchPaging("+(pageNo-1)+");'>[이전]</a>";
+			pageBar+="<li class=\"page-item\"><a class=\"page-link\"  href='javascript:workSearchPaging("+(pageNo-1)+");' aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
 		}
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
-			if(pageNo==cPage) {
-				pageBar+="<span>"+pageNo+"</span>";	
+			if(cPage==pageNo) {
+				pageBar+="<li class=\"page-item\"><a class=\"page-link\" href=\"#\"><span>"+pageNo+"</a></span></li>";	
 			}else {
-				pageBar+="<a href='javascript:workSearchPaging("+(pageNo)+");'>"+pageNo+"</a>";
+				pageBar+="<li class=\"page-item\"><a class=\"page-link\"  href='javascript:workSearchPaging("+(pageNo)+");'>"+pageNo+"</a></li>";
 			}
 			pageNo++;
 		}
-		if(pageNo>totalPage) {
-			pageBar+="<span>[다음]</span>";	
+		if(pageNo>totalPage) {//다음
+			pageBar+="<li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";	
 		}else {
-			pageBar+="<a href='javascript:workSearchPaging("+(pageNo)+");'>"+"[다음]"+"</a>";
+			pageBar+="<li class=\"page-item\"><a class=\"page-link\"  href='javascript:workSearchPaging("+(pageNo)+");' aria-label=\"Next\">"+"<span aria-hidden=\"true\">&raquo;</span>"+"</a></li>";
 		}
-		
+		pageBar+="</ul></nav>";
 		
 		
 		

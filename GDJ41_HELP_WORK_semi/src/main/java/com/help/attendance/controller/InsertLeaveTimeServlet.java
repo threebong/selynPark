@@ -46,15 +46,17 @@ public class InsertLeaveTimeServlet extends HttpServlet {
 		int result;
 		Attendance a=null;
 		try {
-			result = new AttendanceService().updateLeaveTime(memberId, leaveTime, attDate, attStatus);
 			a = new AttendanceService().outputAttTime(memberId,attDate);
-			if(result>0) {
-				//조회 되나 정상 업데이트 > 퇴근성공
+			if(a.getLeaveTime().equals("퇴근 정보가 없습니다")) {
+				result = new AttendanceService().updateLeaveTime(memberId, leaveTime, attDate, attStatus);
+				a = new AttendanceService().outputAttTime(memberId,attDate);
 				jo.put("leaveSuccess", "퇴근 성공");
-			} else { 
-				//조회가 되나 업데이트 불가(출퇴근 상태 글자수 제한으로 업데이트 불가) > 이미 퇴근상태
+				
+			} else {
 				jo.put("leaveSuccess", "이미 퇴근 상태입니다.");
+				
 			}
+			
 			jo.put("leaveTime", a.getLeaveTime());
 			
 		} catch(NullPointerException e) {
