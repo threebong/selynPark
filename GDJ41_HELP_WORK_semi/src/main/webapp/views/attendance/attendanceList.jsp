@@ -11,12 +11,13 @@
 %>
 <style>
 table.attendanceType {
-  border-collapse: collapse;
   text-align: center;
   line-height: 1.5;
   width:100%;
-
+  border-radius: 30px;
 }
+
+
 table.attendanceType thead th {
   padding: 10px;
   font-weight: bold;
@@ -24,6 +25,7 @@ table.attendanceType thead th {
   color: black;
   border-bottom: 3px solid #036;
 }
+
 table.attendanceType tbody th {
   width: 150px;
   padding: 10px;
@@ -32,6 +34,7 @@ table.attendanceType tbody th {
   border-bottom: 1px solid black;
   background: #f3f6f7;
 }
+
 table.attendanceType td {
   
   padding: 10px;
@@ -43,14 +46,14 @@ input#checkMonth{
  float: right;
 }
 
-input#selectMonth{
+#selectMonth{
 border:none;
-font-size:30px;
+font-size:40px;
 }
 
 
-tr:nth-child(2n) {
-  background-color:rgb(255, 244, 253);
+tr:hover {
+  background-color:rgba(183, 191, 225,0.2);
 }
 
 
@@ -58,26 +61,45 @@ div#attTitle, table, input#checkMonth {
 font-family: 'Do Hyeon', sans-serif;
 }
 
+
+thead{/*테이블내용 */
+		background-color:rgba(183, 191, 225,0.2);
+}
+
+div#pageAll{
+margin : 30px 30px;
+}
+
+#tableDiv{
+border-radius:30px;
+}
+
+
+
 </style>
 
 
 
 <main>
-<div id="attTitle"><h3 id="selectMonth"></h3></div>
+
+<div id="pageAll">
+	<div id="attTitle">
+		<h3 id="selectMonth"></h3>
 		<form id="frm" action="">
 		<input id="checkMonth" type="month" name="checkMonth">
 		</form>
-
+	</div><br><br>
+	<div id="tableDiv">
 		<table class="attendanceType">
-		  <thead>
-		  <tr>
-		    <th>날짜</th>
-		    <th>출근시간</th>
-		    <th>퇴근시간</th>
-		    <th>상태</th>
-		  </tr>
-		  </thead>
-		  <tbody id="ajaxTable">
+			<thead>
+				<tr>
+		    		<th>날짜</th>
+		    		<th>출근시간</th>
+				    <th>퇴근시간</th>
+				    <th>상태</th>
+		  		</tr>
+			</thead>
+			<tbody id="ajaxTable">
 		 	<% if(list.isEmpty()) { %>
 		  	<tr>
 		  		<td colspan="4">조회된 출퇴근 이력이 없습니다.</td>
@@ -100,12 +122,10 @@ font-family: 'Do Hyeon', sans-serif;
 		  	<%}
 		  	}%>
 		
-		  </tbody>
-		  <tbody id="changeAjax">
-		  </tbody>
-		
+		  	</tbody>
 		</table>
-
+	</div>
+</div>
 </main>
 <script>
 	var date = moment(check).format('yyyy년 MM월');
@@ -113,6 +133,7 @@ font-family: 'Do Hyeon', sans-serif;
 	$("#selectMonth").text(date);
 
  	$("#checkMonth").change(e=>{
+ 	 	$("#ajaxTable").hide();
 		var check2 = $("#checkMonth").val();
 		var date = moment(check2).format('yyyy년 MM월');
 		$("#selectMonth").text(date);
@@ -126,8 +147,8 @@ font-family: 'Do Hyeon', sans-serif;
 			data : {"memberId":memberId,"month":month},
 			dataType : 'json',
             success:data=>{
- 	 			$("#ajaxTable").remove();
-				let tbody=$('tbody[id="changeAjax"]');
+ 	 			$("#ajaxTable").show();
+				let tbody=$('tbody[id="ajaxTable"]');
 				tbody.empty();
 				if(data.length==0){
 					let tr=$("<tr>");

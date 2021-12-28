@@ -49,6 +49,8 @@ public class AttendanceDao {
 		}
 		return result;
 	}
+	
+	
 	//출근/퇴근시간 출력
 	public Attendance outputAttTime(Connection conn, String memberId, String attDate) {
 		PreparedStatement pstmt = null;

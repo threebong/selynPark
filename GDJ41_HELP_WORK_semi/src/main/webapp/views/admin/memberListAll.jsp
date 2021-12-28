@@ -55,6 +55,16 @@ font-family: 'Do Hyeon', sans-serif;
 }
 
 
+.btn-outline-secondary:hover{
+   background-color: #6710f242;
+   border: 1px solid #6710f242;
+}
+.btn-outline-secondary{
+   border: 1px solid #6710f242;
+   color:#6710f242;
+}
+
+
 </style>
 
 <main>
@@ -180,10 +190,12 @@ function adminMemberList(cPage){
 					let memberId = $('<input>').attr({type:"hidden",name:"memberId",id:"memberId",value:memberList[i]["memberId"]});
 					id.append(memberId);
 					let dName = $("<td>").html(memberList[i]["deptName"]);
+					let deptName = $('<input>').attr({type:"hidden",name:"deptName",id:"deptName",value:memberList[i]["deptName"]});
+					dName.append(deptName);
 					let pName = $("<td>").html(memberList[i]["positionName"]);
 					let phone = $("<td>").html(memberList[i]["memberPhone"]);
 					let note = $("<td>").html("<button>수정");
-					note.children('button').attr("id","updateMember"+i);
+					note.children('button').attr({id:"updateMember"+i, class:"btn btn-outline-secondary"});
 					note.children('button').attr("onclick","adminUpdateMember(this);");
 					table.append(tbody);
 					tbody.append(tr2);
@@ -238,7 +250,7 @@ function waitMemberList(){
 					let pName = $("<td>").html(data[i]["positionName"]);
 					let phone = $("<td>").html(data[i]["memberPhone"]);
 					let note = $("<td>").html("<button>수정");
-					note.children('button').attr("id","updateWaitMember"+i);
+					note.children('button').attr({id:"updateWaitMember"+i, class:"btn btn-outline-secondary"});
 					note.children('button').attr("onclick","adminUpdateWaitMember(this);");
 					table.append(tbody);
 					tbody.append(tr2);
@@ -291,6 +303,8 @@ const adminUpdateMember=(e)=>{
 	   $("#modName2").val(memberName);
 	   var memberId = e.parentElement.parentElement.children[1].children[0].value;
 	   $("#modId2").val(memberId);
+	   var deptName = e.parentElement.parentElement.children[2].children[0].value;
+	   $("#modDeptName2").val(deptName);
 	   $("#update-MemberInfoBtn").click();
 };
 

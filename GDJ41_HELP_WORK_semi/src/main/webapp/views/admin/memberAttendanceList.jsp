@@ -59,6 +59,16 @@ div#attTitle, div.modal, table {
 font-family: 'Do Hyeon', sans-serif;
 }
 
+
+.btn-outline-secondary:hover{
+   background-color: #6710f242;
+   border: 1px solid #6710f242;
+}
+.btn-outline-secondary{
+   border: 1px solid #6710f242;
+   color:#6710f242;
+}
+
 </style>
 
 <main>
@@ -170,7 +180,7 @@ function adminAttendanceList(cPage){
 						let leaveTime = $("<td>").html(memberList[i]["leaveTime"]);
 						let attStatus = $("<td>").html(memberList[i]["attStatus"]);
 						let note = $("<td>").html("<button>수정");
-						note.children('button').attr("id","updateAttendance"+i);
+						note.children('button').attr({id:"updateAttendance"+i,class:"btn btn-outline-secondary"});
 						note.children('button').attr("onclick","adminUpdateAttendance(this);");
 						tbody.append(tr2);
 						table.append(tbody);
