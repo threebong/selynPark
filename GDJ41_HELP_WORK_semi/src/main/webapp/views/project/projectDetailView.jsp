@@ -14,10 +14,10 @@
    List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
 %>
 <style>
-   .form-select{
+   /* .form-select{
       width: 120px;
    }
-</style>
+ */</style>
 <script>
 $(document).ready(()=>{
    contentListAjax();
@@ -341,16 +341,17 @@ function contentView(e){
                      $("#schedist").html(pc["dist"]);
                      
                      $("#scheAttendPeople").children().remove();
+                     $("#scheAttendPeople").html("<span><i class='fas fa-user'></i> 일정참석자 : </span>");
                      for(let i=0;i<memberNameList.length;i++){
-                        const span = $("<span>");
+                        const span = $("<span style='padding-right:5px;'>");
                         span.html(memberNameList[i]["memberName"]);
                         $("#scheAttendPeople").append(span);
                      }
                      
-                     $("#scheStartDate_view").html(pc["startDate"]);
-                     $("#scheEndDate_view").html(pc["endDate"]);
-                     $("#schePlaceName").html(pc["placeName"]);
-                     $("#schePlaceAddr").html(pc["address"]);
+                     $("#scheStartDate_view").html("<span style='padding-right:5px; color:rgb(1, 161, 36);'><i class='fas fa-calendar-plus'></i></span>"+pc["startDate"]);
+                     $("#scheEndDate_view").html("<span style='padding-right:5px;color:rgb(255, 83, 53);'><i class='fas fa-calendar-check'></i></span>"+pc["endDate"]);
+                     $("#schePlaceName").html("<span style='padding-right:5px;'><i class='fas fa-map-marker-alt'></i></span>"+pc["placeName"]);
+                     $("#schePlaceAddr").html("<span style='padding-right:5px;'><i class='fas fa-map-marked-alt'></i></span>"+pc["address"]);
                      $("#scheContent_view").html(pc["content"]);
                      scheCommentView();
                      $("#scheViewBtn").click();
@@ -397,15 +398,16 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
          <div id="writerName" style="font-size: 18px; font-family:'Do Hyeon'; display:inline-block; margin-left: 20px;"></div>
          <div id="writeDate"style="font-size: 18px; font-family:'Do Hyeon';  margin-left: 15px; display:inline-block;"></div>
    </div>
-  <div class="offcanvas-body" id="contentBody" style="word-break:break-all;"></div>
+  <div class="offcanvas-body" id="contentBody"></div>
   <div>
    <div class="updateBtnContainer" style="display:none; text-align: right;">
         <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal_update" id="normal_update_btn">수정</button>
         <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#normal-delete">삭제</button>
    </div>
   <div id="normalReadCount" style="font-family:'Do Hyeon';text-align:right; margin-right:20px;"></div>
+  <div style="margin-left: 10px;font-family:'Do Hyeon'; font-size: 20px;">첨부파일</div>
    <div id="normalFileContainer" style="margin-right: 20px;">
-	        <div id="normalOriFileName" style="font-family:'Do Hyeon'; font-size: 20px; padding:10px;"></div>
+	        <div id="normalOriFileName" style="font-family:'Do Hyeon'; font-size: 18px; padding:10px;"></div>
 	        <div id="normalReFileName" style="display: none;"></div>
 	</div>
   </div>
@@ -519,13 +521,13 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
          <div id="workWriterName" style="font-size: 18px; font-family:'Do Hyeon'; display:inline-block; margin-left: 20px;"></div>
          <div id="workWriteDate" style="font-size: 18px; font-family:'Do Hyeon';  margin-left: 15px; display:inline-block;"></div>
    </div>
-  <div class="offcanvas-body" id="contentBody" style="word-break:break-all;">
+  <div class="offcanvas-body" id="contentBody">
         <div id="workIngView" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
         <div id="workManager" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
         <div id="workStartDate_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
         <div id="workEndDate_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
         <div id="workRank_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
-        <div id="workContent_view"></div>
+        <div id="workContent_view" style="word-break:break-word;white-space:pre-line"></div>
         <div id="workdist" style="display:none;"></div>
   </div>
      <div class="updateBtnContainer" style="display: none;text-align: right;">
@@ -533,12 +535,13 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
         <button type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#work-delete" id="del_btn2">삭제</button>
      </div>
    <div id="workReadCount" style="font-family:'Do Hyeon'; text-align:right; margin-right:20px;"></div>
-   
-  <div class="offcanvas-body" id="contentfooter" style="background-color:rgba(217, 170, 255, 0.082);">
-     <div id="workFileContainer">
-        <div id="workOriFileName"></div>
+   <div style="margin-left: 10px;font-family:'Do Hyeon'; font-size: 20px;" >첨부파일</div>
+   <div id="workFileContainer" style="margin-right: 20px;">
+        <div id="workOriFileName" style="font-family:'Do Hyeon'; font-size: 18px; padding:10px;"></div>
         <div id="workReFileName" style="display:none;"></div>
-     </div>
+    </div>
+     
+  <div class="offcanvas-body" id="contentfooter" style="background-color:rgba(217, 170, 255, 0.082);">
      
      <!-- 댓글 입력 -->
      <div id="normalCommentContainer" style="width: 100%; text-align: center;">
@@ -635,40 +638,48 @@ function deleteWorkComment(e){
 
 <button class="btn btn-primary"  id="scheViewBtn" type="button" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#scheContentView" aria-controls="offcanvasScrolling"></button>
 <div class="offcanvas offcanvas-end" style="width: 40%;" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  id="scheContentView" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header"> 
+  <div class="offcanvas-header" style="background-color:rgba(217, 170, 255, 0.082);"> 
   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="sche_close_btn"></button>
   </div>
-   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray">
+   <div class="offcanvas-title" style="border-bottom: 1px solid lightgray;background-color:rgba(217, 170, 255, 0.082);">
+         <div id="scheContentNo"style="text-align:right;font-family:'Do Hyeon'; margin-right: 15px; "></div>
+         <div id="scheContentTitleView" style="font-size: 25px; font-family:'Do Hyeon';margin-left: 20px; "></div>
+         <div id="scheWriterName" style="font-size: 18px; font-family:'Do Hyeon'; display:inline-block; margin-left: 20px;"></div>
+         <div id="scheWriteDate" style="font-size: 18px; font-family:'Do Hyeon';  margin-left: 15px; display:inline-block;"></div>
          
-         <span id="scheWriterName" style="font-size: 18px; font-weight: bold;"></span>
-         <span id="scheWriteDate"style="font-size: 18px; font-weight: bold; margin-left: 15px;"></span>
-         <span id="scheReadCount"></span>
-         <h4 id="scheContentTitleView" style="margin-top: 20px;"></h4>
+         <div id="scheReadCount" style="font-family:'Do Hyeon'; text-align:right; margin-right:20px;"></div>
+         
    </div>
   <div class="offcanvas-body" id="contentBody">
-        <div id="scheAttendPeople"></div>
-        <div id="scheStartDate_view"></div>
-        <div id="scheEndDate_view"></div>
-        <div id="schePlaceName"></div>
-        <div id="schePlaceAddr"></div>
-        <div id="scheContent_view"></div>
-        <div id="scheContentNo"style="display:none;"></div>
+        <div id="scheAttendPeople" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="scheStartDate_view"  style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="scheEndDate_view" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="schePlaceName" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="schePlaceAddr" style="font-family:'Do Hyeon'; font-size: 18px; margin-bottom: 5px;"></div>
+        <div id="scheContent_view" style="word-break:break-word;white-space:pre-line"></div>
+       
         <div id="schedist"style="display:none;"></div>
   </div>
-   <div class="offcanvas-body" id="contentfooter">
-        <div class="updateBtnContainer" style="display:none;">
-           <button  type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateScheModal" id="updateSche_">수정</button>
-           <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sche-delete" id="del_btn3">삭제</button>
-        </div>
+  <div class="updateBtnContainer" style="display: none;text-align: right;">
+           <button  type="button" style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateScheModal" id="updateSche_">수정</button>
+           <button type="button"  style="border:none;" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sche-delete" id="del_btn3">삭제</button>
+  </div>
+   <div id="scheReadCount"></div>
+   <div class="offcanvas-body" id="contentfooter" style="background-color:rgba(217, 170, 255, 0.082);">
+        
       <!-- 댓글 입력 -->
-     <div id="scheCommentContainer">
+     <div id="scheCommentContainer" style="width: 100%; text-align: center;">
      	<div class="comment_editor">
-     		<textarea rows="1" cols="60" style="resize:none;" id="sche_comment"></textarea>
+     		<div style="display: inline-block; width: 70%; vertical-align: middle;">
+     		<textarea rows="1" cols="60" style="resize:none;" id="sche_comment"  placeholder="댓글입력" class="form-control"></textarea>
+     		</div>
+     		<div style="display: inline-block; vertical-align: middle;">
      		<button type="button" id="sche_comment_submit" class="btn btn-outline-secondary">등록</button>
+     		</div>
      	</div>
      </div>
      <!-- 댓글 출력 -->
-     <div id="scheCommentOutputContainer">
+     <div id="scheCommentOutputContainer" style="margin-top: 20px;">
      </div>
      </div>
 </div>
@@ -713,16 +724,16 @@ function scheCommentView(){
 			$("#scheCommentOutputContainer").html("");
 			for(let i=0;i<data.length;i++){
 				const scheCommentNo = $("<div class='scheCommentNo' style='display:none;'>").text(data[i]["scheCommentNo"]);
-				const scheCommentContent = $("<div class='scheCommentContent' style='display: inline-block;'>").text(data[i]["scheCommentContent"]);
+				const scheCommentContent = $("<div class='scheCommentContent'>").text(data[i]["scheCommentContent"]);
 				const scheCommentWriter = $("<div class ='scheCommentWriter' style='display: inline-block;'>").text(data[i]["writerName"]);
 				const scheCommentWriterId = $("<div class='scheCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
 				const scheCommentDate = $("<div class='scheCommentDate' style='display: inline-block;'>").text(data[i]["commentDate"]);	
-				const scheCommentOutput = $("<div class='scheCommentOutput'>");
+				const scheCommentOutput = $("<div class='scheCommentOutput' style='border-bottom:1px solid lightgray;'>");
 				
-				scheCommentOutput.append(scheCommentContent).append(scheCommentWriter).append(scheCommentDate).append(scheCommentNo).append(scheCommentWriterId);
+				scheCommentOutput.append(scheCommentWriter).append(scheCommentDate).append(scheCommentContent).append(scheCommentNo).append(scheCommentWriterId);
 				if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
-					const deletBtn = $("<button class='btn btn-outline-secondary' onclick='deleteScheComment(this);'>삭제</button>");
-					scheCommentOutput.append(deletBtn);
+					const deletBtn = $("<button class='btn btn-outline-secondary delBtn' onclick='deleteScheComment(this);'>삭제</button>");
+					scheCommentContent.append(deletBtn);
 				}
 				
 				$("#scheCommentOutputContainer").append(scheCommentOutput);
@@ -733,7 +744,7 @@ function scheCommentView(){
 //댓글 삭제
 function deleteScheComment(e){
 	
-	let scheCommentNo = $(e).parent().children().eq(3).text();
+	let scheCommentNo = $(e).parent().next().text();
 	
 	$.ajax({
 		url : "<%=request.getContextPath()%>/project/sche/deleteScheComment.do",
@@ -755,21 +766,23 @@ function deleteScheComment(e){
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">사원 목록</h5>
+        <div class="modal-title" id="exampleModalLabel" style="font-family:'Do Hyeon'; font-size: 25px;">사원 목록</div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div>
-      <div>
-         <div id="searchType_Member">
-         <select class="form-select" aria-label=".form-select-sm example" id="searchType_select">              
+      <div style="width: 100%; text-align: center; margin-top: 20px;">
+      <div style="display: inline-block;">
+           <select class="form-select" style="width: 100px;" aria-label=".form-select-sm example" id="searchType_select" >              
                  <option value="M.MEMBER_NAME">사원명</option>
                  <option value="D.DEPT_NAME">부서명</option>
                  <option value="P.POSITION_NAME">직급명</option>
             </select>
-         </div>
-            <div class="input-group mb-3">
-               <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchKeyword_Member">
-               <button class="btn btn-outline-secondary" type="button" id="search_Member_btn">검색</button>
+       </div>
+            <div style="display: inline-block; width: 40%;">
+            	<div class="input-group mb-3" >
+               		<input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchKeyword_Member">
+               		<button class="btn btn-outline-secondary" type="button" id="search_Member_btn">검색</button>
+             </div>
             </div>
       </div>
       
@@ -979,33 +992,36 @@ function deleteScheComment(e){
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="workTitle_update">
       <span id="work_titleResult"></span>
-      <div id="work_Ing_container">
-         <span><i class="fas fa-history"></i></span>
-         <input type="radio" value="요청" id="call" name="work_ing_update"><label for="call">요청</label>
-         <input type="radio" value="진행" id="ing" name="work_ing_update"><label for="ing">진행</label>
-        <input type="radio" value="피드백" id="feedback" name="work_ing_update"><label for="feedback">피드백</label>
-         <input type="radio" value="보류" id="hold" name="work_ing_update"><label for="hold">보류</label>
-         <input type="radio"value="완료" id="complete" name="work_ing_update"><label for="complete">완료</label>
+      <div id="work_Ing_container" style="padding-left: 20px; padding-top: 20px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-history"></i></span>
+         
+        <label for="call2" class="workIngLa"><input type="radio" value="요청" id="call2" name="work_ing_update"><span style="background-color: #00b2ff">요청</span></label>
+         <label for="ing2" class="workIngLa"><input type="radio" value="진행" id="ing2" name="work_ing_update"><span style="background-color: #00b01c" >진행</span></label>
+         <label for="feedback2" class="workIngLa"><input type="radio" value="피드백" id="feedback2" name="work_ing_update"><span style="background-color:#fd7900;">피드백</span></label>
+         <label for="hold2" class="workIngLa"><input type="radio" value="보류" id="hold2" name="work_ing_update"><span style="background-color: #777;">보류</span></label>
+         <label for="complete2" class="workIngLa"><input type="radio"value="완료" id="complete2" name="work_ing_update"><span style="background-color:#402a9d;">완료</span></label>
+         
       </div>
       <!-- <div id="work_addMember_container">
          <span><i class="fas fa-user"></i></span>
          <div><select class="form-select" id="work_addMember_update"></select></div>
          <div id="work_addMember_area_update"></div>
       </div> -->
-      <div id="workStart_container">
-         <span><i class="fas fa-calendar-plus"></i></span>
+      <div id="workStart_container" style="padding-left: 20px; padding-top: 10px;">
+          <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-plus"></i></span>
          <input type="date" id="workStart_update">
       </div>
-      <div id="workEnd_container">
-         <span><i class="fas fa-calendar-check"></i></span>
+      <div id="workEnd_container" style="padding-left: 20px;padding-top: 8px;">
+          <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-check"></i></span>
          <input type="date" id="workEnd_update">
       </div>
-      <div id="workRank_container_update">
+      <div id="workRank_container_update" style="padding-left: 20px;padding-top: 8px;">
          <span><i class="fas fa-flag"></i></span>
-          <input type="radio" value="보통" id="normal" name="work_rank_update"><label for="normal">보통</label>
-          <input type="radio" value="낮음" id="row" name="work_rank_update"><label for="row">낮음</label>
-          <input type="radio" value="긴급" id="emergency" name="work_rank_update"><label for="emergency">긴급</label>
-          <input type="radio" value="높음" id="high" name="work_rank_update"><label for="high">높음</label>
+          
+          <label for="normal2" class="workRankLa"><input type="radio" value="보통" id="normal2" name="work_rank_update"><span>보통</span></label>
+          <label for="row2" class="workRankLa"><input type="radio" value="낮음" id="row2" name="work_rank_update"><span>낮음</span></label>
+          <label for="emergency2" class="workRankLa"><input type="radio" value="긴급" id="emergency2" name="work_rank_update"><span>긴급</span></label>
+          <label for="high2" class="workRankLa"><input type="radio" value="높음" id="high2" name="work_rank_update"><span>높음</span></label>
       </div>
       
         <textarea class="form-control" placeholder="내용을 입력하세요" id="workContent_update" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
@@ -1179,12 +1195,12 @@ $("#work_update_Btn").click(e=>{
       <div class="modal-body">
       <input class="form-control" type="text" placeholder="제목" aria-label="default input example" id="scheTitle_update">
       <span id="sche_titleResult_update"></span>
-      <div id="scheStart_container">
-         <span><i class="fas fa-calendar-plus"></i></span>
+      <div id="scheStart_container" style="padding-left: 20px; padding-top: 5px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-plus"></i></span>
          <input type="date" id="scheStartDate_update">
       </div>
-      <div id="scheEnd_container">
-         <span><i class="fas fa-calendar-check"></i></span>
+      <div id="scheEnd_container" style="padding-left: 20px; padding-top: 8px;">
+         <span style="font-size: 20px; margin-right: 15px;"><i class="fas fa-calendar-check"></i></span>
          <input type="date" id="scheEndDate_update">
       </div>
     <textarea class="form-control" placeholder="내용을 입력하세요" id="scheContent_update" style="height: 200px; margin-top: 20px; margin-bottom:10px; resize:none"></textarea>
@@ -1511,8 +1527,8 @@ $("#sche_place_btn").click(e=>{
       <li class="nav-item" style="font-family:'Sunflower'"><a class="nav-link" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/FileInProjectServlet.do?projectNo=<%=p.getProjectNo()%>')">파일</a></li>
    </ul>
 </div>
-   <hr style="margin-top: 5px;">
-<div id="pro_container">
+
+<div id="pro_container" style="bordert">
    <div id="inner_pro_container">
    <div id="inputContent_container">
       <div id="input-group">
@@ -1661,9 +1677,10 @@ function sche_delComplete(){
 function work_delComplete(){
    let workContentNo = $("#workContentNo").text();
    let fileArr = [];
-   $("#workReFileName").find("h6").each(function(i,v){
-      fileArr.push($(this).text());
-   });
+   
+	$("#workReFileName").find("div").each(function(i,v){
+		fileArr.push($(this).text());
+	});   
    
    $.ajax({
       url : "<%=request.getContextPath()%>/project/deleteWorkContent.do",
@@ -1682,7 +1699,7 @@ function work_delComplete(){
 function normal_delComplete(){
    let normalContentNo = $("#normalContentNo").text();
    let fileArr = [];
-   $("#normalReFileName").find("h6").each(function(i,v){
+   $("#normalReFileName").find("div").each(function(i,v){
       fileArr.push($(this).text());
    });
    
@@ -1719,10 +1736,10 @@ $("#add_btn").click(e=>{
       success : data=>{
       
          $("#addProjectMemberListContainer").find("table").remove();
-         const table = $("<table class='table' style='text-align:center;'>");
-         table.html("<thead><tr><th scope='col'>이름</th><th scope='col'>부서명</th><th scope='col'>직급</th><th scope='col'>선택</th></tr></thead>");
+         const table = $("<table class='mytable2' style='text-align:center;'>");
+         table.html("<thead><tr><th>이름</th><th scope='col'>부서명</th><th scope='col'>직급</th><th scope='col'>선택</th></tr></thead>");
          for(let i=0;i<data.length;i++){
-         const tr = $("<tr scope='row'>");
+         const tr = $("<tr>");
          const memberName = $("<td>").html(data[i]["memberName"]);
          const deptName = $("<td>").html(data[i]["deptName"]);
          const positionName = $("<td>").html(data[i]["positionName"]);
