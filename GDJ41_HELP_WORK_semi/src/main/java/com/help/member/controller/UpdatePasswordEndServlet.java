@@ -32,25 +32,22 @@ public class UpdatePasswordEndServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String userId=request.getParameter("userId");
-		String curPassword=request.getParameter("password");
+		String memberId=request.getParameter("memberId");
+		String curPassword=request.getParameter("memberPwd");
 		
 		//현재 비밀번호가 맞는지 확인
-		Member m=new MemberService().login(userId,curPassword);
+		Member m=new MemberService().login(memberId,curPassword);
 		if(m!=null) {
-			String newPassword=request.getParameter("password_new");
+			String newPassword=request.getParameter("memberPwd_new");
 			//현재 비밀번호가 일치
-			int result=new MemberService().updatePassword(userId,newPassword);
+			int result=new MemberService().updatePassword(memberId,newPassword);
 			if(result>0) {
-				JOptionPane.showMessageDialog(null, "비밀번호 변경 완료");
 				request.setAttribute("script", "opener.location.href='"+request.getContextPath()+"/member/logoutMember.do';close();");
 			}else {
-				JOptionPane.showMessageDialog(null, "비밀번호 변경 실패");
-				request.getRequestDispatcher("/member.updatePassword.do?userId="+userId);
+				request.getRequestDispatcher("/member.updatePassword.do?memberId="+memberId);
 			}
 		}else {
-			JOptionPane.showMessageDialog(null, "현재 비밀번호가 일치하지 않습니다.");
-			request.getRequestDispatcher("/member.updatePassword.do?userId="+userId);
+			request.getRequestDispatcher("/member.updatePassword.do?memberId="+memberId);
 		}
 	
 	

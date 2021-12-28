@@ -13,7 +13,7 @@
 <body>
 	<div id="checkId-container">
 		<%if(m==null){ %>
-			[<span><%=request.getParameter("userId") %></span>]는 사용가능합니다.	
+			[<span><%=request.getParameter("memberId") %></span>]는 사용가능합니다.	
 			<br><br>
 			<button type="button" id="btn" >닫기</button>
 		<%}else {%>
@@ -28,18 +28,18 @@
 	</div>
 	<script>
 		const el=document.querySelector("#btn").addEventListener("click",e=>{
-			const userId='<%=request.getParameter("userId")%>';
-			opener.enrollMemberFrm.userId.value=userId;
-			opener.enrollMemberFrm.password.focus();
+			const memberId='<%=request.getParameter("memberId")%>';
+			opener.enrollMemberFrm.memberId.value=userId;
+			opener.enrollMemberFrm.memberPwd.focus();
 			close();
 		});
 		
 		const checks=()=>{
 			const checkId=RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
-			if(!checkId.test($("#userId").val())){
+			if(!checkId.test($("#memberId").val())){
 	   			alert("이메일 형식으로 작성해주세요");
-	   			$("#userId").val("");
-	   			$("#userId").focus();
+	   			$("#memberId").val("");
+	   			$("#memberId").focus();
 	   			return false;
 	   		}
 		}

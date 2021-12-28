@@ -49,19 +49,19 @@ public class UpdateMemberServlet extends HttpServlet {
 		MultipartRequest mr=new MultipartRequest(request,path,maxSize,"UTF-8",new DefaultFileRenamePolicy());
 		
 		Member m=Member.builder()
-				.memberId(mr.getParameter("userId"))
-				.memberPwd(mr.getParameter("password"))
-				.memberName(mr.getParameter("userName"))
-				.memberPhone(mr.getParameter("phone"))
+				.memberId(mr.getParameter("memberId"))
+				.memberPwd(mr.getParameter("memberPwd"))
+				.memberName(mr.getParameter("memberName"))
+				.memberPhone(mr.getParameter("memberPhone"))
 				.build();
 		
-		File f=mr.getFile("upProfile");
-		System.out.println(mr.getFilesystemName("upProfile"));
+		File f=mr.getFile("memberProfile");
+		System.out.println(mr.getFilesystemName("memberProfile"));
 		if(f!=null&&f.length()>0) {
 			//이전파일삭제
 			File deleteProfile=new File(path+mr.getParameter("oriProfile"));
 			deleteProfile.delete();
-			m.setMemberProfile(mr.getFilesystemName("upProfile"));
+			m.setMemberProfile(mr.getFilesystemName("memberProfile"));
 			
 		}else {
 			//업로드파일이 없음

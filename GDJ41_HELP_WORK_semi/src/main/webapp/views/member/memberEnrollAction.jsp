@@ -7,29 +7,29 @@
 
 	request.setCharacterEncoding("UTF-8");
 
-	String userId = null;
-	String password = null;
-	String phone = null;
-	String upProfile = null;
-	String userName = null;	
+	String memberId = null;
+	String memberPwd = null;
+	String memberPhone = null;
+	String memberProfile = null;
+	String memberName = null;	
 
-	if (request.getParameter("userId") != null) {
-		userId = request.getParameter("userId");
+	if (request.getParameter("memberId") != null) {
+		memberId = request.getParameter("memberId");
 	}
-	if (request.getParameter("password") != null) {
-		password = request.getParameter("password");
+	if (request.getParameter("memberPwd") != null) {
+		memberPwd = request.getParameter("memberPwd");
 	}
-	if (request.getParameter("phone") != null) {
-		phone = request.getParameter("phone");
+	if (request.getParameter("memberPhone") != null) {
+		memberPhone = request.getParameter("memberPhone");
 	}
-	/* if (request.getParameter("upProfile") != null) {
-		upProfile = request.getParameter("upProfile");
+	/* if (request.getParameter("memberProfile") != null) {
+		upProfile = request.getParameter("memberProfile");
 	} */
-	if (request.getParameter("userName") != null) {
-		userName = request.getParameter("userName");
+	if (request.getParameter("memberName") != null) {
+		memberName = request.getParameter("memberName");
 	}
-/* 	if (userId == null || password == null || phone == null || upProfile == null || userName == null) {
- */	if (userId == null || password == null || phone == null || userName == null) {
+/* 	if (memberId == null || memberPwd == null || memberPhone == null || memberProfile == null || memberName == null) {
+ */	if (memberId == null || memberPwd == null || memberPhone == null || memberName == null) {
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
 		script.println("alert('입력이 안 된 사항이 있습니다.');");
@@ -39,7 +39,7 @@
 		return;
 	}
 	MemberDao dao = new MemberDao();
-	int result = dao.insertMember(new Member(userId,null,null,password,phone,upProfile,userName,null,SHA256.getSHA256(userId), false));
+	int result = dao.insertMember(new Member(memberId,null,null,memberPwd,memberPhone,memberProfile,memberName,null,SHA256.getSHA256(memberId), false));
 	if (result == -1) {
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
@@ -49,7 +49,7 @@
 		script.close();
 		return;
 	} else {
-		session.setAttribute("userId", userId);
+		session.setAttribute("memberId", memberId);
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
 		script.println("location.href = '/views/member/emailSendAction.jsp'");

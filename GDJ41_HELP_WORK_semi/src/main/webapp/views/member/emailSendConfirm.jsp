@@ -16,11 +16,11 @@
 </head>
 <body>
 <%
-   String userId = null;
-   if(session.getAttribute("userId") != null) {
-	   userId = (String) session.getAttribute("userId");
+   String memberId = null;
+   if(session.getAttribute("memberId") != null) {
+	   memberId = (String) session.getAttribute("memberId");
    }
-   if(userId == null) {
+   if(memberId == null) {
 	   PrintWriter script = response.getWriter();
 	   script.println("<script>");
 	   script.println("alert('로그인을 해주세요.');");
@@ -48,7 +48,7 @@
                     </a>
                  <div class="dropdown-menu" aria-labelledby="dropdown">
 <%
- if(userId == null) {
+ if(memberId == null) {
 %>
                         <a class="dropdown-item" href="userLogin.jsp">로그인</a>
                         <a class="dropdown-item" href="userJoin.jsp">회원가입</a>

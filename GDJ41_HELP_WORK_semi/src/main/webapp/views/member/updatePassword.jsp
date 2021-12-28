@@ -24,12 +24,12 @@
 			<table>
 				<tr>
 					<th>현재 비밀번호</th>
-					<td><input type="password" name="password" id="password" required></td>
+					<td><input type="password" name="memberPwd" id="memberPwd" required></td>
 				</tr>
 				<tr>
 					<th>변경할 비밀번호</th>
 					<td>
-						<input type="password" name="password_new" id="password_new" required>
+						<input type="password" name="memberPwd_new" id="memberPwd_new" required>
 					</td>
 				</tr>
 				<tr>
@@ -46,7 +46,7 @@
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="userId" value="<%=request.getParameter("userId") %>"/>
+			<input type="hidden" name="memberId" value="<%=request.getParameter("memberId") %>"/>
 		</form>
 	</div>
 	<script>

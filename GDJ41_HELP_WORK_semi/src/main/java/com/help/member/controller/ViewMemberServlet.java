@@ -31,10 +31,10 @@ public class ViewMemberServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String userId=request.getParameter("userId");
-		System.out.println(userId);
+		String memberId=request.getParameter("memberId");
+		System.out.println(memberId);
 		
-		Member m=new MemberService().checkIdDuplicate(userId);
+		Member m=new MemberService().checkIdDuplicate(memberId);
 		
 		request.setAttribute("member",m);
 		

@@ -17,7 +17,7 @@
 //	
 //	@Override
 //	   public String getParameter(String name) {
-//	      if(name.equals("password")||name.equals("password_new")) {
+//	      if(name.equals("memberPwd")||name.equals("password_new")) {
 //	         String oriPw=super.getParameter(name);
 //	         System.out.println(oriPw);
 //	         String encPw=getSHA512(oriPw);
