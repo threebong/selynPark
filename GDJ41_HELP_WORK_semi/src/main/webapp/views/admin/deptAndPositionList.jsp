@@ -22,9 +22,7 @@ table thead th {
   
 }
 
-table thead {
-	
-}
+
 
 table tbody th {
   width: 150px;
@@ -53,7 +51,6 @@ table td {
 	margin-left: 30px;
 }
 
-
 tr:hover {
   background-color:rgba(183, 191, 225,0.2);
 }
@@ -80,7 +77,6 @@ div#ajaxTable{
 background-color:rgba(183, 191, 225,0.2);
 border-radius:30px;
 
-
 }
 
 </style>
@@ -100,6 +96,8 @@ border-radius:30px;
 	
 	<div id="ajaxTable"></div>
 </div>
+
+
 <!-- 부서수정 모달창 -->
 <button id="update-DeptBtn" type="button" class="btn btn-primary"
 data-bs-toggle="modal" data-bs-target="#UpdateDeptModal" style="display: none;">부서 수정</button> 
@@ -236,10 +234,10 @@ function adminDeptList(){
 			let thead=$("<thead>");
 			let tbody=$('<tbody>');
 			let tr=$("<tr>");
-			let th1=$("<th>").html("부서코드");
-			let th2=$("<th>").html("부서명");
-			let th3=$("<th>").html("수정");
-			let th4=$("<th>").html("삭제");
+			let th1=$("<th style='font-size:20px;'>").html("부서코드");
+			let th2=$("<th style='font-size:20px;'>").html("부서명");
+			let th3=$("<th style='font-size:20px;'>").html("수정");
+			let th4=$("<th style='font-size:20px;'>").html("삭제");
 			thead.append(tr).append(th1).append(th2).append(th3).append(th4);
 			table.append(thead);
 			
@@ -373,7 +371,6 @@ const deletePosition=(e)=>{
 	   var positionName = e.parentElement.parentElement.children[1].children[0].value;
 	   $("#deletePositionName").val(positionName);
 	   $("#delete-PositionBtn").click();
-	   console.log($(".modal-body").html());
 };
 
 

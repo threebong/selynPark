@@ -52,27 +52,40 @@ public class MemberAttendanceListEndServlet extends HttpServlet {
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
 		int pageEnd=pageNo+pageBarSize-1;
 		
-		String pageBar="";
+		String pageBar = "<nav aria-label=\"Page navigation example\">\r\n"
+				+ "  <ul class=\"pagination\">\r\n"
+				+ "    <li class=\"page-item\">";
 		
 		if(pageNo==1) {
-			pageBar+="<span>[이전]</span>";
+			pageBar += " <a class=\"page-link\" href=\"#\" aria-label=\"Previous\">\r\n"
+					+ "        <span aria-hidden=\"true\">&laquo;</span>\r\n"
+					+ "      </a></li>";
 		} else {
-			pageBar+="<a href='javascript:adminAttendanceList("+(pageNo-1)+");'>[이전]</a>";
+			pageBar+="<a class=\"page-link\" aria-label=\"Previous\" href='javascript:adminAttendanceList("+(pageNo-1)+");'><span aria-hidden=\"true\">[이전]</span></a></li>";
 		}
 		
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(cPage==pageNo) {
-				pageBar+="<span>"+pageNo+"</span>";
+				pageBar+=" <li class=\"page-item\"><a class=\"page-link\" href=\"#\">"+pageNo+"</a></li>";
 			} else {
-				pageBar+="<a href='javascript:adminAttendanceList("+(pageNo)+");'>"+pageNo+"</a>";
+				pageBar+="<li class=\"page-item\"><a class=\"page-link\" href='javascript:adminAttendanceList("+(pageNo)+");'>"+pageNo+"</a></li>";
 			}
 			pageNo++;
 		}
 		
 		if(pageNo>totalPage) {
-			pageBar+="<span>[다음]</span>";
+			pageBar+="<li class=\"page-item\">\r\n"
+					+ "      <a class=\"page-link\" href=\"#\" aria-label=\"Next\">\r\n"
+					+ "        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+					+ "      </a>\r\n"
+					+ "    </li>\r\n"
+					+ "  </ul>\r\n"
+					+ "</nav>";
 		} else {
-			pageBar+="<a href='javascript:adminAttendanceList("+(pageNo)+");'>[다음]</a>";
+			pageBar+=" <li class=\"page-item\"><a class=\"page-link\" aria-label=\"Next\" href='javascript:adminAttendanceList("+(pageNo)+");'><span aria-hidden=\"true\">&raquo;</span></a>\r\n"
+					+ "    </li>\r\n"
+					+ "  </ul>\r\n"
+					+ "</nav>";
 		}
 		
 		Map<String, Object> param = Map.of("pageBar",pageBar,"list",list);
