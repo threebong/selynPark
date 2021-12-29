@@ -27,15 +27,15 @@ public class MemberDao {
 	}
 	
 	//로그인
-	public Member login(Connection conn,String userId,String password) {
+	public Member login(Connection conn,String memberId,String memberPwd) {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		Member m=null;
 		String sql=prop.getProperty("selectMember");
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
-			pstmt.setString(2, password);
+			pstmt.setString(1, memberId);
+			pstmt.setString(2, memberPwd);
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
 				m=Member.builder()
@@ -57,7 +57,7 @@ public class MemberDao {
 		}
 		return m;
 	}
-//	public int login(String userId,String password) {
+//	public int login(String memberId,String memberPwd) {
 //		PreparedStatement pstmt=null;
 //		Connection conn=null;
 //		ResultSet rs=null;
@@ -66,7 +66,7 @@ public class MemberDao {
 //		try {
 //			conn=JDBCTemplate.getConnection();
 //			pstmt=conn.prepareStatement(sql);
-//			pstmt.setString(1, userId);
+//			pstmt.setString(1, memberId);
 //			rs=pstmt.executeQuery();
 //			if(rs.next()) {
 ////				m=Member.builder()
@@ -81,7 +81,7 @@ public class MemberDao {
 ////						.emailHash(rs.getString("EMAIL_HASH"))
 ////						.emailChecked(rs.getBoolean("EMAIL_CHECKED"))
 ////						.build();
-//				if(rs.getString(1).equals(password)) {
+//				if(rs.getString(1).equals(memberPwd)) {
 //					return 1;// 로그인 성공
 //				}
 //				else {
@@ -101,14 +101,14 @@ public class MemberDao {
 	
 	
 	//id중복확인
-	public Member checkIdDuplicate(Connection conn,String userId) {
+	public Member checkIdDuplicate(Connection conn,String memberId) {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		Member m=null;
 		String sql=prop.getProperty("selectId");
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
+			pstmt.setString(1, memberId);
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
 				m=Member.builder()
@@ -171,8 +171,8 @@ public class MemberDao {
 //	}
 	
 	//이메일 인증여부
-//	
-//	public boolean getEmailChecked(String userId) { 
+	
+//	public boolean getEmailChecked(String memberId) { 
 //		String sql=prop.getProperty("selectEmailChecked");    
 //        Connection conn = null; 
 //        PreparedStatement pstmt = null;
@@ -182,7 +182,7 @@ public class MemberDao {
 //	try {          
 //            conn = JDBCTemplate.getConnection(); 
 //            pstmt = conn.prepareStatement(sql); 
-//            pstmt.setString(1, userId);
+//            pstmt.setString(1, memberId);
 //            rs = pstmt.executeQuery();
 //            if(rs.next()) {
 //              result = rs.getInt(1);
@@ -204,12 +204,12 @@ public class MemberDao {
 	
 //        return false; // 데이터베이스 오류
 //	}
-	
-	
-	//이메일 인증받기
-	
-	
-//	public boolean setEmailChecked(String userId) { //이메일 인증을 완료해주는 함수
+//	
+//	
+//	//이메일 인증받기
+//	
+//	
+//	public boolean setEmailChecked(String memberId) { //이메일 인증을 완료해주는 함수
 //	    String sql=prop.getProperty("updateEmailChecked");
 //        Connection conn = null; 
 //        PreparedStatement pstmt = null;
@@ -217,7 +217,7 @@ public class MemberDao {
 //        try {          
 //            conn = JDBCTemplate.getConnection(); 
 //            pstmt = conn.prepareStatement(sql); 
-//            pstmt.setString(1, userId);
+//            pstmt.setString(1, memberId);
 //            pstmt.executeUpdate();
 //            return true;
 //        } catch (Exception e) {
@@ -229,9 +229,9 @@ public class MemberDao {
 //       }
 //        return false; // 데이터베이스 오류
 //       }          
-  
-	//이메일 확인
-//	public String getMemberEmail(String userId) {
+//  
+//	//이메일 확인
+//	public String getMemberEmail(String memberId) {
 //    	  String sql=prop.getProperty("getMemberEmail");
 //          Connection conn = null; 
 //          PreparedStatement pstmt = null; 
@@ -239,7 +239,7 @@ public class MemberDao {
 //          try {          
 //              conn = JDBCTemplate.getConnection();
 //              pstmt = conn.prepareStatement(sql); 
-//              pstmt.setString(1, userId);
+//              pstmt.setString(1, memberId);
 //              rs = pstmt.executeQuery();
 //              if(rs.next()) {
 //                  return rs.getString(1);
@@ -274,14 +274,14 @@ public class MemberDao {
 	}
 	
 	//비밀번호변경
-	public int updatePassword(Connection conn,String userId,String password) {
+	public int updatePassword(Connection conn,String memberId,String memberPwd) {
 		PreparedStatement pstmt=null;
 		int result=0;
 		String sql=prop.getProperty("updatePassword");
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, password);
-			pstmt.setString(2, userId);
+			pstmt.setString(1, memberPwd);
+			pstmt.setString(2, memberId);
 			result=pstmt.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -292,15 +292,15 @@ public class MemberDao {
 	}
 	
 	//아이디 찾기
-	public String findMemberId(Connection conn,String userName,String phone) {
+	public String findMemberId(Connection conn,String memberName,String memberPhone) {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		String userId=null;
 		String sql=prop.getProperty("findMemberId");
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, userName);
-			pstmt.setString(2, phone);
+			pstmt.setString(1, memberName);
+			pstmt.setString(2, memberPhone);
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
 				userId = rs.getString("MEMBER_ID"); 

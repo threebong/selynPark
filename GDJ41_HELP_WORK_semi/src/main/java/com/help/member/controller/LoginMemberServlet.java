@@ -34,25 +34,25 @@ public class LoginMemberServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//로그인		
-		String userId=request.getParameter("userId");
-		String password=request.getParameter("password");
+		String memberId=request.getParameter("memberId");
+		String memberPwd=request.getParameter("memberPwd");
 		
-		Member m=new MemberService().login(userId,password);
+		Member m=new MemberService().login(memberId,memberPwd);
 
 		//아이디값 저장하기
 		String saveId=request.getParameter("saveId");
 		
 		if(saveId!=null) {
-			Cookie c=new Cookie("saveId",userId);
+			Cookie c=new Cookie("saveId",memberId);
 			c.setMaxAge(24*60*60*7);
 			response.addCookie(c);
 		}else {
-			Cookie c=new Cookie("saveId",userId);
+			Cookie c=new Cookie("saveId",memberId);
 			c.setMaxAge(0);
 			response.addCookie(c);			
 		}
-		System.out.println(userId);
-		System.out.println(password);
+		System.out.println(memberId);
+		System.out.println(memberPwd);
 		
 		if(m!=null) {
 			HttpSession session=request.getSession();

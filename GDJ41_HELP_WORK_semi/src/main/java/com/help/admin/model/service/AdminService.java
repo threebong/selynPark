@@ -32,11 +32,19 @@ public class AdminService {
 		return result;
 	}
 	
-	public List<AdminListMember> waitMemberAll() {
+	public List<AdminListMember> waitMemberAll(int cPage, int numPerPage) {
 		Connection conn = getConnection();
-		List<AdminListMember> list = dao.waitMemberAll(conn);
+		List<AdminListMember> list = dao.waitMemberAll(conn, cPage, numPerPage);
 		close(conn);
 		return list;
+	}
+	
+	
+	public int waitMemberAllCount() {
+		Connection conn = getConnection();
+		int result = dao.waitMemberAllCount(conn);
+		close(conn);
+		return result;
 	}
 	
 	

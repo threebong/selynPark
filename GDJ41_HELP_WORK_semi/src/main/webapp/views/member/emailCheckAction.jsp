@@ -9,11 +9,11 @@
 	   code = request.getParameter("code");
    }
    MemberDao dao = new MemberDao();
-   String userId = null;
-   if(session.getAttribute("userId") != null) {
-	   userId = (String) session.getAttribute("userId");
+   String memberId = null;
+   if(session.getAttribute("memberId") != null) {
+	   memberId = (String) session.getAttribute("memberId");
    }
-   if(userId == null) {
+   if(memberId == null) {
 	   PrintWriter script = response.getWriter();
 	   script.println("<script>");
 	   script.println("alert('로그인을 해주세요.');");
@@ -21,12 +21,12 @@
 	   script.println("</script>");
 	   script.close();
 	   return;
-   } 
+   }  
    
-   String userEmail = dao.getMemberEmail(userId);
+   String userEmail = dao.getMemberEmail(memberId);
    boolean isRight = (new SHA256().getSHA256(userEmail).equals(code)) ? true : false;
    if(isRight == true) {
-	   dao.setEmailChecked(userId);
+	   dao.setEmailChecked(memberId);
 	   PrintWriter script = response.getWriter();
 	   script.println("<script>");
 	   script.println("alert('인증에 성공했습니다.');");

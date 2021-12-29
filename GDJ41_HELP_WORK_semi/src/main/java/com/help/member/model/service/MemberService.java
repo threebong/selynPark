@@ -13,23 +13,23 @@ public class MemberService {
 	private MemberDao dao=new MemberDao();
 	
 	//로그인
-	public Member login(String userId,String password) {
+	public Member login(String memberId,String memberPwd) {
 		Connection conn=getConnection();
-		Member m=dao.login(conn,userId,password);
+		Member m=dao.login(conn,memberId,memberPwd);
 		close(conn);
 		return m;
 	}
-//	public int login(String userId,String password) {
+//	public int login(String memberId,String memberPwd) {
 //		Connection conn=getConnection();
-//		int result=dao.login(conn,userId,password);
+//		int result=dao.login(conn,userId,memberPwd);
 //		close(conn);
 //		return result;
 //	}
 	
 	//id중복확인
-	public Member checkIdDuplicate(String userId) {
+	public Member checkIdDuplicate(String memberId) {
 		Connection conn=getConnection();
-		Member m=dao.checkIdDuplicate(conn,userId);
+		Member m=dao.checkIdDuplicate(conn,memberId);
 		close(conn);
 		return m;
 	}
@@ -53,9 +53,9 @@ public class MemberService {
 //	}
 //	
 //	//이메일 인증여부
-//	public boolean getEmailChecked(String userId) {
+//	public boolean getEmailChecked(String memberId) {
 //		Connection conn=getConnection();
-//		boolean flag=dao.getEmailChecked(conn,userId);
+//		boolean flag=dao.getEmailChecked(conn,memberId);
 //		if(flag=true) commit(conn);
 //		else commit(conn);
 //		close(conn);
@@ -63,9 +63,9 @@ public class MemberService {
 //	}
 //
 //	//이메일 인증하기
-//	public boolean setEmailChecked(String userId) {
+//	public boolean setEmailChecked(String memberId) {
 //		Connection conn=getConnection();
-//		boolean flag=dao.getEmailChecked(conn,userId);
+//		boolean flag=dao.getEmailChecked(conn,memberId);
 //		if(flag=true) commit(conn);
 //		else commit(conn);
 //		close(conn);
@@ -83,9 +83,9 @@ public class MemberService {
 	}
 	
 	//비밀번호 변경
-	public int updatePassword(String userId,String password) {
+	public int updatePassword(String memberId,String memberPwd) {
 		Connection conn=getConnection();
-		int result=dao.updatePassword(conn,userId,password);
+		int result=dao.updatePassword(conn,memberId,memberPwd);
 		if(result>0) commit(conn);
 		else rollback(conn);
 		close(conn);
@@ -93,11 +93,11 @@ public class MemberService {
 	}
 	
 	//아이디 찾기
-	public String findMemberId(String userName,String phone) {
+	public String findMemberId(String memberName,String memberPhone) {
 		Connection conn=getConnection();
-		String userId=dao.findMemberId(conn,userName,phone);
+		String memberId=dao.findMemberId(conn,memberName,memberPhone);
 		close(conn);
-		return userId;
+		return memberId;
 	}
 
 }

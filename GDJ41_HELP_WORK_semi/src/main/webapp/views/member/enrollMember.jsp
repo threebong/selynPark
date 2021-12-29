@@ -10,69 +10,138 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
-<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	<!-- CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script type="text/javascript"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+<style>
+	* {
+	  margin: 0;
+	  padding: 0;
+	  box-sizing: border-box;
+	  font-family: 'Do Hyeon', sans-serif;
+	  color:#6710f242
+	}
+	.wrap {
+	  width: 100%;
+	  height: 100%;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  background: rgba(0, 0, 0, 0);
+	  margin-top: 100px;
+	  margin-bottom: 100px;
+	}
+	.btn-outline-secondary:hover{
+	   background-color: #6710f242;
+	   border: 1px solid #6710f242;
+	}
+	.btn-outline-secondary{
+	   border: 1px solid #6710f242;
+	   color:#6710f242;
+	}
+	th,h1{
+		text-align:center;
+		color:purple;
+	}
+	form{
+		overflow:auto;
+	}
+	img {
+    object-fit: cover;
+    object-position: top;
+    border-radius: 50%;
+    width: 200px; 
+    height: 200px;
+}
+</style>
 </head>
 <body>
-	<section id=enroll-container>
-		<h2>회원 가입 정보 입력</h2>
-     	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
-    	<%-- <form name="enrollMemberFrm" action="<%=request.getContextPath() %>/views/member/memberEnrollAction.jsp" method="post" enctype="multipart/form-data" onsubmit="return checks()" > --%>
-    		<table class="table" style="margin-left: auto; margin-right: auto;">
-				<tr>
-					<th>아이디</th>
-					<td>
-						<input type="text" placeholder="이메일형식으로 입력해주세요" name="userId" id="userId_" >
-						<input type="button" value="중복검사" id="idDuplicateBtn">
-						<span>이메일 형식으로 입력해주세요 ex)silver@world.com</span>
-					</td>
-				</tr>
-				<tr>
-					<th>패스워드</th>
-					<td>
-						<input type="password" name="password" id="password_" placeholder="비밀번호를 입력해주세요"><br>
-						<span>비밀번호는 영문 대소문자+숫자+특수문자 조합 최소 8자리 이상으로 작성해주세요</span>
-					</td>
-				</tr>
-				<tr>
-					<th>패스워드확인</th>
-					<td>	
-						<input type="password" id="password_2" placeholder="비밀번호를 다시 한번 입력해주세요"><br>
-						<span id="pwresult"></span>
-					</td>
-				</tr>  
-				<tr>
-					<th>이름</th>
-					<td>	
-						<input type="text"  name="userName" id="userName" required><br>
-					</td>
-				</tr>
-				<tr>
-					<th>휴대폰</th>
-					<td>	
-						<input type="tel" placeholder="휴대폰번호를 '-'없이 입력" name="phone" id="phone" maxlength="15" required><br>
-					</td>
-				</tr>
-				<tr>
-					<th>프로필사진</th>
-					<td>	
-						<div id="imageContainer"></div>
-						<input type="file" name="upProfile" id="upProfile">
-					</td>
-				</tr>
-			</table>
-			<input type="submit" value="가입" >
-			<input type="reset" value="취소" >
-		</form>
-		<form name="idDuplicateFrm">
-			<input type="hidden" name="userId">
-		</form>
+	<section id=enroll-container >
+		<div class="wrap">
+	     	<form name="enrollMemberFrm" action="<%=request.getContextPath() %>/member/enrollMemberEnd.do" method="post" enctype="multipart/form-data" onsubmit="return checks()" >
+	    	<%-- <form name="enrollMemberFrm" action="<%=request.getContextPath() %>/views/member/memberEnrollAction.jsp" method="post" enctype="multipart/form-data" onsubmit="return checks()" > --%>
+	    		<table class="table" style="margin-left: auto; margin-right: auto;">
+					<h1>회원 가입 정보 입력</h1>
+					<tr>
+						<th>아 이 디</th>
+						<td>
+							<div class="form-floating mb-3">
+								<input type="text" class="form-control" id="memberId" name="memberId" placeholder="name@example.com">
+								<label for="floatingInput">아이디 입력</label>
+								<span>이메일 형식으로 입력해주세요 ex)silver@world.com</span>
+							</div>
+						</td>
+						<td>
+		 					<input type="button" value="아이디 중복검사" id="idDuplicateBtn" class="btn btn-outline-secondary">
+		 					<br>
+						</td>
+					</tr>
+					<tr>
+						<th>비밀번호</th>
+						<td colspan="2">
+							<div class="form-floating">
+								<input type="password" class="form-control" id="memberPwd" name="memberPwd" placeholder="비밀번호">
+								<label for="floatingPassword">비밀번호 입력</label>
+								<span>비밀번호는 영문 대소문자+숫자+특수문자 조합 최소 8자리 이상으로 작성해주세요</span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>비밀번호 확인</th>
+						<td colspan="2">
+							<div class="form-floating">
+								<input type="password" class="form-control" id="memberPwd_2" name="memberPwd_2" placeholder="비밀번호">
+								<label for="floatingPassword">비밀번호 확인</label>
+								<span id="pwresult"></span>
+							</div>	
+						</td>
+					</tr>  
+					<tr>
+						<th>이 름</th>
+						<td colspan="2">	 
+							<div class="form-floating mb-3">
+								<input type="text" class="form-control" id="memberName" name="memberName" placeholder="">
+								<label for="floatingInput">이름 입력</label> 
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>휴대폰번호</th>
+						<td colspan="2">	
+							<div class="form-floating mb-3">
+								<input type="tel" class="form-control" id="memberPhone" name="memberPhone" placeholder="휴대폰번호를 '-'없이 입력">
+								<label for="floatingInput">휴대폰번호를 '-'없이 입력</label>
+							</div> 
+						</td>
+					</tr>
+					<tr>
+						<th>프로필사진</th>
+						<td colspan="2">	
+							<div id="imageContainer"></div>
+							<div class="mb-3">
+		  						<input class="form-control" type="file" id="memberProfile" name="memberProfile" >
+							</div>
+						</td>
+					</tr>
+				</table>
+				<input type="submit" value="가입" class="btn btn-outline-secondary" >
+				<input type="reset" value="취소" class="btn btn-outline-secondary">
+			</form>
+			<form name="idDuplicateFrm">
+				<input type="hidden" name="memberId">
+			</form>
+		</div>
 	</section>
 	<script>
 		//비밀번호 일치 확인
 	   	$(()=>{
-	   		$("#password_2").keyup(e=>{
+	   		$("#memberPwd_2").keyup(e=>{
 	   			if($(e.target).val().trim().length>3){
-	   				if($(e.target).val()==$("#password_").val()){
+	   				if($(e.target).val()==$("#memberPwd").val()){
 	   					$("#pwresult").text("비밀번호가 일치합니다.").css({"color":"green"});
 	   				}else{
 	   					$("#pwresult").text("비밀번호가 불일치합니다.").css({"color":"red"});
@@ -88,31 +157,31 @@
 			const checkPhone=RegExp(/^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/);
 			const getName= RegExp(/^[가-힣]+$/);
 			
-			if(!checkId.test($("#userId_").val())){
+			if(!checkId.test($("#memberId").val())){
 	   			alert("이메일 형식으로 작성해주세요");
-	   			$("#userId_").val("");
-	   			$("#userId_").focus();
+	   			$("#memberId").val("");
+	   			$("#memberId").focus();
 	   			return false;
 	   		}
 
-			if(!checkPw.test($("#password_").val())){
+			if(!checkPw.test($("#memberPwd").val())){
 				alert("비밀번호는 영문 대소문자+숫자+특수문자 조합 최소 8자리 이상으로 작성해주세요");				
-	   			$("#password_").val("");
-	   			$("#password_").focus();
+	   			$("#memberPwd").val("");
+	   			$("#memberPwd").focus();
 	   			return false;
 			}
 			
-			if(!checkPhone.test($("#phone").val())){
+			if(!checkPhone.test($("#memberPhone").val())){
 				alert("전화번호를 정확하게 입력해주세요!");
-				$("#phone").val("");
-				$("#phone").focus();
+				$("#memberPhone").val("");
+				$("#memberPhone").focus();
 				return false;
 			}
 			
-			if (!getName.test($("#userName").val())) {
+			if (!getName.test($("#memberName").val())) {
 		        alert("이름 똑띠 쓰세용");
-		        $("#userName").val("");
-		        $("#userName").focus();
+		        $("#memberName").val("");
+		        $("#memberName").focus();
 		        return false;
 		      }
 	   		
@@ -121,13 +190,13 @@
 	   	//아이디 중복확인하기
 	   	$(()=>{
 	   		$("#idDuplicateBtn").click(e=>{
-	   			const userId=$("#userId_").val().trim();
-	   			if(userId.match("@")){
+	   			const memberId=$("#memberId").val().trim();
+	   			if(memberId.match("@")){
 	   				const url="<%=request.getContextPath()%>/member/idDuplicate.do";
 	   				const title="idDuplicate";
-	   				const style="width=300,height=200";
+	   				const style="width=350,height=100";
 	   				open("",title,style);
-	   				idDuplicateFrm.userId.value=userId;
+	   				idDuplicateFrm.memberId.value=memberId;
 	   				idDuplicateFrm.action=url;
 	   				idDuplicateFrm.method="post";
 	   				idDuplicateFrm.target=title;
@@ -135,22 +204,22 @@
 	   				
 	   			}else{
 	   				alert("이메일 형식으로 작성해주세요");
-	   				$("#userId_").focus();
+	   				$("#memberId").focus();
 	   			}
 	   		});
 	   	});
 	   	
 	   	$("#target").click(e=>{
-	   		$("input[name=upProfile]").click();
+	   		$("input[name=memberProfile]").click();
 	   	});
-	   	$("input[name=upProfile]").change(e=>{
+	   	$("input[name=memberProfile]").change(e=>{
 	   		if(e.target.files[0].type.includes("image")){
 	   			let reader=new FileReader();
 	   			reader.onload=(e)=>{
 	   				const img=$("<img>").attr({
 	   					src:e.target.result,
 	   					width:"100px",
-	   					height:"100px"
+	   					height:"100px",
 	   				});
 	   				$("#imageContainer").append(img);
 	   				$("#target").attr("src",e.target.result);

@@ -9,6 +9,7 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2117f58ed9ba4b4e13a9bca2bc216232&&APIKEY&libraries=services"></script>
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Sunflower:wght@300&display=swap" rel="stylesheet">
+<link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <%
    Project p = (Project)request.getAttribute("projectInfo");
    List<ProMemberJoinMember> pMember = (List)request.getAttribute("ProMemberJoinMember");
@@ -377,7 +378,7 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 
 
 </script>
-<link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
+
 <style>
 #contentView{
    cursor: pointer;
@@ -471,6 +472,7 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 			success:data=>{
 				$("#normalCommentOutputContainer").html("");
 				for(let i=0;i<data.length;i++){
+					
 					const normalCommentNo = $("<div class='normalCommentNo' style='display:none;'>").text(data[i]["normalCommentNo"]);
 					const normalCommentContent = $("<div class='normalCommentContent'>").text(data[i]["normalCommentContent"]);
 					const normalCommentWriterName = $("<div class ='normalCommentWriterName' style='display: inline-block;'>").text(data[i]["writerName"]);
@@ -478,6 +480,7 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 					const normalCommentOutput = $("<div class='normalCommentOutput' style='border-bottom:1px solid lightgray;'>");
 					const normalCommentWriterId = $("<div class='normalCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
 					normalCommentOutput.append(normalCommentWriterName).append(normalCommentDate).append(normalCommentContent).append(normalCommentNo).append(normalCommentWriterId)
+					
 					if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
 						const deletBtn = $("<button class='btn btn-outline-secondary delBtn' onclick='deleteNormalComment(this);'>삭제</button>");
 						normalCommentContent.append(deletBtn);
@@ -781,7 +784,7 @@ function deleteScheComment(e){
             <div style="display: inline-block; width: 40%;">
             	<div class="input-group mb-3" >
                		<input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchKeyword_Member">
-               		<button class="btn btn-outline-secondary" type="button" id="search_Member_btn">검색</button>
+               		<button class="btn btn-outline-secondary" type="button" id="search_Member_btn"><i class="fas fa-search"></i></button>
              </div>
             </div>
       </div>
@@ -1084,6 +1087,42 @@ $("#updateWork_").click(e=>{
    });
 });
 
+
+//시작 날짜 
+$("#workStart_update").change(e=>{
+   workStart = $("#workStart_update").val();
+   let startDateArr = workStart.split("-");
+   let endDateArr = workEnd.split("-");
+	 
+   let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+   let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+   if(startDateCompare.getTime() > endDateCompare.getTime()) {
+       alert("시작날짜와 종료날짜를 확인해 주세요.");
+       document.getElementById('workStart_update').value= new Date().toISOString().substring(0, 10);
+       $("#workStart_update").focus();
+       return false;
+   }
+});      
+
+//마감 날짜
+
+$("#workEnd_update").change(e=>{
+   workEnd = $("#workEnd_update").val();
+   //날짜 
+   let startDateArr = workStart.split("-");
+   let endDateArr = workEnd.split("-");
+	 
+   let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+   let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+   if(startDateCompare.getTime() > endDateCompare.getTime()) {
+       alert("시작날짜와 종료날짜를 확인해 주세요.");
+       document.getElementById('workEnd_update').value= new Date().toISOString().substring(0, 10);
+       $("#workEnd_update").focus();
+       return false;
+   }
+});
+
+
 $("#work_update_Btn").click(e=>{
 	
 	let workTitle =  $("#workTitle_update").val();
@@ -1240,6 +1279,40 @@ $("#updateSche_").click(e=>{
 	
 });
 
+//시작 날짜 
+$("#scheStartDate_update").change(e=>{
+   workStart = $("#scheStartDate_update").val();
+   let startDateArr = workStart.split("-");
+   let endDateArr = workEnd.split("-");
+	 
+   let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+   let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+   if(startDateCompare.getTime() > endDateCompare.getTime()) {
+       alert("시작날짜와 종료날짜를 확인해 주세요.");
+       document.getElementById('scheStartDate_update').value= new Date().toISOString().substring(0, 10);
+       $("#scheStartDate_update").focus();
+       return false;
+   }
+});      
+
+//마감 날짜
+
+$("#scheEndDate_update").change(e=>{
+   workEnd = $("#scheEndDate_update").val();
+   //날짜 
+   let startDateArr = workStart.split("-");
+   let endDateArr = workEnd.split("-");
+	 
+   let startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+   let endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+   if(startDateCompare.getTime() > endDateCompare.getTime()) {
+       alert("시작날짜와 종료날짜를 확인해 주세요.");
+       document.getElementById('scheEndDate_update').value= new Date().toISOString().substring(0, 10);
+       $("#scheEndDate_update").focus();
+       return false;
+   }
+});
+
 
 $("#sche_update_Btn").click(e=>{
 	let scheTitle =  $("#scheTitle_update").val();
@@ -1281,6 +1354,7 @@ $("#sche_update_Btn").click(e=>{
    let shce_place_Loadaddr;
    
    function getAddress(){
+	 $("#searchResultContainer").html("");
     shce_place_name = $("#shce_place_name").text();
     shce_place_Loadaddr = $("#shce_place_Loadaddr").text();
    //화면 출력 꺼지게 하기
@@ -1554,7 +1628,7 @@ $("#sche_place_btn").click(e=>{
                </select>
             </div>        
             <input type="text" class="form-control" placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchConKeyword">
-            <button class="btn btn-outline-secondary" type="button" id="searchConBtn">검색</button>
+            <button class="btn btn-outline-secondary" type="button" id="searchConBtn"><i class="fas fa-search"></i></button>
       </div>
        <div id="filterDist" style="display: inline-block; margin-left: 5px;">
          <div class="dropdown" style="margin-left: 5px;">
@@ -1594,12 +1668,12 @@ $("#sche_place_btn").click(e=>{
    
    </div>
    <div id="proMemberViewContainer">
-      <div id="innder_proMemberViewContainer">
+      <div id="innder_proMemberViewContainer" style="font-family:'Do Hyeon'; ">
       	<div style="background-color: rgba(213, 124, 255, 0.26);  border-radius: 30px 30px 0 0; padding: 20px;">
       		<div style="font-size: 21px; font-weight: bold;">프로젝트 관리자</div>
          	<div id="proCreator" style="font-size: 20px; font-weight: bold;"></div>
       	</div>
-         <div style="padding: 20px;">
+         <div style="padding: 20px; ">
          	<div style="font-size: 21px; font-weight: bold;"><i class="fas fa-users"></i>&nbsp;참여자</div>
          	<div id="proAttend" style="font-size: 18px; font-weight: 400;"></div>
          </div>
