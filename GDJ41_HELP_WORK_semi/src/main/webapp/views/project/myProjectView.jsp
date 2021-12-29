@@ -67,7 +67,6 @@
 					<option value="projectTitle">프로젝트 이름</option>
 					<option value="ProjectMember">프로젝트 생성자</option>
 					<option value="ProjectNo">프로젝트 번호</option>
-					<option value="">날짜</option>
 				</select>
 				 <input id="searchText" type="text" class="form-control"
 					aria-label="Recipient's username" aria-describedby="button-addon2">
