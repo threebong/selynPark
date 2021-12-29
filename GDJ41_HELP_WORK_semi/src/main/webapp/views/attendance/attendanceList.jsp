@@ -11,6 +11,7 @@
 %>
 <style>
 table.attendanceType {
+
   text-align: center;
   line-height: 1.5;
   width:100%;
@@ -26,14 +27,6 @@ table.attendanceType thead th {
   border-bottom: 3px solid #036;
 }
 
-table.attendanceType tbody th {
-  width: 150px;
-  padding: 10px;
-  font-weight: bold;
-  vertical-align: top;
-  border-bottom: 1px solid black;
-  background: #f3f6f7;
-}
 
 table.attendanceType td {
   
@@ -62,16 +55,18 @@ font-family: 'Do Hyeon', sans-serif;
 }
 
 
-thead{/*테이블내용 */
-		background-color:rgba(183, 191, 225,0.2);
+table.attendanceType thead{
+	font-size:20px;
 }
 
 div#pageAll{
 margin : 30px 30px;
 }
 
-#tableDiv{
+div#tableDiv{
+background-color:rgba(183, 191, 225,0.2);
 border-radius:30px;
+
 }
 
 
@@ -168,6 +163,8 @@ border-radius:30px;
 						tbody.append(tr);
 					}	
 				}
+				$("#tableDiv").html($("#attendanceType"));
+
             }
     	 })
      });

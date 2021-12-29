@@ -293,4 +293,32 @@ public class ProjectService {
 	 * }
 	 */
 	
+	public List<Project> selectSearchProName(String memId,String searchText){
+		//아이디,검색어로 해당 프로젝트 이름 검색하기
+		Connection conn=getConnection();
+		List<Project> result=dao.selectSearchProName(conn,memId,searchText);
+		close(conn);
+		return result;
+	}
+	public List<Project> selectSearchProMemberName(String memId,String searchText){
+		//아이디,검색어로 해당 프로젝트 생성자 검색하기
+		Connection conn=getConnection();
+		List<Project> result=dao.selectSearchProMemberName(conn,memId,searchText);
+		close(conn);
+		return result;
+	}
+	public List<Project> selectSearchProNumber(String memId,String searchText){
+		//아이디,검색어로 해당 프로젝트 번호 검색하기
+		Connection conn=getConnection();
+		List<Project> result=dao.selectSearchProNumber(conn,memId,searchText);
+		close(conn);
+		return result;
+	}
+	public int proMemberCount(int proNo) {
+		//프로젝트 참여 인원 구하기
+		Connection conn=getConnection();
+		int result=dao.proMemberCount(conn,proNo);
+		close(conn);
+		return result;
+	}
 }

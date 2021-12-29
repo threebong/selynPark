@@ -35,8 +35,16 @@ public class SelectProjectDetailViewToList extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int projectNo = Integer.parseInt(request.getParameter("projectNo"));
-
+		int projectNo=0; 
+		try {
+			 projectNo = Integer.parseInt(request.getParameter("projectNo"));	
+		}catch(NumberFormatException e) {
+			System.out.println(projectNo);
+		}
+		
+		
+		
+		
 		Project pinfo = new ProjectService().selectProjectOne(projectNo);
 		
 		//해당 프로젝트에 참여중인 사원 리스트

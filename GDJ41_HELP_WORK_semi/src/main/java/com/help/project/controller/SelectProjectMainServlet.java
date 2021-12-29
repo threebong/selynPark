@@ -45,6 +45,7 @@ public class SelectProjectMainServlet extends HttpServlet {
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		
 		String memId=loginMember.getMemberId();//로그인한 아이디
+		
 		//로그인한 id가 참여한 프로젝트..-최신순으로 
 		List<Project> join= new ProjectService().selectJoin(memId);
 		request.setAttribute("joinPro", join);
