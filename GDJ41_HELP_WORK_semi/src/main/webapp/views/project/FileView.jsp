@@ -7,6 +7,8 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp" %>
 <!-- projectDetailView의 css가져옴 -->
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Sunflower:wght@300&display=swap" rel="stylesheet">
 <link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 <%//project -> '파일' 눌렀을때 뜨는 상세 화면입니다. 
    Project p = (Project)request.getAttribute("projectInfo");
@@ -25,7 +27,8 @@
 
 <div id="title-container">
    <div id="pro-bookmark-star"><i class="fas fa-star"></i></div>
-   <div id="project-title"><span><%=p.getProName() %></span></div>
+   <div id="project-title" style="font-family:'Jua'"><span><%=p.getProName() %></span></div>
+  <div id="project-explain" style="font-family:'Do Hyeon'; font-size:22px;"><%=p.getProExplain() %></div>
    <div style="float:right;">
    <%if(loginMember.getMemberId().equals(p.getMemberId())){ %> <!-- 현재 로그인된 멤버와, 프로젝트 생성자 아이디가 같으면 초대 버튼 활성화 -->
    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProjectMemberModal" id="add_btn">사원 추가</button>
@@ -36,32 +39,24 @@
 
 <div id="menu-container">
    <ul class="nav">
-      <li class="nav-item"><a class="nav-link active" aria-current="page" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=<%=p.getProjectNo()%>')">홈</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">파일</a></li>
+      <li class="nav-item" style="font-family:'Sunflower'"><a class="nav-link active" aria-current="page" href="#" onclick="location.assign('<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=<%=p.getProjectNo()%>')">홈</a></li>
+      <li class="nav-item" style="font-family:'Sunflower'"><a class="nav-link" href="#">파일</a></li>
    </ul>
 </div>
 
 
-   <hr style="margin-top: 5px;">
 <div id="pro_container">
-   <div id="inner_pro_container">
-   
-	   <div id="inputContent_container">
-	      <div id="input-group">
-	         <div id=""><span><i class="fas fa-file-archive"></i>&nbsp;파일</span></div>
-	      </div>
-	   </div>
-	   
+   <div id="inner_pro_container" style="padding: 20px;">
+
 <!-- 	   파일 검색  -->
 	   <div class="input-group mb-3"  style="width: 400px;">
             <div>
                <select class="form-select" aria-label="Default select example" style="width: 140px;" id="searchFileForWhat">
                   <option value="fileName" selected>파일 이름</option>
-                  <option value="fileExt">확장자</option>
                </select>
             </div>        
             <input type="text" class="form-control" id="FileSearchText"placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2" id="searchConKeyword">
-            <button class="btn btn-outline-success" type="button" id="searchFile">검색</button>
+            <button class="btn btn-outline-secondary" type="button" id="searchFile">검색</button>
       </div>
       
 	   <!-- 파일출력공간 -->
@@ -83,12 +78,8 @@
 	
 		let proNo=<%=p.getProjectNo()%>;//프로젝트번호 
 		//테이블만들자 
-		let table=$("<table class='table'>");
-		let tr=$("<tr>");
-		let th=$("<th>").html("게시글 제목");
-		let th1=$("<th>").html("첨부된 파일");
-		tr.append(th).append(th1);
-		table.append(tr);
+		let table=$("<table class='mytable'>");
+		table.html("<thead><tr><th style='padding-left:20px;'>게시글명</th><th style='padding-left:20px;'>파일명</th></td></thead>")				
 		//업무 파일 불러오기
 		$.ajax({
 			url: "<%=request.getContextPath()%>/project/WorkFileInProjectEndServlet.do",
@@ -97,7 +88,7 @@
 			success : data =>{
 				//위의 테이블에 이어붙일거란다 
 				for(let i=0;i<data.length;i++){
-					let tr2=$("<tr >");
+					let tr2=$("<tr>");
 					let title=$("<td>").html(data[i]["contentTitle"]);
 					let oriFileName=$("<td onclick='WorkfileDownload(this);' style='cursor:pointer;'>").html(data[i]["workOriFileName"])
 					let reFileName=$("<td style='visibility:hidden'>").html(data[i]["workReFileName"]);
@@ -129,7 +120,6 @@
 	
 	//검색하기 기능
 	$("#searchFile").click(e=>{
-		alert("검색눌렀다~준비중입니다")
 		searchFile();
 	});
 	
@@ -147,8 +137,7 @@
 		tr.append(th).append(th1);
 		table.append(tr);
 		
-		alert("함수실행된다");
-
+		
 		let searchWhat= $("#searchFileForWhat option:selected").val();//파일이름인지,확장자인지
 		let text=$("#FileSearchText").val();//입력한 글자
 		let choName1="fileName";
@@ -156,7 +145,6 @@
 		console.log(searchWhat);
 		console.log(text);
 		//if(searchWhat==choName1){
-			alert("파일이름으로 찾으세용")
 			$.ajax({//업무파일검색
 				url: "<%=request.getContextPath()%>/project/SelectWorkFileInProjectServlet.do",
 				type: "post",
@@ -200,7 +188,6 @@
 	
 
 	function WorkfileDownload(e){//업무파일다운
-		alert("업무파일다운실행이야")
 		let oriFileName=$(e).text();
 		let reFileName=$(e).next().text();
 		
@@ -211,7 +198,6 @@
 	}
 	
 	function NormalfileDownload(e){//일반파일다운
-		alert("일반파일다운실행이야")
 		let oriFileName=$(e).text();
 		let reFileName=$(e).next().text();
 		

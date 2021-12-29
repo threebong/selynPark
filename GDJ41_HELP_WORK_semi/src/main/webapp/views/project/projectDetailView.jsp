@@ -471,6 +471,7 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 			success:data=>{
 				$("#normalCommentOutputContainer").html("");
 				for(let i=0;i<data.length;i++){
+					
 					const normalCommentNo = $("<div class='normalCommentNo' style='display:none;'>").text(data[i]["normalCommentNo"]);
 					const normalCommentContent = $("<div class='normalCommentContent'>").text(data[i]["normalCommentContent"]);
 					const normalCommentWriterName = $("<div class ='normalCommentWriterName' style='display: inline-block;'>").text(data[i]["writerName"]);
@@ -478,6 +479,7 @@ const fn_normalFileDownload=(normalOriFileName,normalReFileName)=>{
 					const normalCommentOutput = $("<div class='normalCommentOutput' style='border-bottom:1px solid lightgray;'>");
 					const normalCommentWriterId = $("<div class='normalCommentWriterId' style='display:none;'>").text(data[i]["writerId"]);
 					normalCommentOutput.append(normalCommentWriterName).append(normalCommentDate).append(normalCommentContent).append(normalCommentNo).append(normalCommentWriterId)
+					
 					if(loginMember == data[i]["writerId"] || loginMember == projectCreator || loginMember =='admin' ){
 						const deletBtn = $("<button class='btn btn-outline-secondary delBtn' onclick='deleteNormalComment(this);'>삭제</button>");
 						normalCommentContent.append(deletBtn);
