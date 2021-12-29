@@ -28,7 +28,6 @@ public class AttendanceListEndServlet extends HttpServlet {
 		
 		String memberId = request.getParameter("memberId");
 		String month =  request.getParameter("month"); 
-		System.out.println(month);
 		// yyyy-mm형태로 조회하면 db의 date타입이랑 모양 안맞아서 정상적으로 출력되지 않음
 	    //파라미터는 string이라 date로 변환 후 date 모양 바꿔서 다시 string으로 변환
 //		String formatMonth = "";
