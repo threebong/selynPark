@@ -243,3 +243,4 @@ const update_attendance=()=>{
  };
 
 </script>
+<%@ include file="/views/common/footer.jsp"%>
