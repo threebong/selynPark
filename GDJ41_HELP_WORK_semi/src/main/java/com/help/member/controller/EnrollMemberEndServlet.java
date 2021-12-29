@@ -50,11 +50,11 @@ public class EnrollMemberEndServlet extends HttpServlet {
 		MultipartRequest mr=new MultipartRequest(request,path,maxSize,encode,new DefaultFileRenamePolicy());
 		
 		Member m=Member.builder()
-				.memberId(mr.getParameter("userId"))
-				.memberPwd(mr.getParameter("password"))
-				.memberName(mr.getParameter("userName"))
-				.memberPhone(mr.getParameter("phone"))
-				.memberProfile(mr.getFilesystemName("upProfile"))
+				.memberId(mr.getParameter("memberId"))
+				.memberPwd(mr.getParameter("memberPwd"))
+				.memberName(mr.getParameter("memberName"))
+				.memberPhone(mr.getParameter("memberPhone"))
+				.memberProfile(mr.getFilesystemName("memberProfile"))
 				.build();
 		
 		int result=new MemberService().insertMember(m);

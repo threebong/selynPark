@@ -15,11 +15,11 @@
 <%
 
 	  MemberDao dao = new MemberDao();
-   String userId = null;
-   if(session.getAttribute("userId") != null) {
-	   userId = (String) session.getAttribute("userId");
+   String memberId = null;
+   if(session.getAttribute("memberId") != null) {
+	   memberId = (String) session.getAttribute("memberId");
    }
-   if(userId == null) {
+   if(memberId == null) {
 	   PrintWriter script = response.getWriter();
 	   script.println("<script>");
 	   script.println("alert('로그인을 해주세요.');");
@@ -29,7 +29,7 @@
 	   return;
    }
 
-	  boolean emailChecked = dao.getEmailChecked(userId);
+	  boolean emailChecked = dao.getEmailChecked(memberId);
    if(emailChecked == true) {
 	   PrintWriter script = response.getWriter();
 	   script.println("<script>");
@@ -41,12 +41,12 @@
    }
 
 	
-
+ 
 	// 사용자에게 보낼 메시지를 기입합니다.
 
 	String host = "http://localhost:9090/GDJ41_HELP_WORK_semi/";
 	String from = "helphelp2021help@gmail.com";
-	String to = dao.getMemberEmail(userId);
+	String to = dao.getMemberEmail(memberId);
 	String subject = "HELP_WORK 사용을 위한 이메일 확인 메일입니다.";
 	String content = "다음 링크에 접속하여 이메일 확인을 진행하세요." +
 		"<a href='" + host + "emailCheckAction.jsp?code=" + new SHA256().getSHA256(to) + "'>이메일 인증하기</a>";

@@ -4,6 +4,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap" rel="stylesheet">
 <%
 	Member logMem=(Member)session.getAttribute("loginMember");
 	String memId=logMem.getMemberId();
@@ -39,20 +41,39 @@
 }
 
 .project_content_ing {
-	width: 200px;
-	height: 200px;
-	background-color: rgba(255, 204, 0, 0.404);
+	width: 210px;
+	height: 210px;
 	float: left;
 	margin: 10px 10px;
 	border-radius: 30px;
-	padding: 15px;
+	padding: 20px;
 	overflow: hidden;
-	
+	border: 1px solid #6308f575;
 }
+.project_content_ing:hover {
+	color:black;
+	background-color:#6710f242;
+}
+
 .search_Project{
 	margin-left: 30px;
 }
-
+.project_content{
+font-family:'Do Hyeon';
+font-size: 20px;
+}
+.input-group{
+ margin-top: 15px;
+}
+.btn-outline-secondary{
+ 	border:1px solid #6710f242;
+    color: #6710f242;
+}
+.btn-outline-secondary:hover{
+ 	border:1px solid #6710f242;
+    color: #6710f242;
+    background-color: #6710f242;
+}
 </style>
 
 
@@ -61,13 +82,16 @@
 	<div id="wrapper-Project">
 		<!-- 내프로젝트를 눌렀을때 보여지는 첫 화면  -->
 		<div class="search_Project">
-			<h4><%=loginMember.getMemberId()%>님의 프로젝트</h4>
-			<div class="input-group mb-3">
-				<select name="search-project-op">
-					<option value="projectTitle">프로젝트 이름</option>
+			<div class="project_content" style="font-size: 25px;"><%=loginMember.getMemberId()%>님의 프로젝트</div>
+			<div style="display: inline-block;">
+				<select name="search-project-op" class="form-select">
+					<option value="projectTitle">프로젝트 명</option>
 					<option value="ProjectMember">프로젝트 생성자</option>
 					<option value="ProjectNo">프로젝트 번호</option>
 				</select>
+			</div>
+			<div style="display: inline-block;">
+				<div class="input-group mb-3">
 				 <input id="searchText" type="text" class="form-control"
 					aria-label="Recipient's username" aria-describedby="button-addon2">
 				<button class="btn btn-outline-secondary" type="button"
@@ -75,9 +99,11 @@
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
+			</div>
+			
 		</div>
 		<div class="project_ing">
-			<h2>참여한 프로젝트</h2>
+			<h2 style="font-family:'Do Hyeon'; ">참여 프로젝트</h2>
 			<div>
 				<!-- 	출력될공간 -->
 				<%
@@ -88,12 +114,12 @@
 					<div name="defaultView">
 						<div class="project_content_ing" style="cursor:pointer;"
 						onclick="location.assign('<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=<%=p.getProjectNo() %>')">
-							<div><%=p.getProjectNo() %></div>
-							<div><%=p.getProName() %></div>
-							<div><%=p.getProExplain() %></div>
-							<div>작성자: <%=p.getMemberId() %></div>
+							<div class="project_content" style="text-align: right;"><%=p.getProjectNo() %></div>
+							<div class="project_content" style="font-size: 23px;"><%=p.getProName() %></div>
+							<div style="font-family:'Do Hyeon';font-size:16px; height: 50px; overflow: hidden; font-family: 'Nanum Gothic'; "><%=p.getProExplain() %></div>
+							<div class="project_content" style="font-size: 16px;"><i class="fas fa-user-edit"></i>&nbsp;<%=p.getMemberId() %></div>
 							
-							<div>참여인원 : <%=joinNum.get(p.getProjectNo()) %></div>
+							<div class="project_content" style="font-size: 16px;"><i class="fas fa-users"></i>&nbsp;<%=joinNum.get(p.getProjectNo()) %></div>
 						</div>
 					</div>
 				

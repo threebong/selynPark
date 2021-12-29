@@ -4,15 +4,15 @@
 <%@ page import="java.io.PrintWriter"%>
 <%
     request.setCharacterEncoding("UTF-8");
-    String userId = null;
-    String password = null;
-    if(request.getParameter("userId") !=null) {
-    	userId = request.getParameter("userId");
+    String memberId = null;
+    String memberPwd = null;
+    if(request.getParameter("memberId") !=null) {
+    	memberId = request.getParameter("memberId");
     }
-    if(request.getParameter("password") != null) {
-    	password = (String) request.getParameter("password");
+    if(request.getParameter("memberPwd") != null) {
+    	memberPwd = (String) request.getParameter("memberPwd");
 	}
-    if(userId == null ||password ==null) {
+    if(memberId == null ||memberPwd ==null) {
     	PrintWriter script = response.getWriter();
 		script.println("<script>");
 		script.println("alert('입력이 안 된 사항이 있습니다.');");
@@ -20,19 +20,19 @@
 		script.println("</script>");
 		script.close();
 		return;
-    }else if(userId=="admin"&&password=="admin"){
+    }else if(memberId=="admin"&&memberPwd=="admin"){
     	PrintWriter script = response.getWriter();
 		script.println("<script>");
 		script.println("alert('관리자님의 입장을 환영합니다. ^_^');");
-		script.println("location.href='/views/project/myProjectView.jsp'");
+		script.println("location.href='views/project/myProjectView.jsp'");
 		script.println("</script>");
 		script.close();
 		return;
     }
     MemberDao dao = new MemberDao();
-	int result = dao.login(userId, password);
+	int result = dao.login(memberId, memberPwd);
 	if (result == 1) {
-		session.setAttribute("userId", userId);
+		session.setAttribute("memberId", memberId);
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
 		script.println("location.href='/views/project/myProjectView.jsp'");
@@ -71,4 +71,4 @@
 		return;
 	}
 
-%> --%>
+%>  --%>

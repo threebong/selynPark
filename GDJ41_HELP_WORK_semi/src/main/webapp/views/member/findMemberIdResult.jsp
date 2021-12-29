@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	String userId=(String)request.getAttribute("findMemberId");
-	System.out.println(userId);
+	String memberId=(String)request.getAttribute("findMemberId");
+	System.out.println(memberId);
 %>
 <!DOCTYPE html>
 <html>
@@ -14,10 +14,10 @@
 <script>
 $(()=>{
 		$("#idMasking").onLoad(e=>{
-			const userId=<%=userId%>
+			const memberId=<%=memberId%>
 			const id=userId.split("@")[0].replace(/(?<=.{1})./gi,"*");
-			const mail=userId.split("@")[1].replace(/(?=.{4})./gi,"*");
-			userId=id+"@"+mail;
+			const mail=memberId.split("@")[1].replace(/(?=.{4})./gi,"*");
+			memberId=id+"@"+mail;
 		});
 	});	
 </script>
@@ -25,14 +25,14 @@ $(()=>{
 <body onload="idMasking();">
 	<form name="idsearch" method="post" onLoad="idMasking();">
       <%
-       if (userId != null) {
+       if (memberId != null) {
       %>
       
 		<div class = "container">
       		<div class = "found-success">
 	      		<h4>  회원님의 아이디는 </h4>  
 	      		<div class ="found-id">
-		      		<span id="maskingId"><%=userId %></span>
+		      		<span id="maskingId"><%=memberId %></span>
 	      		</div>
 	      		<h4>  입니다 </h4>
 	     	</div>
@@ -66,16 +66,6 @@ $(()=>{
 	const enrollMember=()=>{
 		const url="<%=request.getContextPath()%>/member/enrollMember.do"
 		location.assign(url);
-	}
-	
-	<%-- const idMasking=(<%=userId%>)=>{
-		const userId=<%=userId%>
-		const id=userId.split("@")[0].replace(/(?<=.{1})./gi,"*");
-		const mail=userId.split("@")[1].replace(/(?=.{4})./gi,"*");
-		userId=id+"@"+mail;
-		$("#idMasking").text(userId).css({"color":"black"}); --%>
-		
-		
 	}
 
 
