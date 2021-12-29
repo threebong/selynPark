@@ -113,14 +113,14 @@
 	  height: 50px;
 	  border: 0;
 	  outline: none;
-	  border-radius: 40px;
+	 
 	}
 	.submit button{
 	  width: 100%;
 	  height: 50px;
 	  border: 0;
 	  outline: none;
-	  border-radius: 40px;
+	 
 	}
 	.btn-outline-secondary:hover{
 	   background-color: #6710f242;
@@ -141,7 +141,7 @@
         <div class="login">
             <h2>HELP-WORK</h2>
             <h2>LOGIN</h2><br>
-            <div style="width: 400px;">
+            <div style="width: 80%;">
 	            <div class="form-floating mb-3" style="width: 100%">
 		            <!-- <label for="exampleInputEmail1" class="form-label">아이디</label> -->
 				  	<input type="text" class="form-control" id="floatingInput" name="memberId" placeholder="name@example.com" value="<%=saveId!=null?saveId:""%>">
@@ -149,18 +149,19 @@
 				</div>
 			</div>	
 			
-            <div class="login_etc">
-                <div class="checkbox">
-                	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>>
-                	<label for="saveId">아이디저장</label>
-                </div>
-            </div>
-            <div style="width: 400px;">
+          
+            <div style="width: 80%;">
 					<div class="form-floating" style="width: 100%">
 					  <input type="password" class="form-control" id="floatingPassword" name="memberPwd" placeholder="Password">
 					  <label for="floatingPassword">패스워드를 입력하세요</label>
 					</div>
 			</div>
+			  <div class="login_etc" style="margin-top: 15px;">
+                <div class="checkbox">
+                	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>>
+                	<label for="saveId">아이디저장</label>
+                </div>
+            </div>
             <div class="submit btn-outline-secondary">
             	
                 <button type="submit" value="로그인" class="btn btn-outline-secondary">로그인</button>
@@ -172,12 +173,14 @@
 		        
 	        </div>
 			<br>
-            <div class="login_etc">
-                <div class="forgot_email">
-	 		        <input type="button" class="btn btn-outline-secondary" value="아이디 찾기" onclick="findMemberId();">
-	 		        <input type="button" class="btn btn-outline-secondary" value="패스워드 찾기" onclick="">
+                <div style="width: 80%;">
+                	<div style="width: 49%; display: inline-block;">
+                		<input type="button" class="btn btn-outline-secondary" value="아이디 찾기" onclick="findMemberId();" style="width: 100%;">
+                	</div>
+	 		        <div  style="width: 49%; display: inline-block;">
+	 		        	<input type="button" class="btn btn-outline-secondary" value="패스워드 찾기" onclick="" style="width: 100%;">
+	 		        </div>
             	</div> 
-            </div>
         </div>
     </form>
     <script>
