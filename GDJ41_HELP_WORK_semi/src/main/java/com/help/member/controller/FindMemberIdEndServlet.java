@@ -32,12 +32,12 @@ public class FindMemberIdEndServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String userName=request.getParameter("userName");
-		String phone=request.getParameter("phone");
+		String MemberName=request.getParameter("MemberName");
+		String memberPhone=request.getParameter("memberPhone");
 		
-		String userId=new MemberService().findMemberId(userName,phone);
+		String memberId=new MemberService().findMemberId(MemberName,memberPhone);
 		
-		request.setAttribute("findMemberId", userId);
+		request.setAttribute("findMemberId", memberId);
 		request.getRequestDispatcher("/views/member/findMemberIdResult.jsp").forward(request, response);
 	}
 
