@@ -22,7 +22,7 @@
 	margin: 0px;
 	display: flex;
 	justify-content: center;
-	background-color:rgba(197, 197, 197, 0.036);
+	/* background-color:rgba(197, 197, 197, 0.036); */
 	border-top : 1px solid lightgray;
 	padding-top : 15px;
 }

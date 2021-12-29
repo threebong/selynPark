@@ -8,6 +8,7 @@
 <%@ include file="/views/common/header.jsp"%>
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet"> <!-- 테이블내용폰트 -->
 <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet"> 
+<link rel ="stylesheet" href="<%=request.getContextPath()%>/css/projectDetailView.css" type="text/css">
 
 <%
 //로그인한 아이디가 속한 프로젝트들 	
@@ -322,6 +323,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 
 				<!--ajax로 테이블 변경할 구역-->
 				<div id="writeTable"></div>
+				<div id="pagingContainer" style="text-align: center; margin-top: 15px;"></div>
 				<!-- 나의 전체 업무 조회 -->
 
 
@@ -385,13 +387,14 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				data: {"logId":logId, "cPage":cPage },
 				dataType : 'json',
 				success : data=>{
+					$("#pagingContainer").html("");
 					const workList=data["list"];
 					const pageBar=data["pageBar"];
 					
 					let table=$("<table>");
 					
 					let h4=$("<h4>").html("나의 업무");
-					let tr=$("<tr>");
+					let tr=$("<tr style='text-align:center'>");
 					let td=$("<th>").html("No");
 					let td8=$("<th>").html("프로젝트");
 					let td9=$("<th>").html("업무No");
@@ -407,7 +410,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					table.append(tr);
 					//let tbody=$("<tbody>");
 					for(let i=0;i<workList.length;i++){
-						let tr2=$("<tr scope='row' onclick='contentView(this);'>").addClass('tableSearch');//상세페이지하는중 
+						let tr2=$("<tr onclick='contentView(this);'style='text-align:center'>").addClass('tableSearch');//상세페이지하는중 
 						let proNo=$("<td>").html(workList[i]["projectNo"]);
 						let proName=$("<td>").html(workList[i]["proName"]);
 						let workNo=$("<td>").html(workList[i]["workNo"]);
@@ -421,16 +424,15 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					    table.append(tr2);
 					}
 					
-					const div=$("<div>").attr("id","pageBar").html(pageBar);
+					const div=$("<div style='display:inline-block'>").attr("id","pageBar").html(pageBar);
 				
-					table.append(div);
 					
+					$("#pagingContainer").append(div);
 					$("#writeTable").html(table);
 					
 					/*속성추가*/
-					$("table").addClass('table');
-					$("table").addClass('searchMyWork');
-					$("th").attr("scope","col");
+					
+					$("table").addClass('mytable');
 					$("h4").addClass('myWorkTitle');
 					
 				//	$("table thead th").attr('scope','col');
@@ -453,6 +455,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 		data : {"proNo":proNo,"workNo":workNo },
 		dataType: "json",
 		success: data => {
+			$("#pagingContainer").html("");
 			let proName=data["proName"];
 			let proDate=data["proDate"];
 			let workTitle=data["workTitle"];
@@ -505,13 +508,14 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			type : 'post',
 			data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId, "cPage":cPage},
 			dataType : 'json',
-			success : data=>{   
+			success : data=>{  
+				$("#pagingContainer").html("");
 				const workList=data["list"];
 				const pageBar=data["pageBar"];
 				console.log(workList);
 				let h4=$("<h4>").html("나의 업무");//'나의업무'문구 변경 금지 (다중조회와 관련)
-				let table=$("<table>");
-				let tr=$("<tr>");
+				let table=$("<table class='mytable'>");
+				let tr=$("<tr style='text-align:center'>");
 				let td=$("<th>").html("No");
 				let td8=$("<th>").html("프로젝트");
 				let td9=$("<th>").html("업무No");
@@ -535,7 +539,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 					nottr.css("text-align","center");
 				}else{//조회 결과 O 
 					for(let i=0;i<workList.length;i++){
-					let tr2=$("<tr scope='row' onclick='contentView(this);'>").addClass('tableSearch');
+					let tr2=$("<tr onclick='contentView(this);' style='text-align:center'>").addClass('tableSearch');
 					let proNo=$("<td>").html(workList[i]["projectNo"]);
 					let proName=$("<td>").html(workList[i]["proName"]);
 					let workNo=$("<td>").html(workList[i]["workNo"]);
@@ -551,15 +555,13 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				    table.append(tr2);
 					}
 				}
-				const div=$("<div>").attr("id","pageBar").html(pageBar);
-				table.append(div);
+				const div=$("<div style='display:inline-block'>").attr("id","pageBar").html(pageBar);
+				$("#pagingContainer").append(div);
 				
 				$("#writeTable").html(table);
 				
 					
 				/*속성추가*/
-				$("table").addClass('table searchMyWork');
-				$("table th").attr('scope','col');
 			}
 		});
 		}
@@ -579,13 +581,14 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 			data: {"logId":logId,"cPage":cPage},
 			dataType : 'json',
 			success : data=>{
+				$("#pagingContainer").html("");
 				const workList=data["list"];
 				const pageBar=data["pageBar"];
 				
 				let table=$("<table>");
-				let h4=$("<h4>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 //이름바꾸면안됨
-				let tr=$("<tr>");
-				let td=$("<th>").html("No");
+				let h4=$("<h4 style='display:none;'>").html("전체 업무");//내가 참여한 모든 프로젝트의 업무 //이름바꾸면안됨
+				let tr=$("<tr style='text-align:center'>");
+				let td=$("<th style='width:80px;'>").html("No");
 				let td8=$("<th>").html("프로젝트");
 				let td9=$("<th>").html("업무No");
 				let td1=$("<th>").html("상태");
@@ -598,8 +601,8 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				table.append(tr);
 				
 				for(let i=0;i<workList.length;i++){
-				let tr2=$("<tr scope='row' onclick='contentView(this);'>").addClass('tableSearch');
-				let proNo=$("<td>").html(workList[i]["projectNo"]);
+				let tr2=$("<tr onclick='contentView(this);' style='text-align:center'>").addClass('tableSearch');
+				let proNo=$("<td style='width:80px;'>").html(workList[i]["projectNo"]);
 				let proName=$("<td>").html(workList[i]["proName"]);
 				let workNo=$("<td>").html(workList[i]["workNo"]);
 				let working=$("<td>").html(workList[i]["workIng"]);
@@ -612,15 +615,13 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				}
 				
 				//페이징처리---
-				const div=$("<div>").attr("id","pageBar").html(pageBar);
+				const div=$("<div style='display:inline-block'>").attr("id","pageBar").html(pageBar);
 				//$("#container").append(table).append(div);
-				table.append(div);
+				$("#pagingContainer").append(div);
 				
 				$("#writeTable").html(table);
 				/*속성추가*/
-				$("table").addClass('table paginated searchAllWork');
-				$("table thead th").attr('scope','col');
-				$("table tbody th").attr('scope','col');
+				$("table").addClass('mytable');
 			}
 		});//id값 보내
 	}
@@ -637,14 +638,14 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 				data: {"ing":ing, "prior":prior, "h4":h4 , "logId":logId, "cPage":cPage},
 				dataType : 'json',
 				success : data=>{   
-					
+					$("#pagingContainer").html("");
 					const workList=data["list"];
 					const pageBar=data["pageBar"];
 					
 					let table=$("<table>");
-					let h14=$("<h4>").html("전체 업무");//문구 변경 금지 (다중조회와 관련)
+					let h14=$("<h4 style='display:none;'>").html("전체 업무");//문구 변경 금지 (다중조회와 관련)
 					let thead=$("<thead>");
-					let tr=$("<tr>");
+					let tr=$("<tr style='text-align:center'>");
 					let td=$("<th>").html("No");
 					let td8=$("<th>").html("프로젝트");
 					let td9=$("<th>").html("업무No");
@@ -666,7 +667,7 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 						nottr.css("text-align","center");
 					}else{//조회 결과 O 
 						for(let i=0;i<workList.length;i++){
-						let tr2=$("<tr scope='row' onclick='contentView(this);'>").addClass('tableSearch');
+						let tr2=$("<tr style='text-align:center' onclick='contentView(this);'>").addClass('tableSearch');
 						let proNo=$("<td>").html(workList[i]["projectNo"]);
 						let proName=$("<td>").html(workList[i]["proName"]);
 						let workNo=$("<td>").html(workList[i]["workNo"]);
@@ -681,13 +682,12 @@ HashMap<Integer, List<Work>> works = (HashMap<Integer, List<Work>>) request.getA
 						}
 					}
 					
-					const div=$("<div>").attr("id","pageBar").html(pageBar);
-					table.append(div);
+					const div=$("<div style='display:inline-block'>").attr("id","pageBar").html(pageBar);
+					$("#pagingContainer").append(div);
 					$("#writeTable").html(table);
 					
 					/*속성추가*/
-					$("table").addClass('table searchAllWork');
-					$("table th").attr('scope','col');
+					$("table").addClass('table mytable');
 				}
 			});//id값 보내
 		}
