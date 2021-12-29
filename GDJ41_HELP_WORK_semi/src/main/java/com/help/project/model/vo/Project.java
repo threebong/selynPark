@@ -23,6 +23,6 @@ public class Project {
 	private String proIsActive;
 	private Date proDate;
 //	private List<Work> workList=new ArrayList();
-
+	private String memberName;//이름
 	
 }

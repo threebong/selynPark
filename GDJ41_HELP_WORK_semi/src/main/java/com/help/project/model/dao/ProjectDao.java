@@ -100,13 +100,27 @@ public class ProjectDao {
 		return result;
 	}
 
-//	public int joinProjectNumber(Connection conn,List join,String memId) {
-//		//로그인한 사원이 참가한 프로젝트의 총 참여인원
-//		PreparedStatement pstmt=null;
-//		int joinNum=0;
-//		String sql=prop.getProperty("joinProjectNumber");
-//		return joinNum;
-//	}
+	public int proMemberCount(Connection conn,int proNo) {
+		//로그인한 사원이 참가한 프로젝트의 총 참여인원
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		int joinNum=0;
+		String sql=prop.getProperty("joinProjectNumber");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, proNo);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				joinNum=rs.getInt("COUNT(*)");
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return joinNum;
+	}
 	public HashMap<Integer, Integer> selectJoinNumber(Connection conn, HashMap<Integer, Integer> peopleNum) {
 		// 키:프로젝트번호 밸류:해당프로젝트 참가자수 해서 반환함
 		PreparedStatement pstmt = null;
@@ -776,5 +790,97 @@ public class ProjectDao {
 			close(pstmt);
 		}
 		return result;
+	}
+	
+	public List<Project> selectSearchProName(Connection conn,String memId,String searchText){
+		//프로젝트 이름 검색하기
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Project> result=new ArrayList<Project>();
+		String sql=prop.getProperty("selectSearchProName");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, memId);
+			pstmt.setString(2, "%"+searchText+"%");
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Project p=Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.build();
+				result.add(p);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	public List<Project> selectSearchProMemberName(Connection conn,String memId,String searchText){
+		//프로젝트 생성자 검색하기
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Project> result=new ArrayList<Project>();
+		String sql=prop.getProperty("selectSearchProMemberName");
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, memId);
+			pstmt.setString(2, "%"+searchText+"%");
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Project p=Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.build();
+				result.add(p);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	public List<Project> selectSearchProNumber(Connection conn,String memId,String searchText){
+		//프로젝트 번호로 검색하기
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Project> result=new ArrayList<Project>();
+		String sql=prop.getProperty("selectSearchProNumber");
+		System.out.println(sql);
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, memId);
+			pstmt.setString(2, "%"+searchText+"%");
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Project p=Project.builder()
+						.projectNo(rs.getInt("PROJECT_NO"))
+						.memberId(rs.getString("MEMBER_ID"))
+						.proName(rs.getString("PRO_NAME"))
+						.proExplain(rs.getString("PRO_EXPLAIN"))
+						.proDate(rs.getDate("PRO_DATE"))
+						.memberName(rs.getString("MEMBER_NAME"))
+						.build();
+				result.add(p);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
 	}
 }
