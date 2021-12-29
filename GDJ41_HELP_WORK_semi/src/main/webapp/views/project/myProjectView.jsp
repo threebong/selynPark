@@ -112,7 +112,7 @@
 
 
 <script>
-	function search(){
+	function search(callBack){
 		const memberId="<%=memId%>";
 		var searchText=$("#searchText").val();//검색할 단어
 		var searchKey=$("select[name=search-project-op]").val();//검색옵션
@@ -120,7 +120,6 @@
 			url: "<%=request.getContextPath()%>/project/SelectProjectNameMainViewServlet.do",
 			type : 'post',
 			data: {"memId":memberId,"searchText":searchText,"searchKey":searchKey},
-			
 			dataType : 'json',
 			success : data=>{   
 				if(data.length!=0){
@@ -129,12 +128,11 @@
 					let div0=$("<div>");
 					for(let i=0;i<data.length;i++){
 						console.log(data[i]);
-						let div=$("<div class='project_content_ing' style='cursor:pointer;'>");
+						let div=$("<div class='project_content_ing' style='cursor:pointer;' onclick='pageTrans(this);'>");
 						let proNo=$("<div>").html(data[i]["projectNo"]);
 						let proName=$("<div>").html(data[i]["proName"]);
 						let proExp=$("<div>").html(data[i]["proExplain"]);
 						let writer=$("<div>").html(data[i]["memberName"]);
-						
 						let memCount=$("<div>").html("참여인원:"+findCount(data[i]["projectNo"]));
 						div.append(proNo).append(proName).append(proExp).append(writer).append(memCount);
 						div0.append(div);
@@ -161,6 +159,11 @@
 			}
 		});
 		return memCount;
+	}
+	function pageTrans(e){
+		let proNo=$(e).children().eq(0).text();
+		url = "<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=";
+		location.assign(url+proNo);
 	}
 </script>
 </main>
