@@ -38,6 +38,7 @@ public class SelectProjectNameMainViewServlet extends HttpServlet {
 		String searchText=(String)request.getParameter("searchText").trim().replace(" ", "");//입력한 검색어
 		String searchKey=(String)request.getParameter("searchKey");//찾을 카테고리
 		List<Project> result=new ArrayList<Project>();
+		
 		if(searchKey.equals("projectTitle")) {//프로젝트이름 으로 검색
 			result=new ProjectService().selectSearchProName(memId,searchText);
 		}else if(searchKey.equals("ProjectMember")) {//프로젝트 생성자
@@ -45,8 +46,7 @@ public class SelectProjectNameMainViewServlet extends HttpServlet {
 		}else if(searchKey.equals("ProjectNo")) {//프로젝트 번호
 			result=new ProjectService().selectSearchProNumber(memId,searchText);
 		}
-		System.out.println(result);
-		System.out.print(memId+"입력글자"+searchText+searchKey);
+		
 		response.setContentType("application/json; charset=utf-8");
 		new Gson().toJson(result,response.getWriter());
 	}

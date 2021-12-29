@@ -4,6 +4,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/views/common/header.jsp"%>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
 <%
 	Member logMem=(Member)session.getAttribute("loginMember");
 	String memId=logMem.getMemberId();
@@ -20,10 +22,16 @@
 	padding : 30px;
 	display: grid;
 }
+.mainTitle{
+	font-size: 20px;
+	font-family: 'Do Hyeon', sans-serif;
+	color:#A8B6AF;
+}
 
 #project_favor, .project_ing {
 	width: 100%;
 	margin: 30px 30px;
+	font-family: 'Do Hyeon', sans-serif;
 }
 
 .input-group {
@@ -61,9 +69,9 @@
 	<div id="wrapper-Project">
 		<!-- 내프로젝트를 눌렀을때 보여지는 첫 화면  -->
 		<div class="search_Project">
-			<h4><%=loginMember.getMemberId()%>님의 프로젝트</h4>
-			<div class="input-group mb-3">
-				<select name="search-project-op">
+			<div class="mainTitle"><%=loginMember.getMemberId()%>님의 프로젝트</div>
+			<div class="input-group mb-3 search-Project-option">
+				<select name="search-project-op cho-proSearch-option">
 					<option value="projectTitle">프로젝트 이름</option>
 					<option value="ProjectMember">프로젝트 생성자</option>
 					<option value="ProjectNo">프로젝트 번호</option>
@@ -160,6 +168,7 @@
 		return memCount;
 	}
 	function pageTrans(e){
+		//해당 프로젝트 상세 페이지로 이동시켜줍니다.
 		let proNo=$(e).children().eq(0).text();
 		url = "<%=request.getContextPath()%>/project/selectProjectDetailViewToList.do?projectNo=";
 		location.assign(url+proNo);
