@@ -42,7 +42,7 @@ public class UpdatePasswordEndServlet extends HttpServlet {
 			//현재 비밀번호가 일치
 			int result=new MemberService().updatePassword(memberId,newPassword);
 			if(result>0) {
-				request.setAttribute("script", "opener.location.href='"+request.getContextPath()+"/member/logoutMember.do';close();");
+				request.setAttribute("script", "opener.location.href='"+request.getContextPath()+"/member/logoutMember.do'; close();");
 			}else {
 				request.getRequestDispatcher("/member.updatePassword.do?memberId="+memberId);
 			}

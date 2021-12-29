@@ -35,9 +35,9 @@ public class DeleteWorkContentServlet extends HttpServlet {
 		//파일 삭제
 		
 		String[] fileArr = request.getParameterValues("fileArr");
-		System.out.println(Arrays.toString(fileArr));
 		String realPath = request.getServletContext().getRealPath("/upfile/work/");
-				
+		int result = 0;		
+		try {
 		if(fileArr.length != 0) {
 			for(int i=0;i<fileArr.length;i++) {
 				File f = new File(realPath+fileArr[i]);
@@ -46,9 +46,11 @@ public class DeleteWorkContentServlet extends HttpServlet {
 				}
 			}	
 		}
+		}catch(NullPointerException e) {
+			result = new ProjectService().deleteWorkContent(workContentNo);
+		}
+		result = new ProjectService().deleteWorkContent(workContentNo);
 		
-		
-		int result = new ProjectService().deleteWorkContent(workContentNo);
 		
 		if(result<0) {
 			response.getWriter().write("삭제 실패!");

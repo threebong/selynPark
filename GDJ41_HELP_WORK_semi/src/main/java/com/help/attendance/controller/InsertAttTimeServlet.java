@@ -30,10 +30,9 @@ public class InsertAttTimeServlet extends HttpServlet {
 		HttpSession session=request.getSession();
 		Member loginMember=(Member)session.getAttribute("loginMember");
 		String memberId=loginMember.getMemberId();
-//		String memberId = request.getParameter("memberId");
+		
+		
 		String attTime = request.getParameter("attTime"); //현재시간
-		System.out.println(memberId);
-		System.out.println(attTime);
 
 		String attDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); //현재날짜
 		String workingTime = String.valueOf(LocalTime.of(9,  00, 00)); // 출근,지각 비교시간
@@ -63,7 +62,6 @@ public class InsertAttTimeServlet extends HttpServlet {
 		}catch(NullPointerException e) {
 			e.printStackTrace();
 		}
-		System.out.println(a);
 
 		response.setContentType("application/json;charset=utf-8");
 		response.getWriter().print(jo);

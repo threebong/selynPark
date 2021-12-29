@@ -20,7 +20,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <script src="<%=request.getContextPath() %>/js/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- JavaScript Bundle with Popper -->
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -43,7 +45,15 @@ window.addEventListener('DOMContentLoaded', event => {
 });
 </script>
 
-   
+<style>
+img {
+    object-fit: cover;
+    object-position: top;
+    border-radius: 50%;
+    width: 30px; 
+    height: 30px;
+}
+</style>   
 </head>
 
 <body class="sb-nav-fixed">
@@ -117,13 +127,12 @@ window.addEventListener('DOMContentLoaded', event => {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li class="dropdown-item"><%=loginMember.getMemberName() %></li>
-                    <li>
+                    <li class="dropdown-item"><img src="<%=request.getContextPath() %>/upfile/member/<%=loginMember.getMemberProfile() %>"> <%=loginMember.getMemberName() %></li>
+                    <li> 
                         <hr class="dropdown-divider" />
                     </li>
                     <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/viewMember.do?memberId=<%=loginMember.getMemberId()%>"><i class="fas fa-user-cog"></i>&nbsp;내 정보 수정</a></li>
                     <li><a class="dropdown-item" href="<%=request.getContextPath()%>/member/logoutMember.do"><i class="fas fa-sign-out-alt"></i>&nbsp;로그아웃</a></li>
-
                 </ul>
             </li>
         </ul>
@@ -167,19 +176,19 @@ window.addEventListener('DOMContentLoaded', event => {
                         <%} else{%>
                      	<div class="sb-sidenav-menu-heading">사원</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            <div class="sb-nav-link-icon"><i class="far fa-address-book"></i>
                             </div>
                             사원관리
                         </a>
-                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndJobList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                        <a class="nav-link" href="<%=request.getContextPath()%>/admin/deptAndPositionList.do">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i>
                             </div>
                             부서/직급관리
                         </a>
                         
                         <div class="sb-sidenav-menu-heading">근태</div>
                         <a class="nav-link" href="<%=request.getContextPath()%>/admin/memberAttendanceList.do">
-                            <div class="sb-nav-link-icon"><i class="fas fa-house-user"></i>
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-edit"></i>
                             </div>
                             근태관리
                         </a>
@@ -312,16 +321,15 @@ window.addEventListener('DOMContentLoaded', event => {
      			data : {"memberId":memberId,"attTime":attTime},
      			dataType:'json',
      				success:data=>{
-     					console.log(data);
      					$("#attTime").html(data["attTime"]);
-     					alert(data["attSuccess"]);
+     					swal(data["attSuccess"]);
      				}
      		})
      	});
         
      
         //퇴근등록
-        function insertLeaveTime(){
+
      	$("#insertLeaveTime").click(e=>{
         	var d = new Date();
           	var leaveTime = moment(d).format('HH:mm');
@@ -332,21 +340,34 @@ window.addEventListener('DOMContentLoaded', event => {
      			data : {"memberId":memberId,"leaveTime":leaveTime},
      			dataType:'json',
      				success:data=>{
-     					console.log(data);
      					$("#leaveTime").html(data["leaveTime"]);
-     					alert(data["leaveSuccess"]);
+     					swal(data["leaveSuccess"]);
      				}
      				
      		})
      	});
-        };
-     	
-	 	/* $(document).ready(()=>{
-	 		insertLeaveTime();
-	 		$("#insertLeaveTime").trigger('click');
-     	});  이건 업데이트가 계속 반복하여 돌게됨*/
-        
 
+        
+        //출근, 퇴근 시간 화면 유지
+        <% if(!(loginMember.getMemberId().equals("admin"))){%>
+	 	$(document).ready(()=>{
+	 		$.ajax({
+     			url : "<%=request.getContextPath()%>/attendance/LoadAttTime.do",
+     			type:'post',
+     			dataType:'json',
+     			success:data=>{
+     				$("#attTime").html(data["attTime"]);
+     				$("#leaveTime").html(data["leaveTime"]);
+     				console.log($("#leaveTime").html());
+     				console.log($("#attTime").html());
+     			}
+     		})
+     	});  
+        <% } %>
+        
+        
+      
+        
         
       
         </script>

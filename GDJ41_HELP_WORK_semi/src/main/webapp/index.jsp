@@ -122,14 +122,17 @@
 	  outline: none;
 	  border-radius: 40px;
 	}
-.btn-outline-secondary:hover{
-   background-color: #6710f242;
-   border: 1px solid #6710f242;
-}
-.btn-outline-secondary{
-   border: 1px solid #6710f242;
-   color:#6710f242;
-}
+	.btn-outline-secondary:hover{
+	   background-color: #6710f242;
+	   border: 1px solid #6710f242;
+	}
+	.btn-outline-secondary{
+	   border: 1px solid #6710f242;
+	   color:#6710f242;
+	}
+	.checkbox{
+ 		justify-content: left;
+	}
 	</style>
 </head>
 <main>
@@ -138,28 +141,26 @@
         <div class="login">
             <h2>HELP-WORK</h2>
             <h2>LOGIN</h2><br>
-            <div class="form-floating mb-3">
-	            <!-- <label for="exampleInputEmail1" class="form-label">아이디</label> -->
-			  	<input type="text" class="form-control" id="floatingInput" name="memberId" placeholder="name@example.com" value="<%=saveId!=null?saveId:""%>">
-			  	<label for="floatingInput">email로 입력하세요</label>
-			</div>
+            <div style="width: 400px;">
+	            <div class="form-floating mb-3" style="width: 100%">
+		            <!-- <label for="exampleInputEmail1" class="form-label">아이디</label> -->
+				  	<input type="text" class="form-control" id="floatingInput" name="memberId" placeholder="name@example.com" value="<%=saveId!=null?saveId:""%>">
+				  	<label for="floatingInput">email로 입력하세요</label>
+				</div>
+			</div>	
+			
             <div class="login_etc">
                 <div class="checkbox">
                 	<input type="checkbox" name="saveId" id="saveId" <%=saveId!=null?"checked":""%>>
                 	<label for="saveId">아이디저장</label>
                 </div>
             </div>
-			<div class="form-floating">
-			  <input type="password" class="form-control" id="floatingPassword" name="memberPwd" placeholder="Password">
-			  <label for="floatingPassword">패스워드를 입력하세요</label>
+            <div style="width: 400px;">
+					<div class="form-floating" style="width: 100%">
+					  <input type="password" class="form-control" id="floatingPassword" name="memberPwd" placeholder="Password">
+					  <label for="floatingPassword">패스워드를 입력하세요</label>
+					</div>
 			</div>
-			<br>
-            <div class="login_etc">
-                <div class="forgot_email">
-	 		        <input type="button" class="btn btn-outline-secondary" value="아이디 찾기" onclick="location.assign('<%=request.getContextPath()%>/member/findMemberId.do')">
-	 		        <input type="button" class="btn btn-outline-secondary" value="패스워드 찾기" onclick="location.assign('<%=request.getContextPath()%>/member/findMemberPwd.do')">
-            	</div> 
-            </div>
             <div class="submit btn-outline-secondary">
             	
                 <button type="submit" value="로그인" class="btn btn-outline-secondary">로그인</button>
@@ -170,6 +171,21 @@
 		        <%-- <input type="button" value="회원가입" onclick="location.assign('<%=request.getContextPath()%>/views/member/enrollMember.jsp')"> --%>
 		        
 	        </div>
+			<br>
+            <div class="login_etc">
+                <div class="forgot_email">
+	 		        <input type="button" class="btn btn-outline-secondary" value="아이디 찾기" onclick="findMemberId();">
+	 		        <input type="button" class="btn btn-outline-secondary" value="패스워드 찾기" onclick="">
+            	</div> 
+            </div>
         </div>
     </form>
+    <script>
+	  //비밀번호 변경
+		const findMemberId=()=>{
+			const url="<%=request.getContextPath()%>/member/findMemberId.do";
+			const style="width=600,height=300,top=200,left=500";
+			open(url,"_blank",style);
+		}
+    </script>
 </main>

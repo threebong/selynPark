@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import = "com.help.admin.model.vo.AdminAttendance" %>
 <%@ include file="/views/common/header.jsp" %>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
 <%
 	List<AdminAttendance> list = (List<AdminAttendance>)request.getAttribute("attendanceDay");
@@ -9,12 +10,13 @@
 %>
 <style>
 table {
-  border-collapse: collapse;
   text-align: center;
   line-height: 1.5;
   width:100%;
-
+  border-radius: 30px;
+  
 }
+
 table thead th {
   padding: 10px;
   font-weight: bold;
@@ -22,6 +24,7 @@ table thead th {
   color: black;
   border-bottom: 3px solid #036;
 }
+
 table tbody th {
   width: 150px;
   padding: 10px;
@@ -30,34 +33,73 @@ table tbody th {
   border-bottom: 1px solid black;
   background: #f3f6f7;
 }
+
 table td {
-  
   padding: 10px;
   vertical-align: top;
   border-bottom: 1px solid #ccc;
 }
+
 input#checkDate{
  float: right;
 }
+
 input#selectDate{
 border:none;
 font-size:30px;
 }
 
+
+
+tr:hover {
+  background-color:rgba(183, 191, 225,0.2);
+}
+
+
+div#attTitle, div.modal, table {
+font-family: 'Do Hyeon', sans-serif;
+}
+
+
+.btn-outline-secondary:hover{
+   background-color: #6710f242;
+   border: 1px solid #6710f242;
+}
+.btn-outline-secondary{
+   border: 1px solid #6710f242;
+   color:#6710f242;
+}
+
+
+div#pageAll{
+margin : 30px 30px;
+}
+
+div#writeTable{
+background-color:rgba(183, 191, 225,0.2);
+border-radius:30px;
+
+}
+
 </style>
 
 <main>
-<h1>근태관리</h1><br>
-<h3 id="selectDate"></h3>
-	<form id="frm" action="">
-	<input id="checkDate" type="date" name="checkDate" onchange="adminAttendanceList();">
-	<input id="hiddenDate" type="hidden">
-	</form>
 
+<div id="pageAll">
+
+	<div id="attTitle"><h1>근태관리</h1><br>
+		<form id="frm" action="">
+		<h3 id="selectDate"></h3>
+		<input id="checkDate" type="date" name="checkDate" onchange="adminAttendanceList();">
+		<input id="hiddenDate" type="hidden">
+		</form><br>
+	</div>
+		<hr style="margin-top: 5px;">
+	
 
 
 	<div id="writeTable"></div>
-<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm">
+<form action="<%=request.getContextPath() %>/admin/updateMemberAttendance.do" method="post" id="update_attendance_frm" onsubmit="return update_attendance(this);">
 <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
     	<div class="modal-content">
@@ -85,7 +127,8 @@ font-size:30px;
 	
 	<button id="update-AttendanceBtn" type="button" class="btn btn-primary"
      data-bs-toggle="modal" data-bs-target="#attendanceModal" style="display: none;">출퇴근정보 수정</button> 
-
+     <div id="pageNavContainer" style="display: flex; justify-content: center; margin-top: 15px; "></div>
+</div>
 </main>
 <script>
 
@@ -117,19 +160,20 @@ function adminAttendanceList(cPage){
 			data:{cPage:cPage, changeDays:changeDays},
 			dataType : 'json',
 			success:data=>{
+				$("#pageNavContainer").html("");
 				const memberList = data["list"];
 				const table=$('<table>');
 				let thead=$("<thead>");
 				let tbody=$('<tbody>');
 				let tr=$("<tr>");
-				let th1=$("<th>").html("이름");
-				let th2=$("<th>").html("아이디");
-				let th3=$("<th>").html("부서");
-				let th4=$("<th>").html("직책");
-				let th5=$("<th>").html("출근시간");
-				let th6=$("<th>").html("퇴근시간");
-				let th7=$("<th>").html("상태");
-				let th8=$("<th>").html("비고");
+				let th1=$("<th style='font-size:20px;'>").html("이름");
+				let th2=$("<th style='font-size:20px;'>").html("아이디");
+				let th3=$("<th style='font-size:20px;'>").html("부서");
+				let th4=$("<th style='font-size:20px;'>").html("직책");
+				let th5=$("<th style='font-size:20px;'>").html("출근시간");
+				let th6=$("<th style='font-size:20px;'>").html("퇴근시간");
+				let th7=$("<th style='font-size:20px;'>").html("상태");
+				let th8=$("<th style='font-size:20px;'>").html("비고");
 				thead.append(th1).append(th2).append(th3).append(th4).append(th5).append(th6).append(th7).append(th8);
 				table.append(thead);
 				if(memberList.length==0){
@@ -154,8 +198,10 @@ function adminAttendanceList(cPage){
 						let attTime = $("<td>").html(memberList[i]["attTime"]);
 						let leaveTime = $("<td>").html(memberList[i]["leaveTime"]);
 						let attStatus = $("<td>").html(memberList[i]["attStatus"]);
+						let inputAttStatus = $('<input>').attr({type:"hidden",name:"attStatus",id:"attStatus",value:memberList[i]["attStatus"]});
+						attStatus.append(inputAttStatus);
 						let note = $("<td>").html("<button>수정");
-						note.children('button').attr("id","updateAttendance"+i);
+						note.children('button').attr({id:"updateAttendance"+i,class:"btn btn-outline-secondary"});
 						note.children('button').attr("onclick","adminUpdateAttendance(this);");
 						tbody.append(tr2);
 						table.append(tbody);
@@ -164,8 +210,8 @@ function adminAttendanceList(cPage){
 
 					}
 				}
-				const div=$("<div>").attr("id","pageBar").html(data["pageBar"]);
-				table.append(div);
+				const div=$("<div style='text-align:center;'>").attr("id","pageBar").html(data["pageBar"]);
+				$("#pageNavContainer").append(div);
 				$("#writeTable").html(table);
 				
 			}
@@ -178,8 +224,22 @@ const adminUpdateAttendance=(e)=>{
    $("#modName").val(memberName);
    var memberId = e.parentElement.parentElement.children[1].children[0].value;
    $("#modId").val(memberId);
+   var attStatus = e.parentElement.parentElement.children[6].children[0].value;
+   $("#modAttStatus").val(attStatus);
    $("#modAttDate").val($("#checkDate").val());
    $("#update-AttendanceBtn").click();
+   console.log(attStatus);
 };
+
+
+
+
+//출퇴근 상태 반드시 입력
+const update_attendance=()=>{
+    if($("#modAttStatus").val().trim().length == 0){
+       $("#modAttStatus").focus();
+       return false;
+    }     
+ };
 
 </script>

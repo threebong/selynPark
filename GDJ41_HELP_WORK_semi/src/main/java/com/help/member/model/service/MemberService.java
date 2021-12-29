@@ -95,9 +95,9 @@ public class MemberService {
 	//아이디 찾기
 	public String findMemberId(String memberName,String memberPhone) {
 		Connection conn=getConnection();
-		String userId=dao.findMemberId(conn,memberName,memberPhone);
+		String memberId=dao.findMemberId(conn,memberName,memberPhone);
 		close(conn);
-		return userId;
+		return memberId;
 	}
 
 }

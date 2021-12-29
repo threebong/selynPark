@@ -35,19 +35,25 @@ public class DeleteNormalContentServlet extends HttpServlet {
 		//파일 삭제
 		String[] fileArr = request.getParameterValues("fileArr");
 		String realPath = request.getServletContext().getRealPath("/upfile/normal/");
+		int result =0;
 		
-		if(fileArr.length != 0) {
-			for(int i=0;i<fileArr.length;i++) {
-				File f = new File(realPath+fileArr[i]);
-				if(f.exists()) {
-					f.delete();
+		
+		try {
+			if(fileArr.length != 0) {
+				for(int i=0;i<fileArr.length;i++) {
+					File f = new File(realPath+fileArr[i]);
+					if(f.exists()) {
+						f.delete();
+					}
 				}
-			}	
+			}
+			
+		}catch(NullPointerException e) {
+			result =  new ProjectService().deleteNormalContent(normalContentNo);
 		}
 		
+		 result=  new ProjectService().deleteNormalContent(normalContentNo);
 		
-		
-		int result = new ProjectService().deleteNormalContent(normalContentNo);
 		
 		if(result<0) {
 			response.getWriter().write("삭제 실패!");
