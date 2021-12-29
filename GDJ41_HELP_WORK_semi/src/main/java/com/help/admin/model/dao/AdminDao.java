@@ -93,14 +93,16 @@ public class AdminDao {
 
 	}
 	
-	//대기사원 조회
-	public List<AdminListMember> waitMemberAll(Connection conn){
+	//대기사원 조회 페이징
+	public List<AdminListMember> waitMemberAll(Connection conn, int cPage, int numPerPage){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<AdminListMember> list = new ArrayList();
 		
 		try {
 			pstmt = conn.prepareStatement(prop.getProperty("waitMemberAll"));
+			pstmt.setInt(1, (cPage-1)*numPerPage+1);
+			pstmt.setInt(2, cPage*numPerPage);
 			rs=pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -121,6 +123,33 @@ public class AdminDao {
 		}
 		return list;
 		
+	}
+	
+	
+	//대기사원 총 인원수
+	public int waitMemberAllCount(Connection conn) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		String sql = prop.getProperty("waitMemberAllCount");
+		
+		try {
+			
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+			
+		} return result;
+
 	}
 	
 	

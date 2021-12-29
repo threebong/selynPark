@@ -220,23 +220,25 @@ function adminMemberList(cPage){
 };
 
 //대기현황
-function waitMemberList(){
+function waitMemberList(cPage){
 	$.ajax({
 		url:"<%=request.getContextPath()%>/admin/waitMemberListEnd.do",
 		type:'post',
+		data:{cPage:cPage},
 		dataType : 'json',
 		success:data=>{
 			$("#pageNavContainer").html("");
+			const memberList = data["list"];
 			const table=$('<table>');
 			let thead=$("<thead>");
 			let tbody=$('<tbody>');
 			let tr=$("<tr>");
-			let th1=$("<th>").html("이름");
-			let th2=$("<th>").html("아이디");
-			let th3=$("<th>").html("부서");
-			let th4=$("<th>").html("직책");
-			let th5=$("<th>").html("연락처");
-			let th6=$("<th>").html("비고");
+			let th1=$("<th style='font-size:20px;'>").html("이름");
+			let th2=$("<th style='font-size:20px;'>").html("아이디");
+			let th3=$("<th style='font-size:20px;'>").html("부서");
+			let th4=$("<th style='font-size:20px;'>").html("직책");
+			let th5=$("<th style='font-size:20px;'>").html("연락처");
+			let th6=$("<th style='font-size:20px;'>").html("비고");
 			thead.append(tr).append(th1).append(th2).append(th3).append(th4).append(th5).append(th6);
 			table.append(thead);
 			if(data.length==0){
@@ -248,17 +250,17 @@ function waitMemberList(){
 				tbody.append(tr2);
 				table.append(tbody);
 			} else{
-				for(let i=0; i<data.length; i++){
+				for(let i=0; i<memberList.length; i++){
 					let tr2 = $("<tr>");
-					let name = $("<td>").html(data[i]["memberName"]);
-					let memberName = $('<input>').attr({type:"hidden",name:"memberName",id:"memberName",value:data[i]["memberName"]});
+					let name = $("<td>").html(memberList[i]["memberName"]);
+					let memberName = $('<input>').attr({type:"hidden",name:"memberName",id:"memberName",value:memberList[i]["memberName"]});
 					name.append(memberName);
-					let id = $("<td>").html(data[i]["memberId"]);
-					let memberId = $('<input>').attr({type:"hidden",name:"memberId",id:"memberId",value:data[i]["memberId"]});
+					let id = $("<td>").html(memberList[i]["memberId"]);
+					let memberId = $('<input>').attr({type:"hidden",name:"memberId",id:"memberId",value:memberList[i]["memberId"]});
 					id.append(memberId);
-					let dName = $("<td>").html(data[i]["deptName"]);
-					let pName = $("<td>").html(data[i]["positionName"]);
-					let phone = $("<td>").html(data[i]["memberPhone"]);
+					let dName = $("<td>").html(memberList[i]["deptName"]);
+					let pName = $("<td>").html(memberList[i]["positionName"]);
+					let phone = $("<td>").html(memberList[i]["memberPhone"]);
 					let note = $("<td>").html("<button>수정");
 					note.children('button').attr({id:"updateWaitMember"+i, class:"btn btn-outline-secondary"});
 					note.children('button').attr("onclick","adminUpdateWaitMember(this);");
@@ -267,6 +269,8 @@ function waitMemberList(){
 					tr2.append(name).append(id).append(dName).append(pName).append(phone).append(note);
 				}
 			}
+			const div=$("<div style='text-align:center;'>").attr("id","pageBar").html(data["pageBar"]);
+			$("#pageNavContainer").append(div);
 			$("#writeTable").html(table);
 		}
 	});
