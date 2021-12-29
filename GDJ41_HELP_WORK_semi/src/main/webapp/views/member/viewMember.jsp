@@ -7,10 +7,11 @@
 <style>
 .updateMemberSection{
 	font-family: 'Do Hyeon', sans-serif;
-	color:#6710f242
+	color:#6710f242;
+	height: 100%;
 }
 h2{
-	color:#6710f242
+	color:#6710f242;
 }
 .btn-outline-secondary:hover{
    background-color: #6710f242;
@@ -20,18 +21,7 @@ h2{
    border: 1px solid #6710f242;
    color:#6710f242;
 }
-.updateMemberSection{
-	width:500px;	
-	position:absolute;
-	left:0;
-	right:0;
-	top:20px;
-	bottom:0;
-	margin:auto;
-}
-.updatememberSection>h2{
-	text-align:center;
-}
+
 .profileImg{
 	align
 }
@@ -56,15 +46,18 @@ img {
     width: 150px; 
     height: 150px;
 }
+#enroll-container{
+	
+}
 
 </style>
-	<section id=enroll-container >
-		<div class=updateMemberSection>
-			<h2>회원 정보 수정</h2>
-	    	<form name="updateMemberFrm" action="<%=request.getContextPath() %>/member/updateMember.do" method="post" enctype="multipart/form-data"  >
+	<main>
+		<div class="updateMemberSection">
+	    	<div style="text-align: center; display: flex; justify-content: center; margin: 50px;">
+	    		<form name="updateMemberFrm" action="<%=request.getContextPath() %>/member/updateMember.do" method="post" enctype="multipart/form-data" >
 	    		<table class="updateTbl">
 					<tr> 
-						<td>
+						<td colspan="2">
 						<div class="profile-outer">
 							<%if(m.getMemberProfile()!=null){ %>
 								<div class="profile-inner">
@@ -105,6 +98,7 @@ img {
 							</div>
 						</td>
 					</tr>
+					
 					<tr>
 						<th>프로필사진</th>
 						<td>	
@@ -115,17 +109,24 @@ img {
 						</td>
 					</tr>	
 				</table>
+				</form>
+	    		</div>
 	<!-- 			<input type="submit" value="회원정보수정" >
 				<input type="button" value="비밀번호 변경" id="pwChangeBtn" onclick="updatePassword();"> -->
-				<div class="outer">
-					<div class="inner">
-						<input type="submit" value="회원정보수정" class="btn btn-outline-secondary">
-						<input type="button" value="비밀번호 변경" class="btn btn-outline-secondary" id="pwChangeBtn" onclick="updatePassword();">
+				<div class="inner" style="width:100%; display: flex; justify-content: center;">
+					<div style="width: 40%; text-align: center;">
+						<div style="width: 30%; display: inline-block;margin-left: 40px;">
+							<input type="button" value="비밀번호 변경" class="btn btn-outline-secondary" id="pwChangeBtn" onclick="updatePassword();" style="width: 100%;">
+						</div>
+						<div style="width: 30%; display: inline-block; ">
+							<input type="submit" value="회원정보수정" class="btn btn-outline-secondary" style="width: 100%">
+						</div>
 					</div>
-				</div>
-			</form>
+			</div>
 		</div>
-	</section>
+		
+	</main>
+	
 	<script>
 		//이미지 미리보기
 		$("#target").click(e=>{
