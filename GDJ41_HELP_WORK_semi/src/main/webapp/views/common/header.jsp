@@ -20,6 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <script src="<%=request.getContextPath() %>/js/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <!-- CSS only -->
@@ -312,9 +313,8 @@ window.addEventListener('DOMContentLoaded', event => {
      			data : {"memberId":memberId,"attTime":attTime},
      			dataType:'json',
      				success:data=>{
-     					console.log(data);
      					$("#attTime").html(data["attTime"]);
-     					alert(data["attSuccess"]);
+     					swal(data["attSuccess"]);
      				}
      		})
      	});
@@ -332,9 +332,8 @@ window.addEventListener('DOMContentLoaded', event => {
      			data : {"memberId":memberId,"leaveTime":leaveTime},
      			dataType:'json',
      				success:data=>{
-     					console.log(data);
      					$("#leaveTime").html(data["leaveTime"]);
-     					alert(data["leaveSuccess"]);
+     					swal(data["leaveSuccess"]);
      				}
      				
      		})
@@ -349,7 +348,6 @@ window.addEventListener('DOMContentLoaded', event => {
      			type:'post',
      			dataType:'json',
      			success:data=>{
-     				//const attTime = data["attTime"];
      				$("#attTime").html(data["attTime"]);
      				$("#leaveTime").html(data["leaveTime"]);
      				console.log($("#leaveTime").html());
@@ -358,6 +356,10 @@ window.addEventListener('DOMContentLoaded', event => {
      		})
      	});  
         <% } %>
+        
+        
+      
+        
         
       
         </script>

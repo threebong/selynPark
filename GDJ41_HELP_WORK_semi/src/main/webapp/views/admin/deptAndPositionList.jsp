@@ -6,10 +6,10 @@
 
 <style>
 table {
-  border-collapse: collapse;
   text-align: center;
   line-height: 1.5;
   width:100%;
+  border-radius: 30px;
 
 }
 
@@ -19,7 +19,10 @@ table thead th {
   vertical-align: top;
   color: black;
   border-bottom: 3px solid #036;
+  
 }
+
+
 
 table tbody th {
   width: 150px;
@@ -48,9 +51,8 @@ table td {
 	margin-left: 30px;
 }
 
-
-tr:nth-child(2n) {
-  background-color:rgb(255, 244, 253);
+tr:hover {
+  background-color:rgba(183, 191, 225,0.2);
 }
 
 
@@ -58,11 +60,30 @@ div#deptTitle, div#menu-container, div.modal, table {
 font-family: 'Do Hyeon', sans-serif;
 }
 
+.btn-outline-secondary:hover{
+   background-color: #6710f242;
+   border: 1px solid #6710f242;
+}
+.btn-outline-secondary{
+   border: 1px solid #6710f242;
+   color:#6710f242;
+}
+
+div#pageAll{
+margin : 30px 30px;
+}
+
+div#ajaxTable{
+background-color:rgba(183, 191, 225,0.2);
+border-radius:30px;
+
+}
+
 </style>
 
 <main>
 
-
+<div id="pageAll">
 <div id="deptTitle"><h1>부서/직급관리</h1></div><br>
 
 	<div id="menu-container">
@@ -74,6 +95,8 @@ font-family: 'Do Hyeon', sans-serif;
 	<hr style="margin-top: 5px;">
 	
 	<div id="ajaxTable"></div>
+</div>
+
 
 <!-- 부서수정 모달창 -->
 <button id="update-DeptBtn" type="button" class="btn btn-primary"
@@ -211,10 +234,10 @@ function adminDeptList(){
 			let thead=$("<thead>");
 			let tbody=$('<tbody>');
 			let tr=$("<tr>");
-			let th1=$("<th>").html("부서코드");
-			let th2=$("<th>").html("부서명");
-			let th3=$("<th>").html("수정");
-			let th4=$("<th>").html("삭제");
+			let th1=$("<th style='font-size:20px;'>").html("부서코드");
+			let th2=$("<th style='font-size:20px;'>").html("부서명");
+			let th3=$("<th style='font-size:20px;'>").html("수정");
+			let th4=$("<th style='font-size:20px;'>").html("삭제");
 			thead.append(tr).append(th1).append(th2).append(th3).append(th4);
 			table.append(thead);
 			
@@ -237,10 +260,10 @@ function adminDeptList(){
 					let inputDeptName = $('<input>').attr({type:"hidden",name:"deptName",id:"deptName",value:data[i]["deptName"]});
 					deptName.append(inputDeptName);
 					let updateDept = $("<td>").html("<button>수정");
-					updateDept.children('button').attr("id","updateDept"+i);
+					updateDept.children('button').attr({id:"updateDept"+i, class:"btn btn-outline-secondary"});
 					updateDept.children('button').attr("onclick","updateDept(this);");
 					let deleteDept = $("<td>").html("<button>삭제");
-					deleteDept.children('button').attr("id","deleteDept"+i);
+					deleteDept.children('button').attr({id:"deleteDept"+i, class:"btn btn-outline-secondary"});
 					deleteDept.children('button').attr("onclick","deleteDept(this);");
 					table.append(tbody);
 					tbody.append(tr2);
@@ -313,10 +336,10 @@ function adminPositionList(){
 					let inputPositionName = $('<input>').attr({type:"hidden",name:"positionName",id:"positionName",value:data[i]["positionName"]});
 					positionName.append(inputPositionName);
 					let updatPosition = $("<td>").html("<button>수정");
-					updatPosition.children('button').attr("id","updatPosition"+i);
+					updatPosition.children('button').attr({id:"updatPosition"+i, class:"btn btn-outline-secondary"});
 					updatPosition.children('button').attr("onclick","updatPosition(this);");
 					let deletePosition = $("<td>").html("<button>삭제");
-					deletePosition.children('button').attr("id","deletePosition"+i);
+					deletePosition.children('button').attr({id:"deletePosition"+i, class:"btn btn-outline-secondary"});
 					deletePosition.children('button').attr("onclick","deletePosition(this);");
 					table.append(tbody);
 					tbody.append(tr2);
@@ -348,7 +371,6 @@ const deletePosition=(e)=>{
 	   var positionName = e.parentElement.parentElement.children[1].children[0].value;
 	   $("#deletePositionName").val(positionName);
 	   $("#delete-PositionBtn").click();
-	   console.log($(".modal-body").html());
 };
 
 
