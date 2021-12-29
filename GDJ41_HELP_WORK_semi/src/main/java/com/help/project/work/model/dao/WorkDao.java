@@ -207,7 +207,7 @@ public class WorkDao {
 							.projectNo(rs.getInt("PROJECT_NO")).workIng(rs.getString("WORK_ING"))
 							.workRank(rs.getString("WORK_RANK")).workTitle(rs.getString("WORK_TITLE"))
 							.memberId(rs.getString("MEMBER_ID")).managerId(rs.getString("MANAGER_ID"))
-							.workDate(new SimpleDateFormat("YYYY-MM-dd").format(rs.getDate("WORK_DATE"))).build();
+							.workDate(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("WORK_DATE"))).build();
 					works.add(wo);
 				}
 				// works.put(p.getProjectNo(), w);//플젝번호-해당업무들
@@ -350,7 +350,6 @@ public class WorkDao {
 							.workTitle(rs.getString("WORK_TITLE")).memberId(rs.getString("MEMBER_ID"))
 							.workDate(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("WORK_DATE"))).build();
 					result.add(j);
-
 				}
 
 			}
